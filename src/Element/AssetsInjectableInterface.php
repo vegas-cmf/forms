@@ -13,6 +13,6 @@ namespace Vegas\Forms\Element;
 
 interface AssetsInjectableInterface
 {
-    public function setAssetsManager(\Vegas\Assets\Manager $assets);
+    public function setAssetsManager(\Phalcon\Assets\Manager $assets);
     public function getAssetsManager();
 }
