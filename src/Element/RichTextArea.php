@@ -54,7 +54,7 @@ class RichTextArea extends \Phalcon\Forms\Element\TextArea implements AssetsInje
         return $this->assets;
     }
 
-    public function setAssetsManager(\Vegas\Assets\Manager $assets)
+    public function setAssetsManager(\Phalcon\Assets\Manager $assets)
     {
         $this->assets = $assets;
         

@@ -48,7 +48,7 @@ class Datepicker extends \Phalcon\Forms\Element\Text implements AssetsInjectable
         return $this->assets;
     }
 
-    public function setAssetsManager(\Vegas\Assets\Manager $assets)
+    public function setAssetsManager(\Phalcon\Assets\Manager $assets)
     {
         $this->assets = $assets;
         

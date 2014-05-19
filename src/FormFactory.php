@@ -13,7 +13,7 @@ namespace Vegas\Forms;
 
 use Phalcon\DI\InjectionAwareInterface,
     Vegas\Forms\Exception\InvalidInputSettingsException,
-    Vegas\Forms\Builder\Exception\BuilderNotFoundException,
+    Vegas\Forms\Builder\Exception\NotFoundException,
     Vegas\Forms\Form as GenericForm,
     Vegas\Forms\InputSettings as InputSettingsForm;
 
@@ -100,13 +100,13 @@ class FormFactory implements InjectionAwareInterface
      * Proxies factory create call to specific responsible trait.
      * @param \Vegas\Forms\InputSettings $settings
      * @return \Phalcon\Forms\ElementInterface form element instance
-     * @throws \Vegas\Forms\Builder\Exception\BuilderNotFoundException When a specific type is not found
+     * @throws \Vegas\Forms\Builder\Exception\NotFoundException When a specific type is not found
      */
     private function callBuilderMethod(InputSettingsForm $settings)
     {
         $methodName = self::TRAIT_METHOD_PREFIX . ucfirst($settings->getValue(InputSettingsForm::TYPE_PARAM));
         if (!method_exists($this, $methodName)) {
-            throw new BuilderNotFoundException;
+            throw new NotFoundException;
         }
         return $this->$methodName($settings);
     }

@@ -74,7 +74,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                     // Keeps all classes used to provide data for multiple data input types.
                     // Use fully qualified class names implementing DataProviderInterface as values.
                     // The order here is how these options will be listed in the form when selecting one.
-                    '\VegasTest\Forms\FakeDataProvider'
+                    '\Vegas\Tests\Forms\FakeDataProvider'
                 ]
             ]
         ]));
@@ -141,7 +141,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                 'type'      => 'Select',
                 'required'  => false,
                 'label'     => 'Select company',
-                'data'      => '\VegasTest\Forms\FakeDataProvider'
+                'data'      => '\Vegas\Tests\Forms\FakeDataProvider'
             ]
         ];
         
@@ -213,7 +213,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         try {
             $this->formFactory->createForm($data);
         } catch (\Exception $e) {
-            $this->assertInstanceOf('\Vegas\Forms\Builder\Exception\BuilderNotFoundException', $e);
+            $this->assertInstanceOf('\Vegas\Forms\Builder\Exception\NotFoundException', $e);
         }
     }
     
@@ -230,7 +230,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         try {
             $this->formFactory->createForm($data);
         } catch (\Exception $e) {
-            $this->assertInstanceOf('\Vegas\Forms\DataProvider\Exception\DataProviderNotFoundException', $e);
+            $this->assertInstanceOf('\Vegas\Forms\DataProvider\Exception\NotFoundException', $e);
         }
     }
 }

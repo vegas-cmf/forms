@@ -23,4 +23,10 @@ $di->set('mongo', function() use ($config) {
     return $mongo->selectDb($config->mongo->db);
 }, true);
 
+$di->set('collectionManager', function() {
+    return new \Phalcon\Mvc\Collection\Manager();
+});
+
+$di->set('filter', '\Vegas\Filter', true);
+
 Phalcon\DI::setDefault($di);

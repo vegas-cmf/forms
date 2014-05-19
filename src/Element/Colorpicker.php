@@ -43,7 +43,7 @@ class Colorpicker extends \Phalcon\Forms\Element\Text implements AssetsInjectabl
         return $this->assets;
     }
 
-    public function setAssetsManager(\Vegas\Assets\Manager $assets)
+    public function setAssetsManager(\Phalcon\Assets\Manager $assets)
     {
         $this->assets = $assets;
         

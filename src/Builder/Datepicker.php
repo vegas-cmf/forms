@@ -17,7 +17,6 @@ use Vegas\Forms\InputSettings,
 
 trait Datepicker
 {
-    
     /**
      * @param \Vegas\Forms\InputSettings $settings
      * @return \Phalcon\Forms\Element\Text
@@ -35,5 +34,4 @@ trait Datepicker
         
         return $element;
     }
-    
 }

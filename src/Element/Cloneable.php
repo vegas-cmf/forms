@@ -27,8 +27,8 @@
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Validation\Validator\Exception\Cloneable\BaseElementNotSetException,
-    Vegas\Validation\Validator\Exception\Cloneable\CantInheritCloneableException,
+use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException,
+    Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException,
     Vegas\Validation\Validator\Cloneable As CloneableValidator,
     Phalcon\Forms\Element;
 

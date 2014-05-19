@@ -411,10 +411,10 @@ class Upload extends \Phalcon\Forms\Element\File
     /**
      * Sets assets manager
      *
-     * @param \Vegas\Assets\Manager $assets
+     * @param \Phalcon\Assets\Manager $assets
      * @return $this
      */
-    public function setAssetsManager(\Vegas\Assets\Manager $assets)
+    public function setAssetsManager(\Phalcon\Assets\Manager $assets)
     {
         $this->assets = $assets;
 

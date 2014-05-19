@@ -2,7 +2,7 @@
 /**
  * This file is part of Vegas package
  *
- * @author Radosław Fąfara <radek@archdevil.pl>
+ * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
  * @copyright Amsterdam Standard Sp. Z o.o.
  * @homepage https://bitbucket.org/amsdard/vegas-phalcon
  *
@@ -10,15 +10,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Vegas\Forms\Builder\Exception;
+namespace Vegas\Forms\Element\Cloneable\Exception;
 
-use \Vegas\Forms\Exception as FormsException;
+use Vegas\Forms\Element\Cloneable\Exception;
 
-/**
- *
- * @package Vegas\Forms\Exception
- */
-class BuilderNotFoundException extends FormsException
+class BaseElementNotSetException extends Exception
 {
-    protected $message = 'Input builder not found';
+    protected $message = 'Base element is not set.';
 }

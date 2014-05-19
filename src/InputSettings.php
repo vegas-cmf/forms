@@ -11,7 +11,7 @@
  */
 namespace Vegas\Forms;
 
-use Vegas\Forms\DataProvider\Exception\DataProviderNotFoundException,
+use Vegas\Forms\DataProvider\Exception\NotFoundException,
     Vegas\Forms\DataProvider\DataProviderInterface,
     Vegas\Forms\Element\Select,
     Phalcon\Forms\Element\Text,
@@ -101,14 +101,14 @@ class InputSettings extends \Vegas\Forms\Form
     /**
      * Proxy method to retrieve data to populate select lists.
      * @return array
-     * @throws \Vegas\Forms\DataProvider\Exception\DataProviderNotFoundException When DI is not configured properly or a wrong value is provided.
+     * @throws \Vegas\Forms\DataProvider\Exception\NotFoundException When DI is not configured properly or a wrong value is provided.
      */
     public function getDataFromProvider()
     {
         $select = $this->get(self::DATA_PARAM);
         $classname = $select->getValue();
         if (!class_exists($classname) || !array_key_exists($classname, $select->getOptions())) {
-            throw new DataProviderNotFoundException;
+            throw new NotFoundException;
         }
         return (new $classname)->getData();
     }

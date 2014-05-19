@@ -42,7 +42,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         try {
             $cloneable->render();
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Validation\Validator\Exception\Cloneable\BaseElementNotSetException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
         }
         
         $cloneable->setBaseElements(array());
@@ -50,7 +50,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         try {
             $cloneable->render();
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Validation\Validator\Exception\Cloneable\BaseElementNotSetException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
         }
         
         $cloneable->setBaseElements(array(new Cloneable('another_cloneable')));
@@ -58,7 +58,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         try {
             $cloneable->render();
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Validation\Validator\Exception\Cloneable\CantInheritCloneableException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException', $ex);
         }
     }
     

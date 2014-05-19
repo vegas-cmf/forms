@@ -1,4 +1,4 @@
-Vegas CMF Core lib
+Vegas CMF Forms lib
 ======================
 
 # List of contents

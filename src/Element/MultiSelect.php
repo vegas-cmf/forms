@@ -58,7 +58,7 @@ class MultiSelect extends \Vegas\Forms\Element\Select
         return $this->assets;
     }
 
-    public function setAssetsManager(\Vegas\Assets\Manager $assets)
+    public function setAssetsManager(\Phalcon\Assets\Manager $assets)
     {
         $this->assets = $assets;
         
