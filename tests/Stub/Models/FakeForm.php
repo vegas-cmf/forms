@@ -11,7 +11,7 @@
  */
 namespace Vegas\Tests\Stub\Models;
 
-use \Phalcon\Forms\Form,
+use \Vegas\Forms\Form,
     \Phalcon\Forms\Element\Text,
     \Phalcon\Validation\Validator\PresenceOf;
 
