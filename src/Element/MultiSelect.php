@@ -24,7 +24,7 @@ namespace Vegas\Forms\Element;
 
 use Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
 
-class MultiSelect extends \Vegas\Forms\Element\Select
+class MultiSelect extends Select implements AssetsInjectableInterface
 {
     public function __construct($name, $options = null, $attributes = null)
     {

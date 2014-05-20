@@ -12,8 +12,9 @@
 namespace Vegas\Forms\Element;
 
 use \Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
+use \Phalcon\Forms\Element\Text;
 
-class Timepicker extends \Phalcon\Forms\Element\Text implements AssetsInjectableInterface
+class Timepicker extends Text implements AssetsInjectableInterface
 {
     private $assets;
     

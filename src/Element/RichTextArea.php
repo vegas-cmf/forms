@@ -12,8 +12,9 @@
 namespace Vegas\Forms\Element;
 
 use \Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
+use \Phalcon\Forms\Element\TextArea;
 
-class RichTextArea extends \Phalcon\Forms\Element\TextArea implements AssetsInjectableInterface
+class RichTextArea extends TextArea implements AssetsInjectableInterface
 {
     private $assets;
     

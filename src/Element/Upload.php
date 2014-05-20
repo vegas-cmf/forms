@@ -17,8 +17,9 @@
 namespace Vegas\Forms\Element;
 
 use \Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
+use \Phalcon\Forms\Element\File;
 
-class Upload extends \Phalcon\Forms\Element\File
+class Upload extends File implements AssetsInjectableInterface
 {
     /**
      * Describes single mode of uploading file
