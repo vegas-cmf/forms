@@ -60,7 +60,7 @@ class Birthdaypicker extends Text implements AssetsInjectableInterface
     {
         $value = parent::getValue();
         
-        if (!empty($value)) {
+        if (!empty($value) && is_array($value)) {
             $value = implode('-', $value);
         }
         

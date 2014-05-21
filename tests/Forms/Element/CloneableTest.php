@@ -13,7 +13,7 @@ namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
 use Vegas\Forms\Element\Cloneable;
-use Vegas\Tests\Stub\Models\FakeForm;
+use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
 
 class CloneableTest extends \PHPUnit_Framework_TestCase
@@ -24,7 +24,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->di = DI::getDefault();
-        $this->form = new FakeForm();
+        $this->form = new FakeVegasForm();
     }
 
     public function testInvalidSetup()
@@ -66,8 +66,19 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     {
         $cloneable = $this->prepareValidCloneableField();
         $this->form->add($cloneable);
-        
-        $this->assertTrue(is_string($this->form->render('cloneable_field')));
+
+        $this->assertEquals(
+            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset></div>',
+            $this->form->get('cloneable_field')->render()
+        );
+
+        $this->assertEquals(
+            '<div vegas-cloneable="1"><fieldset attribute="test"><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset attribute="test"><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset></div>',
+            $this->form->get('cloneable_field')->render(array('attribute' => 'test'))
+        );
+
+        $this->assertNull($this->form->get('cloneable_field')->getBaseElement('test3'));
+        $this->assertInstanceOf('\Phalcon\Forms\ElementInterface', $this->form->get('cloneable_field')->getBaseElement('test2'));
     }
 
     public function testBinding()
@@ -84,10 +95,18 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
             )
         ), $model);
 
-        $values = $this->form->getValue('cloneable_field');
+        $bindedValues = $this->form->get('cloneable_field')->getValue();
 
-        $this->assertEquals($values[0]['test1'], 'foo');
-        $this->assertEquals($values[1]['test2'], 'xyz');
+        $this->assertEquals($bindedValues[0]['test1'], 'foo');
+        $this->assertEquals($bindedValues[1]['test2'], 'xyz');
+
+        $this->assertEquals($model->cloneable_field[0]['test1'], 'foo');
+        $this->assertEquals($model->cloneable_field[1]['test2'], 'xyz');
+
+        $this->assertEquals(
+            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /></fieldset></div>',
+            $this->form->get('cloneable_field')->render()
+        );
     }
 
     private function prepareValidCloneableField()

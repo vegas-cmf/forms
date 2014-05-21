@@ -12,11 +12,11 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
-use Vegas\Forms\Element\Datepicker;
+use Vegas\Forms\Element\Birthdaypicker;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 
-class DatepickerTest extends \PHPUnit_Framework_TestCase
+class BirthdaypickerTest extends \PHPUnit_Framework_TestCase
 {
     protected $di;
     protected $form;
@@ -28,21 +28,25 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $this->model = new FakeModel();
         $this->form = new FakeVegasForm();
 
-        $datepicker = new Datepicker('date');
+        $datepicker = new Birthdaypicker('date');
         $this->form->add($datepicker);
     }
 
     public function testInput()
     {
         $dateTime = new \DateTime('2014-03-13');
+        $dateArray = explode('-', $dateTime->format('Y-m-d'));
 
         $this->form->bind(array('date' => $dateTime->format('Y-m-d')), $this->model);
-        $this->assertEquals($dateTime->getTimestamp(), $this->model->date);
+        $this->assertEquals($dateArray[0], $this->model->date['year']);
+        $this->assertEquals($dateArray[1], $this->model->date['month']);
+        $this->assertEquals($dateArray[2], $this->model->date['day']);
+
         $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('Y-m-d'));
 
         // create new form for filled model
         $this->form = new FakeVegasForm($this->model);
-        $datepicker = new Datepicker('date');
+        $datepicker = new Birthdaypicker('date');
         $this->form->add($datepicker);
         $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('Y-m-d'));
 

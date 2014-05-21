@@ -15,7 +15,7 @@ use \Vegas\Forms\Form,
     \Phalcon\Forms\Element\Text,
     \Phalcon\Validation\Validator\PresenceOf;
 
-class FakeForm extends Form
+class FakeVegasForm extends Form
 {
     public function initialize()
     {

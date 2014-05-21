@@ -12,11 +12,11 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
-use Vegas\Forms\Element\Datepicker;
+use Vegas\Forms\Element\Timepicker;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 
-class DatepickerTest extends \PHPUnit_Framework_TestCase
+class TimepickerTest extends \PHPUnit_Framework_TestCase
 {
     protected $di;
     protected $form;
@@ -28,28 +28,18 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $this->model = new FakeModel();
         $this->form = new FakeVegasForm();
 
-        $datepicker = new Datepicker('date');
+        $datepicker = new Timepicker('date');
         $this->form->add($datepicker);
     }
 
     public function testInput()
     {
-        $dateTime = new \DateTime('2014-03-13');
+        // without additional validation any string can pass here
+        $dateTime = new \DateTime('2014-03-13 12:23');
 
-        $this->form->bind(array('date' => $dateTime->format('Y-m-d')), $this->model);
-        $this->assertEquals($dateTime->getTimestamp(), $this->model->date);
-        $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('Y-m-d'));
-
-        // create new form for filled model
-        $this->form = new FakeVegasForm($this->model);
-        $datepicker = new Datepicker('date');
-        $this->form->add($datepicker);
-        $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('Y-m-d'));
-
-        // treat nondate values as normal string
-        $testString = 'test string';
-        $this->form->bind(array('date' => $testString), $this->model);
-        $this->assertEquals($testString, $this->model->date);
+        $this->form->bind(array('date' => $dateTime->format('H:i')), $this->model);
+        $this->assertEquals($dateTime->format('H:i'), $this->model->date);
+        $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('H:i'));
     }
 
     public function testRender()
@@ -65,6 +55,6 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $this->form->get('date')->setAssetsManager($this->di->get('assets'));
 
         $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('date')->getAssetsManager());
-        $this->assertEquals('<input type="text" id="date" name="date" vegas-datepicker="1" />', $this->form->get('date')->render());
+        $this->assertEquals('<input type="text" id="date" name="date" vegas-timepicker="1" />', $this->form->get('date')->render());
     }
 }
