@@ -148,8 +148,7 @@ class Upload extends File implements AssetsInjectableInterface
      */
     public function render($attributes = array())
     {
-        $this->addCss();
-        $this->addJs();
+        $this->addAssets();
         $this->setUploadAttributes();
 
         $renderer = new Upload\Renderer($this, $attributes);
@@ -371,24 +370,18 @@ class Upload extends File implements AssetsInjectableInterface
     }
 
     /**
-     * Adds css to the website
-     */
-    private function addCss()
-    {
-        $this->assets->addCss('assets/css/common/upload.css');
-        $this->assets->addCss('assets/vendor/blueimp-file-upload/css/jquery.fileupload.css');
-    }
-
-    /**
-     * Adds js to the website
+     * Adds js and css to the website
      *
      * @throws Exception\InvalidAssetsManagerException
      */
-    private function addJs()
+    private function addAssets()
     {
         if(!$this->assets) {
             throw new InvalidAssetsManagerException();
         }
+
+        $this->assets->addCss('assets/css/common/upload.css');
+        $this->assets->addCss('assets/vendor/blueimp-file-upload/css/jquery.fileupload.css');
 
         $this->assets->addJs('assets/js/lib/vegas/components/jquery-uploader.js');
         $this->assets->addJs('assets/js/lib/vegas/ui/upload.js');

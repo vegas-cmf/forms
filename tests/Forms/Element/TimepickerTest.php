@@ -32,16 +32,6 @@ class TimepickerTest extends \PHPUnit_Framework_TestCase
         $this->form->add($datepicker);
     }
 
-    public function testInput()
-    {
-        // without additional validation any string can pass here
-        $dateTime = new \DateTime('2014-03-13 12:23');
-
-        $this->form->bind(array('date' => $dateTime->format('H:i')), $this->model);
-        $this->assertEquals($dateTime->format('H:i'), $this->model->date);
-        $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('H:i'));
-    }
-
     public function testRender()
     {
         $this->assertNull($this->form->get('date')->getAssetsManager());

@@ -12,11 +12,11 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
-use Vegas\Forms\Element\RichTextArea;
+use Vegas\Forms\Element\Upload;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 
-class RichTextAreaTest extends \PHPUnit_Framework_TestCase
+class UploadTest extends \PHPUnit_Framework_TestCase
 {
     protected $di;
     protected $form;
@@ -28,23 +28,25 @@ class RichTextAreaTest extends \PHPUnit_Framework_TestCase
         $this->model = new FakeModel();
         $this->form = new FakeVegasForm();
 
-        $content = new RichTextArea('content');
-        $this->form->add($content);
+        $upload = new Upload('upload');
+        $this->form->add($upload);
     }
 
     public function testRender()
     {
-        $this->assertNull($this->form->get('content')->getAssetsManager());
+        $this->assertNull($this->form->get('upload')->getAssetsManager());
 
         try {
-            $this->form->get('content')->render();
+            $this->form->get('upload')->render();
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
         }
 
-        $this->form->get('content')->setAssetsManager($this->di->get('assets'));
+        $this->form->get('upload')->setAssetsManager($this->di->get('assets'));
 
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('content')->getAssetsManager());
-        $this->assertEquals('<textarea id="content" name="content" vegas-richtext="1"></textarea>', $this->form->get('content')->render());
+        $generatedHtmlLength = strlen('<div data-form-element-upload-wrapper="true"><input type="file" id="upload" name="upload" data-form-element-upload="true" data-id="537ca0e52a49c" data-trigger-type="button" data-button-add-label="Add file" /><div data-jq-upload-error></div><div data-jq-upload-preview></div><div data-templates></div></div>');
+
+        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('upload')->getAssetsManager());
+        $this->assertEquals($generatedHtmlLength, strlen($this->form->get('upload')->render()));
     }
 }

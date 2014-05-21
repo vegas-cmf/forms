@@ -26,6 +26,8 @@ use Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
 
 class MultiSelect extends Select implements AssetsInjectableInterface
 {
+    private $assets;
+
     public function __construct($name, $options = null, $attributes = null)
     {
         $attributes['multiple'] = 'multiple';

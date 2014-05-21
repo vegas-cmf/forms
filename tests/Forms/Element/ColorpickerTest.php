@@ -32,16 +32,6 @@ class ColorpickerTest extends \PHPUnit_Framework_TestCase
         $this->form->add($content);
     }
 
-    public function testInput()
-    {
-        // without additional validation any string can pass here
-        $testString = '#000FFF';
-
-        $this->form->bind(array('content' => $testString), $this->model);
-        $this->assertEquals($testString, $this->model->content);
-        $this->assertEquals($this->form->get('content')->getValue(), $testString);
-    }
-
     public function testRender()
     {
         $this->assertNull($this->form->get('content')->getAssetsManager());
