@@ -383,7 +383,7 @@ class Upload extends File implements AssetsInjectableInterface
         $this->assets->addCss('assets/css/common/upload.css');
         $this->assets->addCss('assets/vendor/blueimp-file-upload/css/jquery.fileupload.css');
 
-        $this->assets->addJs('assets/js/lib/vegas/components/jquery-uploader.js');
+        $this->assets->addJs('assets/vendor/jquery-uploader/jquery-uploader.js');
         $this->assets->addJs('assets/js/lib/vegas/ui/upload.js');
         $this->assets->addJs('assets/vendor/jquery-ui/ui/jquery.ui.widget.js');
         $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image.js');
