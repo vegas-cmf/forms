@@ -12,7 +12,7 @@
     $.fn.vegasCloner = function(options) {
         var prepareField = function(element, rowCounter) {
             var preparedField = element.clone();
-            
+
             preparedField.find('[name]').each(function() {
                 var orginalName = $(this).attr('name');
 
@@ -21,11 +21,11 @@
 
                 nameArray = nameArray.join('[');
                 nameArray = nameArray.split(']');
-                
+
                 if (nameArray[0] !== '') {
                     nameArray[0] = parseInt(nameArray[0])+rowCounter;
                 }
-                
+
                 var newName = baseName + '[' + nameArray.join(']');
 
                 preparedField.find('[name="'+orginalName+'"]').each(function() {
@@ -36,40 +36,41 @@
                     $(this).attr('id',newName);
                 });
             });
-            
+
             return preparedField.show();
         };
-        
+
         var options = options || {
             'textAdd': 'Add next',
             'textRemove': 'Remove last',
             'classAdd': 'btn-form-submit',
-            'classRemove': 'btn-form-cancel'
+            'classRemove': 'btn-form-cancel',
+            'rowSelector': 'fieldset'
         };
-        
-        $(this).each(function() { 
+
+        $(this).each(function() {
             var addBtn = $('<a>').html(options.textAdd)
-                    .attr('href','javascript:void(0);')
-                    .addClass('cloner-add').addClass(options.classAdd);
-            
+                .attr('href','javascript:void(0);')
+                .addClass('cloner-add').addClass(options.classAdd);
+
             var removeBtn = $('<a>').html(options.textRemove)
-                    .attr('href','javascript:void(0);')
-                    .addClass('cloner-remove').addClass(options.classRemove);
+                .attr('href','javascript:void(0);')
+                .addClass('cloner-remove').addClass(options.classRemove);
 
             var removeRowBtn = $('<a>').html('x')
-                    .attr('href','javascript:void(0);')
-                    .addClass('cloner-row-remove');
+                .attr('href','javascript:void(0);')
+                .addClass('cloner-row-remove');
 
             var cloneContainer = $(this);
-            var clonerBase = cloneContainer.find('fieldset:eq(0)').clone();
+            var clonerBase = cloneContainer.find(options.rowSelector+':eq(0)').clone();
 
-            cloneContainer.find('fieldset:eq(0)').remove();
+            cloneContainer.find(options.rowSelector+':eq(0)').remove();
 
             removeBtn.insertAfter(cloneContainer);
             addBtn.insertAfter(cloneContainer);
-            
+
             var rowCounter = cloneContainer.children().length;
-            
+
             addBtn.on('click',function() {
                 var element = prepareField(clonerBase, rowCounter);
 
@@ -79,10 +80,10 @@
                 cloneContainer.trigger('cloned');
                 rowCounter++;
             });
-            
+
             removeBtn.on('click',function() {
                 if (cloneContainer.children().length > 1) {
-                    cloneContainer.children().last().remove(); 
+                    cloneContainer.children().last().remove();
                     rowCounter--;
                 } else {
                     $(this).parent().find('input, textarea, select').val('');
@@ -94,7 +95,7 @@
                 rowCounter--;
             });
 
-            cloneContainer.find('fieldset').each(function() {
+            cloneContainer.find(options.rowSelector).each(function() {
                 if ($(this).index > 1) {
                     removeRowBtn.clone(true).prependTo($(this));
                 }
