@@ -40,13 +40,18 @@
             return preparedField.show();
         };
 
-        var options = options || {
+        var defaults = {
             'textAdd': 'Add next',
             'textRemove': 'Remove last',
             'classAdd': 'btn-form-submit',
             'classRemove': 'btn-form-cancel',
-            'rowSelector': 'fieldset'
+            'rowSelector': 'fieldset',
+            'removeRowButton': $('<a>').html('x')
+                .attr('href','javascript:void(0);')
+                .addClass('cloner-row-remove')
         };
+
+        var options = $.extend({}, defaults, options);
 
         $(this).each(function() {
             var addBtn = $('<a>').html(options.textAdd)
@@ -57,9 +62,7 @@
                 .attr('href','javascript:void(0);')
                 .addClass('cloner-remove').addClass(options.classRemove);
 
-            var removeRowBtn = $('<a>').html('x')
-                .attr('href','javascript:void(0);')
-                .addClass('cloner-row-remove');
+            var removeRowBtn = options.removeRowButton;
 
             var cloneContainer = $(this);
             var clonerBase = cloneContainer.find(options.rowSelector+':eq(0)').clone();
