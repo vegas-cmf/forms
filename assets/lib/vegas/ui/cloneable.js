@@ -59,7 +59,21 @@
             }
         };
 
-        var options = $.extend({}, defaults, options);
+        if (typeof options === 'undefined') {
+            var options = {};
+        }
+
+        if (typeof options['buttons'] !== 'undefined') {
+            options['buttons'] = $.extend({}, defaults['buttons'], options['buttons']);
+        }  else {
+            options['buttons'] = defaults['buttons'];
+        }
+
+        if (typeof options['row'] !== 'undefined') {
+            options['row'] = $.extend({}, defaults['row'], options['row']);
+        }  else {
+            options['row'] = defaults['row'];
+        }
 
         $(this).each(function() {
             var addBtn = $('<a>').html(options.buttons.add.text)
@@ -81,15 +95,15 @@
                 options.buttons.insertAfterSelector = cloneContainer;
             }
 
-            removeBtn.insertAfter(cloneContainer);
-            addBtn.insertAfter(cloneContainer);
+            removeBtn.insertAfter(options.buttons.insertAfterSelector);
+            addBtn.insertAfter(options.buttons.insertAfterSelector);
 
             var rowCounter = cloneContainer.children().length;
 
             addBtn.on('click',function() {
                 var element = prepareField(clonerBase, rowCounter);
 
-                removeRowBtn.clone(true).prependTo(element);
+                removeRowBtn.clone(true).appendTo(element);
                 element.appendTo(cloneContainer);
 
                 cloneContainer.trigger('cloned');
@@ -101,7 +115,7 @@
                     cloneContainer.children().last().remove();
                     rowCounter--;
                 } else {
-                    $(this).parent().find('input, textarea, select').val('');
+                    cloneContainer.find('input, textarea, select').val('');
                 }
             });
 
@@ -110,7 +124,7 @@
                 rowCounter--;
             });
 
-            cloneContainer.find(options.rowSelector).each(function() {
+            cloneContainer.find(options.row.selector).each(function() {
                 if ($(this).index > 1) {
                     removeRowBtn.clone(true).appendTo($(this));
                 }
