@@ -41,33 +41,45 @@
         };
 
         var defaults = {
-            'textAdd': 'Add next',
-            'textRemove': 'Remove last',
-            'classAdd': 'btn-form-submit',
-            'classRemove': 'btn-form-cancel',
-            'rowSelector': 'fieldset',
-            'removeRowButton': $('<a>').html('x')
-                .attr('href','javascript:void(0);')
-                .addClass('cloner-row-remove')
+            'buttons': {
+                'add': {
+                    'text': 'Add next',
+                    'class': 'btn-form-submit'
+                },
+                'remove': {
+                    'text': 'Remove last',
+                    'class': 'btn-form-cancel'
+                }
+            },
+            'row': {
+                'selector': 'fieldset',
+                'removeButton': $('<a>').html('x')
+                    .attr('href','javascript:void(0);')
+                    .addClass('cloner-row-remove')
+            }
         };
 
         var options = $.extend({}, defaults, options);
 
         $(this).each(function() {
-            var addBtn = $('<a>').html(options.textAdd)
+            var addBtn = $('<a>').html(options.buttons.add.text)
                 .attr('href','javascript:void(0);')
-                .addClass('cloner-add').addClass(options.classAdd);
+                .addClass('cloner-add').addClass(options.buttons.add.class);
 
-            var removeBtn = $('<a>').html(options.textRemove)
+            var removeBtn = $('<a>').html(options.buttons.remove.text)
                 .attr('href','javascript:void(0);')
-                .addClass('cloner-remove').addClass(options.classRemove);
+                .addClass('cloner-remove').addClass(options.buttons.remove.class);
 
-            var removeRowBtn = options.removeRowButton;
+            var removeRowBtn = options.row.removeButton;
 
             var cloneContainer = $(this);
-            var clonerBase = cloneContainer.find(options.rowSelector+':eq(0)').clone();
+            var clonerBase = cloneContainer.find(options.row.selector+':eq(0)').clone();
 
-            cloneContainer.find(options.rowSelector+':eq(0)').remove();
+            cloneContainer.find(options.row.selector+':eq(0)').remove();
+
+            if (typeof options.buttons.insertAfterSelector === 'undefined') {
+                options.buttons.insertAfterSelector = cloneContainer;
+            }
 
             removeBtn.insertAfter(cloneContainer);
             addBtn.insertAfter(cloneContainer);
@@ -100,7 +112,7 @@
 
             cloneContainer.find(options.rowSelector).each(function() {
                 if ($(this).index > 1) {
-                    removeRowBtn.clone(true).prependTo($(this));
+                    removeRowBtn.clone(true).appendTo($(this));
                 }
             });
         });
