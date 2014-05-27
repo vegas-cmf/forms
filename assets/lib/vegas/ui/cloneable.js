@@ -40,42 +40,26 @@
             return preparedField.show();
         };
 
-        var defaults = {
-            'buttons': {
-                'add': {
-                    'text': 'Add next',
-                    'class': 'btn-form-submit'
-                },
-                'remove': {
-                    'text': 'Remove last',
-                    'class': 'btn-form-cancel'
-                }
-            },
-            'row': {
-                'selector': 'fieldset',
-                'removeButton': $('<a>').html('x')
-                    .attr('href','javascript:void(0);')
-                    .addClass('cloner-row-remove')
-            }
-        };
-
-        if (typeof options === 'undefined') {
-            var options = {};
-        }
-
-        if (typeof options['buttons'] !== 'undefined') {
-            options['buttons'] = $.extend({}, defaults['buttons'], options['buttons']);
-        }  else {
-            options['buttons'] = defaults['buttons'];
-        }
-
-        if (typeof options['row'] !== 'undefined') {
-            options['row'] = $.extend({}, defaults['row'], options['row']);
-        }  else {
-            options['row'] = defaults['row'];
-        }
-
         $(this).each(function() {
+            var options = $.extend({
+                'buttons': {
+                    'add': {
+                        'text': 'Add next',
+                        'class': 'btn-form-submit'
+                    },
+                    'remove': {
+                        'text': 'Remove last',
+                        'class': 'btn-form-cancel'
+                    }
+                },
+                'row': {
+                    'selector': 'fieldset',
+                    'removeButton': $('<a>').html('x')
+                        .attr('href','javascript:void(0);')
+                        .addClass('cloner-row-remove')
+                }
+            }, options);
+
             var addBtn = $('<a>').html(options.buttons.add.text)
                 .attr('href','javascript:void(0);')
                 .addClass('cloner-add').addClass(options.buttons.add.class);
@@ -120,14 +104,16 @@
             });
 
             removeRowBtn.on('click', function() {
-                $(this).parent().remove();
-                rowCounter--;
+                if (cloneContainer.children().length > 1) {
+                    $(this).parent().remove();
+                    rowCounter--;
+                } else {
+                    cloneContainer.find('input, textarea, select').val('');
+                }
             });
 
             cloneContainer.find(options.row.selector).each(function() {
-                if ($(this).index > 1) {
-                    removeRowBtn.clone(true).appendTo($(this));
-                }
+                removeRowBtn.clone(true).appendTo($(this));
             });
         });
     };
