@@ -56,7 +56,7 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
         ));
 
         $html = <<<RENDERED
-<select id="select" name="select[]" multiple="multiple" data-vegas-multiselect="1">
+<input type="hidden" name="select[]" /><select id="select" name="select[]" multiple="multiple" data-vegas-multiselect="1">
 	<option value="test1">foo</option>
 	<option value="test2">bar</option>
 	<option value="test3">baz</option>

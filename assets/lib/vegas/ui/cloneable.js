@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 (function($) {
-    $.fn.vegasCloner = function(options) {
+    $.fn.vegasCloner = function(customOptions) {
         var prepareField = function(element, rowCounter) {
             var preparedField = element.clone();
 
@@ -58,7 +58,7 @@
                         .attr('href','javascript:void(0);')
                         .addClass('cloner-row-remove')
                 }
-            }, options);
+            }, customOptions);
 
             var addBtn = $('<a>').html(options.buttons.add.text)
                 .attr('href','javascript:void(0);')

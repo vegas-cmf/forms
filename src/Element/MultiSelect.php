@@ -22,6 +22,7 @@
  */
 namespace Vegas\Forms\Element;
 
+use Phalcon\Forms\Element\Hidden;
 use Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
 
 class MultiSelect extends Select implements AssetsInjectableInterface
@@ -39,9 +40,10 @@ class MultiSelect extends Select implements AssetsInjectableInterface
     public function render($attributes = array())
     {
         $attributes['name'] = $this->getName().'[]';
-        
+        $hiddenField = new Hidden($attributes['name']);
+
         $this->addAssets();
-        return parent::render($attributes);
+        return $hiddenField->render().parent::render($attributes);
     }
 
     private function addAssets()
