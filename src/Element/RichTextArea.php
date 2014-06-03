@@ -43,7 +43,6 @@ class RichTextArea extends TextArea implements AssetsInjectableInterface
         }
 
         $this->assets->addCss('assets/vendor/jquery-ui/themes/base/jquery-ui.css');
-        $this->assets->addCss('assets/vendor/el-finder/src/elfinder/css/elfinder.css');
 
         $this->assets->addJs('assets/vendor/ckeditor/ckeditor.js');
         $this->assets->addJs('assets/vendor/ckeditor/adapters/jquery.js');
