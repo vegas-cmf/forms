@@ -385,21 +385,6 @@ class Upload extends File implements AssetsInjectableInterface
 
         $this->assets->addJs('assets/vendor/jquery-uploader/jquery-uploader.js');
         $this->assets->addJs('assets/js/lib/vegas/ui/upload.js');
-        $this->assets->addJs('assets/vendor/jquery-ui/ui/jquery.ui.widget.js');
-        $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image.js');
-        $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image-ios.js');
-        $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image-orientation.js');
-        $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image-meta.js');
-        $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image-exif.js');
-        $this->assets->addJs('assets/vendor/blueimp-load-image/js/load-image-exif-map.js');
-        $this->assets->addJs('assets/vendor/blueimp-canvas-to-blob/js/canvas-to-blob.min.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.iframe-transport.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.fileupload.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.fileupload-process.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.fileupload-image.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.fileupload-audio.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.fileupload-video.js');
-        $this->assets->addJs('assets/vendor/blueimp-file-upload/js/jquery.fileupload-validate.js');
     }
 
     /**
