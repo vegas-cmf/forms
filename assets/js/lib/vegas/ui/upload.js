@@ -1,9 +1,10 @@
 $(document).ready(function() {
 
     $('input[type="file"][data-form-element-upload]').each(function() {
+        var uploader = $(this);
 
         var renumber = function() {
-            $('form').each(function() {
+            uploader.closest('form').each(function() {
                 var index = 0;
 
                 $(this).find('[data-jq-upload-preview]>div').each(function() {
@@ -28,7 +29,7 @@ $(document).ready(function() {
             });
         };
 
-        $(this).closest('form').each(function() {
+        uploader.closest('form').each(function() {
             $(this).find('[data-jq-upload-preview-stored]').find('button').click(function(clickEvent) {
                 $(this).closest('[data-jq-upload-preview-stored]').remove();
                 clickEvent.preventDefault();
@@ -36,13 +37,13 @@ $(document).ready(function() {
         });
 
         var options = {
-            url: $(this).data('url'),
+            url: uploader.data('url'),
             preview: {
-                selector: '[data-jq-upload-preview]'
+                selector: '[data-for-id=' + uploader.data('id') + '] [data-jq-upload-preview]'
             },
-            selectFileText: $(this).data('button-add-label'),
+            selectFileText: uploader.data('button-add-label'),
             trigger: {
-                type:  $(this).data('trigger-type'),
+                type:  uploader.data('trigger-type'),
                 attributes: {
                     class: 'btn btn-form-submit'
                 }
@@ -65,7 +66,7 @@ $(document).ready(function() {
                 }
             },
             error: {
-                selector: '[data-jq-upload-error]',
+                selector: '[data-for-id=' + uploader.data('id') + '] [data-jq-upload-error]',
                 attributes: {
                     style: 'margin:20px;padding:20px;border:1px solid #e51902; color:#e51902;border-radius:4px;'
                 }
@@ -84,7 +85,7 @@ $(document).ready(function() {
                         var template = Handlebars.compile(source);
                         var context = {};
 
-                        context[baseElements[index].name] = 'files[0][' + baseElements[index].name + ']';
+                        context[baseElements[index].name] = config.input.attr('id') + '[0][' + baseElements[index].name + ']';
 
                         var html = template(context);
                         templatesHtml += html;
@@ -112,11 +113,11 @@ $(document).ready(function() {
 
                         var inputHidden = document.createElement('input');
                         inputHidden.setAttribute('type', 'hidden');
-                        inputHidden.setAttribute('name', 'files[0][file_id]');
+                        inputHidden.setAttribute('name', config.input.attr('id') + '[0][file_id]');
                         inputHidden.setAttribute('style', 'display:none');
                         inputHidden.value = file.file_id;
 
-                        $(config.preview).find('button:last').after(inputHidden);
+                        uploader.closest(config.preview).find('button:last').after(inputHidden);
                     }
 
                     renumber();
@@ -129,7 +130,7 @@ $(document).ready(function() {
         if ($(this).attr('multiple') === 'multiple') {
             options['buttons'].uploadAll = {
                 text: 'Upload all files',
-                    attributes: {
+                attributes: {
                     class: 'btn btn-form-submit'
                 }
             };
@@ -173,6 +174,6 @@ $(document).ready(function() {
             options['maxFileSize'] = $(this).data('max-file-size');
         }
 
-        $(this).upload(options);
+        uploader.upload(options);
     });
 });

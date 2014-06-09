@@ -56,6 +56,8 @@ class Renderer
 
     private function getDecorator()
     {
+        $uploadAttributes = $this->upload->getUploadAttributes();
+
         $baseElementsTemplates = '';
         $baseElements = $this->upload->getBaseElements();
         if(isset($baseElements)) {
@@ -68,7 +70,7 @@ class Renderer
         }
 
         return
-            '<div data-form-element-upload-wrapper="true">' .
+            '<div data-for-id="'.$uploadAttributes['data-id'].'" data-form-element-upload-wrapper="true">' .
                 '%s' .
                 '<div data-jq-upload-error></div>'.
                 '<div data-jq-upload-preview></div>'.

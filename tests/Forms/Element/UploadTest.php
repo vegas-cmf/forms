@@ -44,7 +44,7 @@ class UploadTest extends \PHPUnit_Framework_TestCase
 
         $this->form->get('upload')->setAssetsManager($this->di->get('assets'));
 
-        $generatedHtmlLength = strlen('<div data-form-element-upload-wrapper="true"><input type="file" id="upload" name="upload" data-form-element-upload="true" data-id="537ca0e52a49c" data-trigger-type="button" data-button-add-label="Add file" /><div data-jq-upload-error></div><div data-jq-upload-preview></div><div data-templates></div></div>');
+        $generatedHtmlLength = strlen('<div data-for-id="537ca0e52a49c" data-form-element-upload-wrapper="true"><input type="file" id="upload" name="upload" data-form-element-upload="true" data-id="537ca0e52a49c" data-trigger-type="button" data-button-add-label="Add file" /><div data-jq-upload-error></div><div data-jq-upload-preview></div><div data-templates></div></div>');
 
         $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('upload')->getAssetsManager());
         $this->assertEquals($generatedHtmlLength, strlen($this->form->get('upload')->render()));
