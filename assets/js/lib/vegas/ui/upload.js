@@ -117,7 +117,7 @@ $(document).ready(function() {
                         inputHidden.setAttribute('style', 'display:none');
                         inputHidden.value = file.file_id;
 
-                        uploader.closest(config.preview).find('button:last').after(inputHidden);
+                        $(config.preview).find('button:last').after(inputHidden);
                     }
 
                     renumber();
