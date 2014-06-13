@@ -52,7 +52,7 @@ class Form extends \Phalcon\Forms\Form
     {
         $reflectionClass = new \ReflectionClass($element);
         $elementType = strtolower(str_replace($reflectionClass->getNamespaceName() . '\\', '', $reflectionClass->getName()));
-        $element->setUserOption('type', $elementType);
+        $element->setUserOption('_type', $elementType);
         // hax even when $postion and $type are null by default, call parent::add($element, $postion, $type)
         // causes exception : Array position does not exist
         if (!is_null($postion) || !is_null($type)) {
