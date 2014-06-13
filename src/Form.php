@@ -39,7 +39,29 @@ class Form extends \Phalcon\Forms\Form
             }
         }
     }
-    
+
+    /**
+     * Adds an element to the form
+     *
+     * @param \Phalcon\Forms\ElementInterface $element
+     * @param string $postion
+     * @param bool $type If $type is TRUE, the element wile add before $postion, else is after
+     * @return \Phalcon\Forms\Form
+     */
+    public function add($element, $postion = null, $type = null)
+    {
+        $reflectionClass = new \ReflectionClass($element);
+        $elementType = strtolower(str_replace($reflectionClass->getNamespaceName() . '\\', '', $reflectionClass->getName()));
+        $element->setUserOption('type', $elementType);
+        // hax even when $postion and $type are null by default, call parent::add($element, $postion, $type)
+        // causes exception : Array position does not exist
+        if (!is_null($postion) || !is_null($type)) {
+            return parent::add($element, $postion, $type);
+        } else {
+            return parent::add($element);
+        }
+    }
+
     /**
      * Remove empty strings from array.
      * 
