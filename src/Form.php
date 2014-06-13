@@ -32,9 +32,10 @@ class Form extends \Phalcon\Forms\Form
         foreach ($data As $name => $values) {
             if (is_array($values)) {
                 $nameArray = array($name);
-                
+
                 $values = $this->prepareValues($nameArray, $values);
-                $entity->$name = array_values($values);
+
+                $entity->$name = $this->reindex($values);
             }
         }
     }
@@ -84,5 +85,16 @@ class Form extends \Phalcon\Forms\Form
     private function passString($value)
     {
         return !is_array($value) && $value !== '';
+    }
+
+    private function reindex($values)
+    {
+        foreach ($values As $key => $value) {
+            if (!is_numeric($key)) {
+                return $values;
+            }
+        }
+
+        return array_keys($values);
     }
 }
