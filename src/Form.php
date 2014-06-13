@@ -97,4 +97,38 @@ class Form extends \Phalcon\Forms\Form
 
         return array_values($values);
     }
+
+    /**
+     * Return single value or value from array (based on $name).
+     * @param string $name
+     * @return mixed
+     */
+    public function getValue($name)
+    {
+        $matches = array();
+
+        if (preg_match('/^([a-zA-Z0-9\-\_]+)\[([a-zA-Z0-9\-\_]*)\](\[([a-zA-Z0-9\-\_]*)\])?$/', $name, $matches)) {
+            return $this->getArrayValue($matches);
+        }
+
+        return parent::getValue($name);
+    }
+
+    private function getArrayValue(array $matches)
+    {
+        $baseName = $matches[1];
+        $value = parent::getValue($baseName);
+
+        foreach ($matches As $key => $match) {
+            if ($key !== 0 && $key%2 === 0) {
+                if (isset($value[$match])) {
+                    $value = $value[$match];
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        return $value;
+    }
 }
