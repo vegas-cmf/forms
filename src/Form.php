@@ -95,6 +95,6 @@ class Form extends \Phalcon\Forms\Form
             }
         }
 
-        return array_keys($values);
+        return array_values($values);
     }
 }
