@@ -10,7 +10,7 @@
  */
 (function($) {
     $.fn.vegasCloner = function(customOptions) {
-        var prepareField = function(element, rowCounter) {
+        self.prepareField = function(element, rowCounter) {
             var preparedField = element.clone();
 
             preparedField.find('[name]').each(function() {
@@ -40,6 +40,15 @@
             return preparedField.show();
         };
 
+        self.sortable = function(cloneContainer, options) {
+            if ($.fn.sortable) {
+                cloneContainer.sortable({
+                    forcePlaceholderSize: true,
+                    items: ':visible'
+                }).bind('sortupdate', options.sortable.callback);
+            }
+        };
+
         $(this).each(function() {
             var options = $.extend({
                 'buttons': {
@@ -57,6 +66,24 @@
                     'removeButton': $('<a>').html('x')
                         .attr('href','javascript:void(0);')
                         .addClass('cloner-row-remove')
+                },
+                'sortable': {
+                    'callback': function() {
+                        var orderIndicator = 0;
+
+                        $(options.row.selector).each(function() {
+                            $(this).find(':input').each(function() {
+                                var matches = $(this).attr('name').match(/([^\[]*\[)(\d+)(\].*)/);
+
+                                if (matches) {
+                                    $(this).attr('name', matches[1]+orderIndicator+matches[3]);
+                                    console.log(matches[1]+orderIndicator+matches[3]);
+                                }
+                            });
+
+                            orderIndicator++;
+                        });
+                    }
                 }
             }, customOptions);
 
@@ -85,13 +112,15 @@
             var rowCounter = cloneContainer.children().length;
 
             addBtn.on('click',function() {
-                var element = prepareField(clonerBase, rowCounter);
+                var element = self.prepareField(clonerBase, rowCounter);
 
                 removeRowBtn.clone(true).appendTo(element);
                 element.appendTo(cloneContainer);
 
                 cloneContainer.trigger('cloned');
                 rowCounter++;
+
+                self.sortable(cloneContainer, options);
             });
 
             removeBtn.on('click',function() {
@@ -101,6 +130,8 @@
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
+
+                self.sortable(cloneContainer, options);
             });
 
             removeRowBtn.on('click', function() {
@@ -110,11 +141,15 @@
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
+
+                self.sortable(cloneContainer, options);
             });
 
             cloneContainer.find(options.row.selector).each(function() {
                 removeRowBtn.clone(true).appendTo($(this));
             });
+
+            self.sortable(cloneContainer, options);
         });
     };
 })(jQuery);
