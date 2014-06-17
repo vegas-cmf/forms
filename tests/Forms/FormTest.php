@@ -11,6 +11,7 @@
  */
 namespace Vegas\Tests\Forms;
 use Phalcon\Forms\Element\Text;
+use Vegas\Validation\Validator\PresenceOf;
 use Vegas\Forms\Element\Cloneable;
 use Vegas\Forms\Form;
 use Vegas\Tests\Stub\Models\FakeModel;
@@ -40,10 +41,15 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $form->add(new Text('test1[]'));
         $form->add(new Text('test1[]'));
 
-        $form->add(new Text('test2[en]'));
+        $text = new Text('test2[en]');
+        $text->addValidator(new PresenceOf());
+
+        $form->add($text);
         $form->add(new Text('test2[nl]'));
 
         $form->bind($values, $model);
+
+        $this->assertTrue($form->isValid());
 
         $this->assertEquals($model->test1[0], $form->getValue('test1[2]'));
         $this->assertEquals($model->test1[1], $form->getValue('test1[3]'));

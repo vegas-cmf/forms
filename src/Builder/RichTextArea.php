@@ -13,7 +13,7 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\RichTextArea as RichTextAreaInput,
-    Phalcon\Validation\Validator\PresenceOf;
+    Vegas\Validation\Validator\PresenceOf;
 
 trait RichTextArea
 {

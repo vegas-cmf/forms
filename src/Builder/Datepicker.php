@@ -13,7 +13,7 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\Datepicker as DatepickerInput,
-    Phalcon\Validation\Validator\PresenceOf;
+    Vegas\Validation\Validator\PresenceOf;
 
 trait Datepicker
 {

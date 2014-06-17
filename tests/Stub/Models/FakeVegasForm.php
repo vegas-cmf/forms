@@ -13,7 +13,7 @@ namespace Vegas\Tests\Stub\Models;
 
 use \Vegas\Forms\Form,
     \Phalcon\Forms\Element\Text,
-    \Phalcon\Validation\Validator\PresenceOf;
+    \Vegas\Validation\Validator\PresenceOf;
 
 class FakeVegasForm extends Form
 {

@@ -13,8 +13,8 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\Select as SelectInput,
-    Phalcon\Validation\Validator\PresenceOf,
-    Phalcon\Validation\Validator\InclusionIn;
+    Vegas\Validation\Validator\PresenceOf,
+    Vegas\Validation\Validator\InclusionIn;
 
 trait Select
 {

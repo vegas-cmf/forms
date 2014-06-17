@@ -13,7 +13,7 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\InputSettings,
     Phalcon\Forms\Element\Text as TextInput,
-    Phalcon\Validation\Validator\PresenceOf;
+    Vegas\Validation\Validator\PresenceOf;
 
 trait Text
 {

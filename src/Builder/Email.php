@@ -13,7 +13,7 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\InputSettings,
     Phalcon\Forms\Element\Text,
-    Phalcon\Validation\Validator\PresenceOf,
+    Vegas\Validation\Validator\PresenceOf,
     Vegas\Validation\Validator\Email as EmailValidator;
 
 trait Email

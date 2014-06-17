@@ -16,7 +16,7 @@ use Vegas\Forms\DataProvider\Exception\NotFoundException,
     Vegas\Forms\Element\Select,
     Phalcon\Forms\Element\Text,
     Phalcon\Forms\Element\Check,
-    Phalcon\Validation\Validator\PresenceOf;
+    Vegas\Validation\Validator\PresenceOf;
 
 /**
  * Subform used to validate settings for each created input element in FormFactory
