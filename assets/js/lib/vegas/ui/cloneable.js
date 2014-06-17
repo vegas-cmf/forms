@@ -77,7 +77,6 @@
 
                                 if (matches) {
                                     $(this).attr('name', matches[1]+orderIndicator+matches[3]);
-                                    console.log(matches[1]+orderIndicator+matches[3]);
                                 }
                             });
 
@@ -119,8 +118,6 @@
 
                 cloneContainer.trigger('cloned');
                 rowCounter++;
-
-                self.sortable(cloneContainer, options);
             });
 
             removeBtn.on('click',function() {
@@ -130,8 +127,6 @@
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
-
-                self.sortable(cloneContainer, options);
             });
 
             removeRowBtn.on('click', function() {
@@ -141,8 +136,6 @@
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
-
-                self.sortable(cloneContainer, options);
             });
 
             cloneContainer.find(options.row.selector).each(function() {
@@ -150,6 +143,10 @@
             });
 
             self.sortable(cloneContainer, options);
+
+            cloneContainer.on('cloned', function() {
+                self.sortable(cloneContainer, options);
+            });
         });
     };
 })(jQuery);
