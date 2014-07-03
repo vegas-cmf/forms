@@ -45,6 +45,7 @@ class Renderer
         }
 
         $file->setAttribute('data-button-add-label', $label);
+        $file->setAttribute('value', null);
 
         return $file->render();
     }
