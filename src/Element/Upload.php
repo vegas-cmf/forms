@@ -150,6 +150,7 @@ class Upload extends File implements AssetsInjectableInterface
     {
         $this->addAssets();
         $this->setUploadAttributes();
+        $this->_value = null;
 
         $renderer = new Upload\Renderer($this, $attributes);
 
