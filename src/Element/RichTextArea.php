@@ -42,8 +42,6 @@ class RichTextArea extends TextArea implements AssetsInjectableInterface
             throw new InvalidAssetsManagerException();
         }
 
-        $this->assets->addCss('assets/css/elfinder/css/elfinder.min.css');
-
         $this->assets->addJs('assets/vendor/ckeditor/ckeditor.js');
         $this->assets->addJs('assets/vendor/ckeditor/adapters/jquery.js');
         $this->assets->addJs('assets/js/lib/vegas/ui/richtext.js');
