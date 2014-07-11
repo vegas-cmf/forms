@@ -70,7 +70,7 @@ class Renderer
             }
         }
 
-        return
+        $html =
             '<div data-for-id="'.$uploadAttributes['data-id'].'" data-form-element-upload-wrapper="true">' .
                 '%s' .
                 '<div data-jq-upload-error></div>'.
@@ -79,6 +79,62 @@ class Renderer
                     $baseElementsTemplates .
                 '</div>' .
             '</div>';
+
+        if($this->upload->getRenderPreview()) {
+
+            $values = $this->upload->getValue();
+
+            if(!empty($values) && is_array($values)) {
+                foreach($values as $index => $file) {
+                    $html .= $this->getPreviewDecorator($file);
+                }
+            }
+        }
+
+        return $html;
     }
 
+    private function getPreviewDecorator($file)
+    {
+        $fileField = \Vegas\Media\Model\File::findById($file['file_id']);
+
+        $decorator = new \Vegas\Media\File\Decorator($fileField);
+
+        $baseElementsHtml = '';
+
+        $baseElements = $this->upload->getBaseElements();
+        if(!empty($baseElements)) {
+            foreach($baseElements as $baseElement) {
+                $baseElementName = $baseElement->getName();
+                $originalName = substr($baseElementName, 2, -2);
+                $defaultValue = null;
+                if(!empty($file[$originalName])) {
+                    $defaultValue = $file[$originalName];
+                }
+                $baseElement->setDefault($defaultValue);
+                $baseElementHtml = $baseElement->render();
+
+                $baseElementsHtml .= str_replace($baseElementName, $this->upload->getName().'['.$index.']['.$originalName.']', $baseElementHtml);
+            }
+        }
+
+        $fileHtml = $decorator->getFileInfo()->getBasename();
+        $fileMimeType = $decorator->getMimeType();
+        if(!empty($fileMimeType) && is_numeric(strpos($fileMimeType, 'image'))) {
+            $fileHtml = '<img src="'.$decorator->getUrl().'" width="190" >';
+        }
+
+        return '
+            <div data-jq-upload-preview-stored>
+                <p>
+                    '.$fileHtml.'
+                    <br><br>
+                    '.$baseElementsHtml.'
+                    <input type="hidden" name="'.$this->upload->getName().'['.$index.'][file_id]" value="'.$decorator->getId().'">
+                    <br>
+                    <button type="button" class="btn btn-danger" data-button="cancel" style="margin-left: 10px; float: right;">Remove</button>
+                </p>
+            </div>
+        ';
+    }
 }

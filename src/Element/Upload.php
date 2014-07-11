@@ -124,6 +124,13 @@ class Upload extends File implements AssetsInjectableInterface
     private $uploadAttributes = null;
 
     /**
+     * Describes if preview items (for example for images) should be displayed when you edit form with upload element.
+     *
+     * @var bool
+     */
+    private $renderPreview = true;
+
+    /**
      * Constructs upload element
      *
      * @param string $name
@@ -138,6 +145,26 @@ class Upload extends File implements AssetsInjectableInterface
         }
 
         parent::__construct($name, $attributes);
+    }
+
+    /**
+     * Sets flag that describes if preview  should be rendered
+     *
+     * @param $renderPreview
+     */
+    public function setRenderPreview($renderPreview)
+    {
+        $this->renderPreview = $renderPreview;
+    }
+
+    /**
+     * Returns the flag that describes if preview  should be rendered
+     *
+     * @return mixed
+     */
+    public function getRenderPreview()
+    {
+        return $this->renderPreview;
     }
 
     /**
