@@ -29,7 +29,7 @@ namespace Vegas\Forms\Element;
 
 use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException,
     Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException,
-    Vegas\Validation\Validator\Cloneable As CloneableValidator,
+    Vegas\Forms\Element\Cloneable\Validation\Extender As ValidationExtender,
     Phalcon\Forms\Element;
 
 class Cloneable extends Element implements AssetsInjectableInterface
@@ -42,7 +42,7 @@ class Cloneable extends Element implements AssetsInjectableInterface
     final public function __construct($name, $attributes = null)
     {
         parent::__construct($name, $attributes);
-        $this->addValidator(new CloneableValidator(array('cloneable' => $this)));
+        $this->addValidator(new ValidationExtender(array('cloneable' => $this)));
     }
 
     public function setBaseElements(array $elements)
