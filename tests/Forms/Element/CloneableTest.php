@@ -12,6 +12,7 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
+use Phalcon\Validation\Validator\PresenceOf;
 use Vegas\Forms\Element\Cloneable;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
@@ -107,6 +108,47 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
             '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /></fieldset></div>',
             $this->form->get('cloneable_field')->render()
         );
+    }
+
+    public function testValidationExtender()
+    {
+        $cloneable = $this->prepareValidCloneableField();
+        $cloneable->getBaseElement('test1')->addValidator(new PresenceOf());
+
+        $this->form->add($cloneable);
+
+        $this->assertFalse($this->form->isValid(array(
+            'cloneable_field' => array(
+                array('test1' => ''),
+                array('test1' => '')
+            ),
+            'fake_field' => 'foo'
+        )));
+
+        $this->assertFalse($this->form->isValid(array(
+            'cloneable_field' => array(
+                array('test1' => 'bar'),
+                array('test1' => '')
+            ),
+            'fake_field' => 'foo'
+        )));
+
+        $this->assertTrue($this->form->isValid(array(
+            'cloneable_field' => array(
+                array('test1' => 'bar'),
+                array('test1' => 'baz')
+            ),
+            'fake_field' => 'foo'
+        )));
+    }
+
+    public function testValidationExtenderForCloneableOnly()
+    {
+        $this->form->get('fake_field')->addValidator(new Cloneable\Validation\Extender());
+
+        $this->assertFalse($this->form->isValid(array(
+            'fake_field' => 'foo'
+        )));
     }
 
     private function prepareValidCloneableField()
