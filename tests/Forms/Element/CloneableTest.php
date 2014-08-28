@@ -13,6 +13,7 @@ namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Email;
 use Vegas\Forms\Element\Cloneable;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
@@ -150,15 +151,131 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
             'fake_field' => 'foo'
         )));
     }
+	
+	public function testAddAssetsAddsSortable()
+	{
+		$cloneable = $this->prepareValidCloneableField();
+		$cloneable->setUserOption('sortable', true);
+		
+		$this->form->add($cloneable);
+		$this->form->get('cloneable_field')->getRows();
+			
+		$sortableAssetPath = 'assets/vendor/html5sortable/jquery.sortable.js';
+		$assets = $this->di->get('assets');
+		$result = false;
+		
+		foreach ($assets->getJs()->getResources() as $resource) {
+			if ($resource->getPath() === $sortableAssetPath) {
+				$result = true;
+				break;
+			}
+		}
+        
+		$this->assertTrue($result);
+	}
+	
+	public function testRowGet()
+	{
+		$cloneable = $this->prepareValidCloneableField();
+		
+		$this->form->add($cloneable);
+		$cloneableObj = $this->form->get('cloneable_field');
+		
+		$rows = $cloneableObj->getRows();
+		$test1 = $rows[0];
+		$test2 = $test1->get('test2');
+		
+		$this->assertInstanceOf('\Phalcon\Forms\Element\Text', $test2);
+	}
+	
+	public function testGetArrayedValue()
+	{
+		$cloneableName = 'foo_cloneable';
+        $cloneable = new Cloneable($cloneableName);
+        $cloneable->setAssetsManager($this->di->get('assets'));
+		
+		$element = new \Phalcon\Forms\Element\Text('email_filter');
+		$element->addFilter(new Email(['filter' => 'email']));		
+        $cloneable->addBaseElement($element);
+		
+		$element = new \Phalcon\Forms\Element\Text('string_filter');
+		$element->addFilter(new Email(['filter' => 'string']));		
+        $cloneable->addBaseElement($element);
+		
+		$element = new \Phalcon\Forms\Element\Text('int_filter');
+		$element->addFilter(new Email(['filter' => 'int']));		
+        $cloneable->addBaseElement($element);
+		
+		$element = new \Phalcon\Forms\Element\Text('float_filter');
+		$element->addFilter(new Email(['filter' => 'float']));		
+        $cloneable->addBaseElement($element);
+		
+		$element = new \Phalcon\Forms\Element\Text('alphanum_filter');
+		$element->addFilter(new Email(['filter' => 'alphanum']));		
+        $cloneable->addBaseElement($element);
+		
+		$this->form->add($cloneable);
+		$cloneableObj = $this->form->get($cloneableName);
+		$cloneableObj->getRows();
+		
+		$rows = $cloneableObj->getRows();
+		$test1 = $rows[0];
+		$test1->setValues([
+			'email_filter' => '\\email _ value<>',
+			'string_filter' => '<foo>value</bar>',
+			'int_filter' => 'foo11689bar$^%&%&',
+			'float_filter' => 'sk1df%2*%&3*I.Jd5f6g',
+			'alphanum_filter' => '!@#*][\\Foo<>?Bar)*(Baz',
+		]);
+		
+		$expectedValues = [
+			'email_filter' => 'email_value',
+			'string_filter' => 'value',
+			'int_filter' => '11689',
+			'float_filter' => '123.56',
+			'alphanum_filter' => 'FooBarBaz',
+		];
+		
+		$elements = $test1->getElements();
+		foreach ($expectedValues as $label => $expectedValue) {
+			$this->assertSame($expectedValue, $elements[$label]->getValue());
+		}
+	}
+	
+	public function testGetSingleFieldNameReturnsOneElementName()
+	{
+		$cloneableName = 'foo_cloneable';
+        $cloneable = new Cloneable($cloneableName);
+        $cloneable->setAssetsManager($this->di->get('assets'));
+		
+		$filedName = 'no_filter';
+		$element = new \Phalcon\Forms\Element\Text($filedName);
+        $cloneable->addBaseElement($element);
+		
+		$this->form->add($cloneable);
+		$cloneableObj = $this->form->get($cloneableName);
+		$rows = $cloneableObj->getRows();
+		
+		$test1 = $rows[0];
+		$expectedValue = 'whatever..';
+		$test1->setValues($expectedValue);
+		
+		$elements = $test1->getElements();
+		$this->assertCount(1, $elements);
+		$this->assertTrue(isset($elements[$filedName]));
+		$this->assertSame($expectedValue, $elements[$filedName]->getValue());
+	}
 
     private function prepareValidCloneableField()
     {
         $cloneable = new Cloneable('cloneable_field');
-        $cloneable->setAssetsManager($this->di->get('assets'));
+		
+        $assets = $this->di->get('assets');
+        $cloneable->setAssetsManager($assets);
+        $this->assertSame($assets, $cloneable->getAssetsManager());
 
         $cloneable->setBaseElements(array(new \Phalcon\Forms\Element\Text('test1')));
         $cloneable->addBaseElement(new \Phalcon\Forms\Element\Text('test2'));
-
         return $cloneable;
     }
 }
