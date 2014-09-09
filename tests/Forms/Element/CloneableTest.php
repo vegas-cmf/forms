@@ -2,9 +2,9 @@
 /**
  * This file is part of Vegas package
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,15 +32,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     public function testInvalidSetup()
     {
         $cloneable = new Cloneable('cloneable_field');
-        
-        try {
-            $cloneable->render();
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
-        }
-        
-        $cloneable->setAssetsManager($this->di->get('assets'));
-        
+
         try {
             $cloneable->render();
         } catch (\Exception $ex) {
@@ -152,7 +144,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         )));
     }
 	
-	public function testAddAssetsAddsSortable()
+	/*public function testAddAssetsAddsSortable()
 	{
 		$cloneable = $this->prepareValidCloneableField();
 		$cloneable->setUserOption('sortable', true);
@@ -172,7 +164,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 		}
         
 		$this->assertTrue($result);
-	}
+	}*/
 	
 	public function testRowGet()
 	{
@@ -192,7 +184,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
-        $cloneable->setAssetsManager($this->di->get('assets'));
+        //$cloneable->setAssetsManager($this->di->get('assets'));
 		
 		$element = new \Phalcon\Forms\Element\Text('email_filter');
 		$element->addFilter(new Email(['filter' => 'email']));		
@@ -246,8 +238,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
-        $cloneable->setAssetsManager($this->di->get('assets'));
-		
+
 		$filedName = 'no_filter';
 		$element = new \Phalcon\Forms\Element\Text($filedName);
         $cloneable->addBaseElement($element);
@@ -269,11 +260,6 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     private function prepareValidCloneableField()
     {
         $cloneable = new Cloneable('cloneable_field');
-		
-        $assets = $this->di->get('assets');
-        $cloneable->setAssetsManager($assets);
-        $this->assertSame($assets, $cloneable->getAssetsManager());
-
         $cloneable->setBaseElements(array(new \Phalcon\Forms\Element\Text('test1')));
         $cloneable->addBaseElement(new \Phalcon\Forms\Element\Text('test2'));
         return $cloneable;

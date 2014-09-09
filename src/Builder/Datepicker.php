@@ -4,7 +4,7 @@
  *
  * @author Radosław Fąfara <radek@archdevil.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,8 +24,7 @@ trait Datepicker
     public function buildDatepicker(InputSettings $settings)
     {
         $name = $settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $settings->getValue(InputSettings::IDENTIFIER_PARAM) : 'Datepicker-'.mt_rand();
-        $element = (new DatepickerInput($name))
-                ->setAssetsManager($settings->assets);
+        $element = new DatepickerInput($name);
         
         $settings->getValue(InputSettings::REQUIRED_PARAM) && $element->addValidator(new PresenceOf());
         $settings->getValue(InputSettings::LABEL_PARAM) && $element->setLabel($settings->getValue(InputSettings::LABEL_PARAM));

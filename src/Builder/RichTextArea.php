@@ -4,7 +4,7 @@
  *
  * @author Radosław Fąfara <radek@archdevil.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,8 +25,7 @@ trait RichTextArea
     public function buildRichTextArea(InputSettings $settings)
     {
         $name = $settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $settings->getValue(InputSettings::IDENTIFIER_PARAM) : 'RichTextArea-'.mt_rand();
-        $element = (new RichTextAreaInput($name))
-                ->setAssetsManager($settings->assets);
+        $element = new RichTextAreaInput($name);
         
         $settings->getValue(InputSettings::REQUIRED_PARAM) && $element->addValidator(new PresenceOf());
         $settings->getValue(InputSettings::LABEL_PARAM) && $element->setLabel($settings->getValue(InputSettings::LABEL_PARAM));

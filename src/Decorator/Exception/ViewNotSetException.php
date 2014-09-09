@@ -2,8 +2,6 @@
 /**
  * This file is part of Vegas package
  *
- * Cloneable element is representation of dynamic data set.
- *
  * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
  * @homepage https://github.com/vegas-cmf
@@ -11,13 +9,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Vegas\Forms\DataProvider;
 
-/**
- *
- * @package Vegas\Forms\DataProvider\Exception
- */
-class Exception extends \Vegas\Forms\Exception
+namespace Vegas\Forms\Decorator\Exception;
+
+use Vegas\Forms\Decorator\Exception;
+
+class ViewNotSetException extends Exception
 {
-
+    protected $message = 'DI does not have view dependency set.';
 }

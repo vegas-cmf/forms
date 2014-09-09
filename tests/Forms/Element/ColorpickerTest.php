@@ -2,9 +2,9 @@
 /**
  * This file is part of Vegas package
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,26 +25,29 @@ class ColorpickerTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->di = DI::getDefault();
+
         $this->model = new FakeModel();
         $this->form = new FakeVegasForm();
 
         $content = new Colorpicker('content');
+        $content->setAttribute('class', 'test1');
         $this->form->add($content);
     }
 
     public function testRender()
     {
-        $this->assertNull($this->form->get('content')->getAssetsManager());
-
         try {
             $this->form->get('content')->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
         }
 
-        $this->form->get('content')->setAssetsManager($this->di->get('assets'));
+        $this->form->get('content')->setDecoratorDi($this->di);
 
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('content')->getAssetsManager());
-        $this->assertEquals('<input type="text" id="content" name="content" vegas-colorpicker="1" />', $this->form->get('content')->render());
+        $this->assertEquals('<input type="text" class="test1" name="content" value=""/>', $this->form->get('content')->render());
+
+        $this->form->get('content')->getDecorator()->setTemplateName('bootstrap');
+        $this->assertEquals('<input type="text" class="test1" name="content" value="" vegas-colorpicker />', $this->form->get('content')->render());
     }
 }

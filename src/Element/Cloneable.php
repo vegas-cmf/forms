@@ -18,9 +18,9 @@
  * $this->add($answers);
  * </code>
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,7 +32,7 @@ use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException,
     Vegas\Forms\Element\Cloneable\Validation\Extender As ValidationExtender,
     Phalcon\Forms\Element;
 
-class Cloneable extends Element implements AssetsInjectableInterface
+class Cloneable extends Element
 {
     private $assets;
     private $baseElements = array();
@@ -92,7 +92,7 @@ class Cloneable extends Element implements AssetsInjectableInterface
         return $renderer->run();
     }
 
-    private function addAssets()
+    /*private function addAssets()
     {
         if ($this->getUserOption('sortable',false)) {
             $this->assets->addJs('assets/vendor/html5sortable/jquery.sortable.js');
@@ -100,14 +100,10 @@ class Cloneable extends Element implements AssetsInjectableInterface
         }
         $this->assets->addCss('assets/css/common/cloneable.css');
         $this->assets->addJs('assets/js/lib/vegas/ui/cloneable.js');
-    }
+    }*/
 
     private function validate()
     {
-        if(!$this->assets) {
-            throw new Exception\InvalidAssetsManagerException();
-        }
-
         if (empty($this->baseElements)) {
             throw new BaseElementNotSetException();
         }
@@ -117,16 +113,6 @@ class Cloneable extends Element implements AssetsInjectableInterface
                 throw new CantInheritCloneableException();
             }
         }
-    }
-
-    public function getAssetsManager() {
-        return $this->assets;
-    }
-
-    public function setAssetsManager(\Phalcon\Assets\Manager $assets) {
-        $this->assets = $assets;
-
-        return $this;
     }
 
     public function getRows()
@@ -141,7 +127,7 @@ class Cloneable extends Element implements AssetsInjectableInterface
     private function generateRows()
     {
         $this->validate();
-        $this->addAssets();
+        //$this->addAssets();
 
         $this->rows = array();
 

@@ -11,11 +11,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Vegas\Forms\DataProvider;
+namespace Vegas\Forms\Decorator;
 
 /**
  *
- * @package Vegas\Forms\DataProvider\Exception
+ * @package Vegas\Forms\Element\Decorator\Exception
  */
 class Exception extends \Vegas\Forms\Exception
 {
