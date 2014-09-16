@@ -2,22 +2,23 @@
 /**
  * This file is part of Vegas package
  *
- * Cloneable element is representation of dynamic data set.
- *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Radosław Fąfara <radek@archdevil.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
  * @homepage https://bitbucket.org/amsdard/vegas-phalcon
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Vegas\Forms\Builder;
+
+namespace Vegas\Forms\Builder\Exception;
+
+use \Vegas\Forms\Builder\Exception as BuilderException;
 
 /**
- * Class Exception
- * @package Vegas\Forms\Builder
+ *
+ * @package Vegas\Forms\Exception
  */
-class Exception extends \Vegas\Forms\Exception
+class NotDefinedException extends BuilderException
 {
-
+    protected $message = 'Input builder not defined';
 }

@@ -14,19 +14,18 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
-    Vegas\Forms\Element\Datepicker as DatepickerInput;
+    Phalcon\Forms\Element\Password as PasswordInput;
 
 /**
- * Class Datepicker
+ * Class Password
  * @package Vegas\Forms\Builder
  */
-class Datepicker extends BuilderAbstract
+class Password extends BuilderAbstract
 {
     public function setElement()
     {
         $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : get_class($this). self::NAME_SEPARATOR . mt_rand();
-        $this->element = (new DatepickerInput($name))
-            ->setAssetsManager($this->settings->assets);
+        $this->element = new PasswordInput($name);
     }
 
 }

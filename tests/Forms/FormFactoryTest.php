@@ -80,15 +80,53 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         ]));
         parent::setUp();
     }
-    
+
     /**
      * Each of builders is "type" param for created inputs.
      */
-    public function testFormFactoryHasAvailableInputBuilders()
+    public function testFormFactoryIsAbleToAddBuilder()
     {
-        $this->assertTrue(method_exists($this->formFactory, 'buildEmail'));
-        $this->assertTrue(method_exists($this->formFactory, 'buildDatepicker'));
-        $this->assertTrue(method_exists($this->formFactory, 'buildSelect'));
+        $this->formFactory->addBuilder('\Vegas\Tests\Stub\Models\FakeBuilder');
+
+        $elements = $this->formFactory->getAvailableInputs();
+        $this->assertTrue(in_array('\Vegas\Tests\Stub\Models\FakeBuilder', $elements));
+
+        $data = [
+            [
+                'name'      => 'fakeUser',
+                'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
+                'required'  => true,
+                'label'     => 'Fill fake user'
+            ],
+            [
+                'name'      => 'fakeUser2',
+                'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
+                'required'  => true,
+                'label'     => 'Fill fake user'
+            ],
+            [
+                'name'      => 'fakeUser3',
+                'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
+                'required'  => true,
+                'label'     => 'Fill fake user'
+            ],
+            [
+                'name'      => 'fakeUser4',
+                'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
+                'required'  => true,
+                'label'     => 'Fill fake user'
+            ],
+            [
+                'name'      => 'fakeUser5',
+                'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
+                'required'  => true,
+                'label'     => 'Fill fake user'
+            ],
+        ];
+
+        $form = $this->formFactory->createForm($data);
+        $this->assertEquals(5, count($form->getElements()));
+
     }
     
     public function testCreateEmptyDynamicForm()
@@ -98,6 +136,49 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Vegas\Forms\Form', $form);
         $this->assertEmpty($form->getElements());
     }
+
+    public function testCreateDynamicForm()
+    {
+        $data = [
+            [
+                'name'      => 'userEmail',
+                'type'      => '\Vegas\Forms\Builder\Email',
+                'required'  => true,
+                'label'     => 'Fill e-mail address'
+            ],
+            [
+                'name'      => 'userPassword',
+                'type'      => '\Vegas\Forms\Builder\Password',
+                'required'  => true,
+                'label'     => 'Fill password'
+            ],
+            [
+                'name'      => 'userBirthdate',
+                'type'      => '\Vegas\Forms\Builder\Datepicker',
+                'required'  => true,
+                'label'     => 'Fill birthdate'
+            ],
+            [
+                'name'      => 'userName',
+                'type'      => '\Vegas\Forms\Builder\Text',
+                'required'  => true,
+                'label'     => 'Fill name'
+            ],
+        ];
+
+        $form = $this->formFactory->createForm($data);
+        $this->assertEquals(4, count($form->getElements()));
+
+        $validData = [
+            'userEmail'     => 'test@example.com',
+            'userPassword' => 'mySecretP@$sw0rd',
+            'userBirthdate' => '2014-01-01',
+            'userName' => 'Lester123'
+        ];
+
+        $this->assertTrue($form->isValid($validData));
+
+    }
     
     public function testCreateDynamicFormWithStaticElements()
     {
@@ -105,13 +186,13 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
             [   // Each array is an input element to be added.
                 // Keys used are specified in \Vegas\Forms\InputSettings as constants.
                 'name'      => 'userEmail',
-                'type'      => 'Email',
+                'type'      => '\Vegas\Forms\Builder\Email',
                 'required'  => true,
                 'label'     => 'Fill e-mail address'
             ],
             [
                 'name'      => 'userBirthdate',
-                'type'      => 'Datepicker',
+                'type'      => '\Vegas\Forms\Builder\Datepicker',
                 'required'  => true,
                 'label'     => 'Fill birthdate'
             ],
@@ -132,13 +213,13 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($form->isValid($validData));
         $this->assertFalse($form->isValid($invalidData));
     }
-    
+
     public function testCreateDynamicFormWithDynamicData()
     {
         $data = [
             [
                 'name'      => 'bananaCompanies',
-                'type'      => 'Select',
+                'type'      => '\Vegas\Forms\Builder\Select',
                 'required'  => false,
                 'label'     => 'Select company',
                 'data'      => '\Vegas\Tests\Forms\FakeDataProvider'
@@ -164,19 +245,19 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($requiredForm->isValid($invalidData));
         $this->assertFalse($requiredForm->isValid($emptyData));
     }
-    
+
     public function testCreateDynamicFormTextData()
     {
         $data = [
             [
                 'name'      => 'firstname',
-                'type'      => 'Text',
+                'type'      => '\Vegas\Forms\Builder\Text',
                 'required'  => true,
                 'label'     => 'Your name'
             ],
             [
                 'name'      => 'contentField',
-                'type'      => 'RichTextArea',
+                'type'      => '\Vegas\Forms\Builder\RichTextArea',
                 'required'  => true,
                 'label'     => 'Your comments'
             ]
@@ -207,7 +288,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $data = [
             [
                 'name'      => uniqid(),
-                'type'      => 'NonExistingClass'
+                'type'      => '\Vegas\Forms\Builder\NonExistingClass'
             ]
         ];
         try {
@@ -222,7 +303,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $data = [
             [
                 'name'      => 'genders',
-                'type'      => 'Select',
+                'type'      => '\Vegas\Forms\Builder\Select',
                 'required'  => true,
                 'data'      => 'NonExistingDataProvider'
             ]
@@ -233,4 +314,5 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Vegas\Forms\DataProvider\Exception\NotFoundException', $e);
         }
     }
+
 }

@@ -10,23 +10,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Vegas\Forms\Builder;
+namespace Vegas\Tests\Stub\Models;
 
 use Vegas\Forms\BuilderAbstract;
-use Vegas\Forms\InputSettings,
-    Vegas\Forms\Element\Datepicker as DatepickerInput;
+use \Phalcon\Forms\Element\Text;
+use Vegas\Forms\InputSettings;
 
-/**
- * Class Datepicker
- * @package Vegas\Forms\Builder
- */
-class Datepicker extends BuilderAbstract
+class FakeBuilder extends BuilderAbstract
 {
-    public function setElement()
+    function setElement()
     {
         $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : get_class($this). self::NAME_SEPARATOR . mt_rand();
-        $this->element = (new DatepickerInput($name))
-            ->setAssetsManager($this->settings->assets);
+        $this->element = new Text($name);
     }
-
 }
