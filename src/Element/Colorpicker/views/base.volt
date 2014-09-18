@@ -1,1 +1,0 @@
-<input type="text"{% for key, value in attributes %} {{ key }}="{{ value }}"{% endfor %}/>

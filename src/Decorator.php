@@ -13,6 +13,7 @@ namespace Vegas\Forms;
 
 use Phalcon\DI\FactoryDefault;
 use Phalcon\DiInterface;
+use Phalcon\Forms\ElementInterface;
 use Vegas\Forms\Decorator\DecoratorInterface;
 use Vegas\Forms\Decorator\Exception\DiNotSetException;
 use Vegas\Forms\Decorator\Exception\InvalidAssetsManagerException;
@@ -20,7 +21,7 @@ use Vegas\Forms\Decorator\Exception\ViewNotSetException;
 
 class Decorator implements DecoratorInterface
 {
-    protected $templateName = 'base';
+    protected $templateName;
     protected $templatePath;
     protected $di;
 
@@ -31,7 +32,7 @@ class Decorator implements DecoratorInterface
         }
     }
 
-    public function render($attributes = array())
+    public function render(ElementInterface $formElement, $value = '', $attributes = array())
     {
         if (!($this->di instanceof DiInterface)) {
             throw new DiNotSetException();
@@ -45,27 +46,24 @@ class Decorator implements DecoratorInterface
             throw new InvalidAssetsManagerException();
         }
 
-        $partial = $this->generatePartial($attributes);
+        $partial = $this->generatePartial($formElement, $value, $attributes);
 
         return $partial;
     }
 
-    private function generatePartial(array $attributes)
+    private function generatePartial(ElementInterface $formElement, $value = '', array $attributes)
     {
         $view = $this->di->get('view');
 
         if ($this->templatePath) {
-            $view->setPartialsDir($this->templatePath);
+            $view->setViewsDir($this->templatePath);
         }
 
-        ob_start();
-
-        $view->partial($this->templateName, ['attributes' => $attributes]);
-        $partial = ob_get_contents();
-
-        ob_end_clean();
-
-        return $partial;
+        return $view->getRender('', $this->templateName, [
+            'attributes' => $attributes,
+            'element' => $formElement,
+            'value' => $value
+        ]);
     }
 
     public function setTemplateName($name)

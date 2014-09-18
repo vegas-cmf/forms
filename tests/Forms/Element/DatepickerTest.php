@@ -12,6 +12,7 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
+use Phalcon\Forms\Element\Text;
 use Vegas\Forms\Element\Datepicker;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
@@ -29,6 +30,7 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $this->form = new FakeVegasForm();
 
         $datepicker = new Datepicker('date');
+        $datepicker->setAttribute('class', 'test1');
         $this->form->add($datepicker);
     }
 
@@ -52,17 +54,47 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($testString, $this->model->date);
     }
 
-    /*public function testRender()
+    public function testRender()
     {
+        $this->assertNull($this->form->get('date')->getDecorator()->getDI());
+
         try {
-            $this->form->get('date')->render();
+            $this->form->get('date')->renderDecorated();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
         }
 
-        $this->form->get('date')->setAssetsManager($this->di->get('assets'));
+        $this->form->get('date')->getDecorator()->setDI($this->di);
+        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('date')->getDecorator()->getDI());
 
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('date')->getAssetsManager());
-        $this->assertEquals('<input type="text" id="date" name="date" vegas-datepicker="1" />', $this->form->get('date')->render());
-    }*/
+        $attributes = ['name' => 'foobaz'];
+
+        $testElement = (new Text('date'))
+            ->setAttribute('class', 'test1');
+
+        $this->assertEquals($testElement->render($attributes), $this->form->get('date')->render($attributes));
+
+        $this->regenerateForm();
+
+        $this->assertEquals('', $this->form->get('date')->renderDecorated());
+
+        $this->form->get('date')->getDecorator()->setTemplateName('bootstrap');
+
+        $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="2014-03-12" vegas-datepicker />', $this->form->get('date')->renderDecorated());
+        $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="2012-04-11" vegas-datepicker />', $this->form->get('date')->renderDecorated(['value' => '2012-04-11']));
+    }
+
+    private function regenerateForm()
+    {
+        $this->model->content = '#abcdef';
+        $this->form = new FakeVegasForm($this->model);
+
+        $datepicker = new Datepicker('date');
+        $datepicker->setAttribute('class', 'test1');
+        $datepicker->getDecorator()->setDI($this->di);
+
+        $this->form->add($datepicker);
+        $this->form->bind(['date' => '2014-03-12'], $this->model);
+    }
 }

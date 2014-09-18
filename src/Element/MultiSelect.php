@@ -23,35 +23,19 @@
 namespace Vegas\Forms\Element;
 
 use Phalcon\Forms\Element\Hidden;
+use Vegas\Forms\DecoratedTrait;
+use Vegas\Forms\Decorator;
 use Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
 
 class MultiSelect extends Select
 {
+    use DecoratedTrait;
+
     public function __construct($name, $options = null, $attributes = null)
     {
-        $attributes['multiple'] = 'multiple';
-        $attributes['data-vegas-multiselect'] = true;
-        
+        $this->setDecorator(new Decorator(dirname(__FILE__).'/MultiSelect/views/'));
+        $this->setAttribute('name', $name.'[]');
+
         parent::__construct($name, $options, $attributes);
     }
-    
-    public function render($attributes = array())
-    {
-        $attributes['name'] = $this->getName().'[]';
-        $hiddenField = new Hidden($attributes['name']);
-
-        //$this->addAssets();
-        return $hiddenField->render().parent::render($attributes);
-    }
-
-    /*private function addAssets()
-    {
-        if(!$this->assets) {
-            throw new InvalidAssetsManagerException();
-        }
-
-        $this->assets->addJs('assets/vendor/multiselect/js/jquery.multi-select.js');
-        $this->assets->addJs('assets/js/lib/vegas/ui/multiselect.js');
-        $this->assets->addCss('assets/vendor/multiselect/css/multi-select.css');
-    }*/
 }

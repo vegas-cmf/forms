@@ -11,34 +11,25 @@
  */
 namespace Vegas\Forms\Element;
 
-use \Phalcon\Forms\Element\Text;
+use Phalcon\Forms\Element\Text;
+use Vegas\Forms\DecoratedTrait;
+use Vegas\Forms\Decorator;
 
 class Datepicker extends Text
 {
+    use DecoratedTrait;
+
     public function __construct($name, $attributes = null)
     {
-        $attributes['vegas-datepicker'] = true;
         $this->addFilter('dateToTimestamp');
-        
+        $this->setDecorator(new Decorator(dirname(__FILE__).'/Datepicker/views/'));
         parent::__construct($name, $attributes);
     }
 
-    /*private function addAssets()
-    {
-        if(!$this->assets) {
-            throw new InvalidAssetsManagerException();
-        }
-        
-        $this->assets->addCss('assets/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-        $this->assets->addJs('assets/vendor/moment/min/moment.min.js');
-        $this->assets->addJs('assets/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js');
-        $this->assets->addJs('assets/js/lib/vegas/ui/datepicker.js');
-    }*/
-    
     public function getValue()
     {
         $value = parent::getValue();
-        
+
         if ($value && is_numeric($value)) {
             $dateTime = new \DateTime();
             $dateTime->setTimestamp(parent::getValue());

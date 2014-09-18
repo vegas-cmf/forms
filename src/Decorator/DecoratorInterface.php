@@ -12,10 +12,11 @@
 namespace Vegas\Forms\Decorator;
 
 use Phalcon\DiInterface;
+use Phalcon\Forms\ElementInterface;
 
 interface DecoratorInterface
 {
-    public function render($attributes = array());
+    public function render(ElementInterface $formElement, $value = '', $attributes = array());
     public function setTemplateName($name);
     public function setTemplatePath($path);
     public function setDI(DiInterface $di);

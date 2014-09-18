@@ -11,7 +11,6 @@
  */
 namespace Vegas\Forms;
 
-use Phalcon\DiInterface;
 use Vegas\Forms\Decorator\DecoratorInterface;
 use Vegas\Forms\Decorator\Exception\ElementNotDecoratedException;
 
@@ -19,22 +18,30 @@ trait DecoratedTrait
 {
     protected $decorator;
 
-    public function render($attributes = null)
+    public function renderDecorated($attributes = null)
     {
         if (!($this->decorator instanceof DecoratorInterface)) {
             throw new ElementNotDecoratedException();
         }
 
+        $baseAttributes = array();
+        $baseAttributes['name'] = $baseAttributes['id'] = $this->getName();
+
         if (is_array($attributes)) {
-            $attributes = array_merge($attributes, $this->getAttributes());
-        } else {
-            $attributes = $this->getAttributes();
+            $baseAttributes = array_merge($baseAttributes, $attributes);
         }
 
-        $attributes['name'] = $this->getName();
-        $attributes['value'] = $this->getValue();
+        $baseAttributes = array_merge($baseAttributes, $this->getAttributes());
 
-        return $this->decorator->render($attributes);
+        if (isset($baseAttributes['value']))
+        {
+            $value = $baseAttributes['value'];
+            unset($baseAttributes['value']);
+        } else {
+            $value = $this->getValue();
+        }
+
+        return $this->decorator->render($this, $value, $baseAttributes);
     }
 
     public function getDecorator()
@@ -45,12 +52,6 @@ trait DecoratedTrait
     public function setDecorator(DecoratorInterface $decorator)
     {
         $this->decorator = $decorator;
-        return $this;
-    }
-
-    public function setDecoratorDi(DiInterface $di)
-    {
-        $this->decorator->setDI($di);
         return $this;
     }
 }

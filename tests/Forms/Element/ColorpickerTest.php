@@ -12,6 +12,7 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
+use Phalcon\Forms\Element\Text;
 use Vegas\Forms\Element\Colorpicker;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
@@ -36,18 +37,45 @@ class ColorpickerTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
+        $this->assertNull($this->form->get('content')->getDecorator()->getDI());
+
         try {
-            $this->form->get('content')->render();
+            $this->form->get('content')->renderDecorated();
             throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
         }
 
-        $this->form->get('content')->setDecoratorDi($this->di);
+        $this->form->get('content')->getDecorator()->setDI($this->di);
+        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('content')->getDecorator()->getDI());
 
-        $this->assertEquals('<input type="text" class="test1" name="content" value=""/>', $this->form->get('content')->render());
+        $attributes = ['name' => 'foobaz'];
+
+        $testElement = (new Text('content'))
+            ->setAttribute('class', 'test1');
+
+        $this->assertEquals($testElement->render($attributes), $this->form->get('content')->render($attributes));
+
+        $this->regenerateForm();
+
+        $this->assertEquals('', $this->form->get('content')->renderDecorated());
 
         $this->form->get('content')->getDecorator()->setTemplateName('bootstrap');
-        $this->assertEquals('<input type="text" class="test1" name="content" value="" vegas-colorpicker />', $this->form->get('content')->render());
+
+        $this->assertEquals('<input type="text" id="content" name="content" class="test1" value="#f0f0f0" vegas-colorpicker />', $this->form->get('content')->renderDecorated());
+        $this->assertEquals('<input type="text" id="content" name="content" class="test1" value="#f0f0f0" vegas-colorpicker />', $this->form->get('content')->renderDecorated(['value' => '#f0f0f0']));
+    }
+
+    private function regenerateForm()
+    {
+        $this->model->content = '#abcdef';
+        $this->form = new FakeVegasForm($this->model);
+
+        $content = new Colorpicker('content');
+        $content->setAttribute('class', 'test1');
+        $content->getDecorator()->setDI($this->di);
+
+        $this->form->add($content);
+        $this->form->bind(['content' => '#f0f0f0'], $this->model);
     }
 }

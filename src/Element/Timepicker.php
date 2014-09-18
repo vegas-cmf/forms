@@ -12,23 +12,15 @@
 namespace Vegas\Forms\Element;
 
 use \Phalcon\Forms\Element\Text;
+use Vegas\Forms\DecoratedTrait;
+use Vegas\Forms\Decorator;
 
 class Timepicker extends Text
 {
+    use DecoratedTrait;
+
     public function __construct($name, $attributes = null) {
-        $attributes['vegas-timepicker'] = true;
+        $this->setDecorator(new Decorator(dirname(__FILE__).'/Timepicker/views/'));
         parent::__construct($name, $attributes);
     }
-
-    /*private function addAssets()
-    {
-        if(!$this->assets) {
-            throw new InvalidAssetsManagerException();
-        }
-
-        $this->assets->addCss('assets/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-        $this->assets->addJs('assets/vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js');
-        $this->assets->addJs('assets/vendor/eonasdan-bootstrap-datetimepicker/src/js/locales/bootstrap-datetimepicker.nl.js');
-        $this->assets->addJs('assets/js/lib/vegas/ui/timepicker.js');
-    }*/
 }

@@ -12,9 +12,13 @@
 namespace Vegas\Forms\Element;
 
 use \Phalcon\Forms\Element\TextArea;
+use Vegas\Forms\DecoratedTrait;
+use Vegas\Forms\Decorator;
 
 class RichTextArea extends TextArea
 {
+    use DecoratedTrait;
+
     /**
      * Constructs rich text area (ckeditor)
      *
@@ -23,18 +27,7 @@ class RichTextArea extends TextArea
      */
     public function __construct($name, $attributes = null)
     {
-        $attributes['vegas-richtext'] = true;
+        $this->setDecorator(new Decorator(dirname(__FILE__).'/RichTextArea/views/'));
         parent::__construct($name, $attributes);
     }
-    
-    /*private function addAssets()
-    {
-        if(!$this->assets) {
-            throw new InvalidAssetsManagerException();
-        }
-
-        $this->assets->addJs('assets/vendor/ckeditor/ckeditor.js');
-        $this->assets->addJs('assets/vendor/ckeditor/adapters/jquery.js');
-        $this->assets->addJs('assets/js/lib/vegas/ui/richtext.js');
-    }*/
 }
