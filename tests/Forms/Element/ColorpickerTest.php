@@ -60,7 +60,7 @@ class ColorpickerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('', $this->form->get('content')->renderDecorated());
 
-        $this->form->get('content')->getDecorator()->setTemplateName('bootstrap');
+        $this->form->get('content')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals('<input type="text" id="content" name="content" class="test1" value="#f0f0f0" vegas-colorpicker />', $this->form->get('content')->renderDecorated());
         $this->assertEquals('<input type="text" id="content" name="content" class="test1" value="#f0f0f0" vegas-colorpicker />', $this->form->get('content')->renderDecorated(['value' => '#f0f0f0']));

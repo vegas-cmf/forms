@@ -66,7 +66,7 @@ RENDER;
         $this->assertEquals($select->render(['value' => 'test1']), $this->form->get('select')->render(['value' => 'test1']));
         $this->assertEquals('', $this->form->get('select')->renderDecorated());
 
-        $this->form->get('select')->getDecorator()->setTemplateName('bootstrap');
+        $this->form->get('select')->getDecorator()->setTemplateName('jquery');
         $this->assertEquals($htmlDecorated, $this->form->get('select')->renderDecorated());
     }
 }

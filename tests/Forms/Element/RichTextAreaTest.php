@@ -59,7 +59,7 @@ class RichTextAreaTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($testElement->render(['value' => '#f0f0f0']), $this->form->get('content')->render());
 
-        $this->form->get('content')->getDecorator()->setTemplateName('bootstrap');
+        $this->form->get('content')->getDecorator()->setTemplateName('jquery');
         $this->assertEquals("<textarea id=\"content\" name=\"content\" class=\"test1\" vegas-richtext>\n#f0f0f0</textarea>", $this->form->get('content')->renderDecorated());
     }
 

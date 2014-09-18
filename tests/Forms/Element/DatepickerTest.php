@@ -79,7 +79,7 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('', $this->form->get('date')->renderDecorated());
 
-        $this->form->get('date')->getDecorator()->setTemplateName('bootstrap');
+        $this->form->get('date')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="2014-03-12" vegas-datepicker />', $this->form->get('date')->renderDecorated());
         $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="2012-04-11" vegas-datepicker />', $this->form->get('date')->renderDecorated(['value' => '2012-04-11']));

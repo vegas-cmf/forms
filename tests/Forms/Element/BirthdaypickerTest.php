@@ -55,16 +55,4 @@ class BirthdaypickerTest extends \PHPUnit_Framework_TestCase
         $this->form->bind(array('date' => $testString), $this->model);
         $this->assertEquals($testString, $this->model->date);
     }
-
-    /*public function testRender()
-    {
-        try {
-            $this->form->get('date')->render();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
-        }
-
-        $this->assertEquals('<input type="text" id="date" name="date" vegas-datepicker="1" />', $this->form->get('date')->render());
-    }*/
 }

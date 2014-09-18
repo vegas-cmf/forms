@@ -60,7 +60,7 @@ class TimepickerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('', $this->form->get('date')->renderDecorated());
 
-        $this->form->get('date')->getDecorator()->setTemplateName('bootstrap');
+        $this->form->get('date')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="10:20" vegas-timepicker />', $this->form->get('date')->renderDecorated());
         $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="10:30" vegas-timepicker />', $this->form->get('date')->renderDecorated(['value' => '10:30']));
