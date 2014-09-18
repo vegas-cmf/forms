@@ -18,6 +18,13 @@ trait DecoratedTrait
 {
     protected $decorator;
 
+    /**
+     * Render element decorated with specific view/template.
+     *
+     * @param null $attributes
+     * @return string
+     * @throws Decorator\Exception\ElementNotDecoratedException
+     */
     public function renderDecorated($attributes = null)
     {
         if (!($this->decorator instanceof DecoratorInterface)) {
@@ -44,11 +51,22 @@ trait DecoratedTrait
         return $this->decorator->render($this, $value, $baseAttributes);
     }
 
+    /**
+     * Get element decorator.
+     *
+     * @return mixed
+     */
     public function getDecorator()
     {
         return $this->decorator;
     }
 
+    /**
+     * Set decorator for element.
+     *
+     * @param DecoratorInterface $decorator
+     * @return $this
+     */
     public function setDecorator(DecoratorInterface $decorator)
     {
         $this->decorator = $decorator;

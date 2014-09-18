@@ -25,6 +25,11 @@ class Decorator implements DecoratorInterface
     protected $templatePath;
     protected $di;
 
+    /**
+     * Create object with default $path.
+     *
+     * @param null $path
+     */
     public function __construct($path = null)
     {
         if ($path) {
@@ -32,6 +37,17 @@ class Decorator implements DecoratorInterface
         }
     }
 
+    /**
+     * Render form element with current templatePath and templateName.
+     *
+     * @param ElementInterface $formElement
+     * @param string $value
+     * @param array $attributes
+     * @return string
+     * @throws Decorator\Exception\DiNotSetException
+     * @throws Decorator\Exception\InvalidAssetsManagerException
+     * @throws Decorator\Exception\ViewNotSetException
+     */
     public function render(ElementInterface $formElement, $value = '', $attributes = array())
     {
         if (!($this->di instanceof DiInterface)) {
@@ -51,6 +67,12 @@ class Decorator implements DecoratorInterface
         return $partial;
     }
 
+    /**
+     * @param ElementInterface $formElement
+     * @param string $value
+     * @param array $attributes
+     * @return mixed
+     */
     private function generatePartial(ElementInterface $formElement, $value = '', array $attributes)
     {
         $view = $this->di->get('view');
@@ -66,24 +88,43 @@ class Decorator implements DecoratorInterface
         ]);
     }
 
+    /**
+     * Set template name for decorator.
+     *
+     * @param $name
+     * @return $this
+     */
     public function setTemplateName($name)
     {
         $this->templateName = (string)$name;
         return $this;
     }
 
+    /**
+     * Set template path for decorator.
+     *
+     * @param $path
+     * @return $this
+     */
     public function setTemplatePath($path)
     {
         $this->templatePath = (string)$path;
         return $this;
     }
 
+    /**
+     * @param DiInterface $di
+     * @return $this
+     */
     public function setDI(DiInterface $di)
     {
         $this->di = $di;
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDI()
     {
         return $this->di;
