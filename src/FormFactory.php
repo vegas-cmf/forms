@@ -8,7 +8,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- */ 
+ */
 namespace Vegas\Forms;
 
 use Phalcon\DI\InjectionAwareInterface,
@@ -72,7 +72,8 @@ class FormFactory implements InjectionAwareInterface
      */
     public function getAvailableInputs()
     {
-        return $this->builders;
+        $values = preg_replace('/.*\\\/', '', $this->builders);
+        return array_combine($this->builders, $values);
     }
 
     public function addBuilder($builderClass)
@@ -87,7 +88,7 @@ class FormFactory implements InjectionAwareInterface
      * Acts as factory pattern: generates form object with all dependent elements.
      * Each element should be represented by a specific trait.
      * Uses i18n for provided labels.
-     * 
+     *
      * @param array $data each form element data
      * @return \Vegas\Forms\Form full instance of form
      * @throws \Vegas\Forms\Exception\InvalidInputSettingsException When provided invalid (manipulated) input
@@ -104,7 +105,7 @@ class FormFactory implements InjectionAwareInterface
         }
         return $form;
     }
-    
+
     /**
      * Proxies factory create call to specific responsible trait.
      * @param array $settings
@@ -131,5 +132,18 @@ class FormFactory implements InjectionAwareInterface
         $method = new \ReflectionMethod($className, self::METHOD_NAME);
         return $method->invokeArgs(new $className, array($settings));
     }
-    
+
+    /**
+     * Method create object for render each element. Execute initElement method
+     * @return array
+     */
+    public function render()
+    {
+        $elements = [];
+        foreach($this->builders as $builder) {
+            $elements[] = (new $builder)->initElement();
+        }
+        return $elements;
+    }
+
 }

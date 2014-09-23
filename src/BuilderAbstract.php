@@ -12,6 +12,8 @@
 
 namespace Vegas\Forms;
 
+use Phalcon\DI;
+use Vegas\Forms\Element\AssetsInjectableInterface;
 use Vegas\Validation\Validator\PresenceOf;
 
 /**
@@ -57,11 +59,24 @@ abstract class BuilderAbstract implements BuilderInterface
     }
 
     /**
+     * Method sets element and return object instance. Only for form builder purpose.
+     * @return mixed
+     */
+    public function initElement()
+    {
+        if(is_null($this->settings)) {
+            $this->settings = new InputSettings();
+
+        }
+
+        return $this->build($this->settings);
+    }
+
+    /**
      * Default setter for dataProvider field
      */
     public function setData() {
         if ($this->settings->getValue(InputSettings::DATA_PARAM)) {
-
         }
     }
 
@@ -82,6 +97,8 @@ abstract class BuilderAbstract implements BuilderInterface
     {
         if($this->settings->getValue(InputSettings::LABEL_PARAM)) {
             $this->element->setLabel($this->settings->getValue(InputSettings::LABEL_PARAM));
+        } else {
+            $this->element->setLabel(preg_replace('/.*\\\/', '', get_class($this)));
         }
     }
 
@@ -113,4 +130,5 @@ abstract class BuilderAbstract implements BuilderInterface
     {
         return $this->element;
     }
+
 } 
