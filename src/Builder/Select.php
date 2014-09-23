@@ -12,6 +12,8 @@
 
 namespace Vegas\Forms\Builder;
 
+use Phalcon\DI;
+use Vegas\DI\InjectionAwareTrait;
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\Select as SelectInput,
@@ -26,8 +28,8 @@ class Select extends BuilderAbstract
 {
     public function setElement()
     {
-        $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : get_class($this) . self::NAME_SEPARATOR . mt_rand();
-        $this->element = new SelectInput($name);
+        $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
+        $this->element = new SelectInput($name, []);
     }
 
     public function setValidator()
@@ -41,8 +43,8 @@ class Select extends BuilderAbstract
 
     public function setData()
     {
-        $data = $this->settings->getDataFromProvider();
-        $this->element->addOptions($data);
+        $this->settings->addDataProviderInput();
+        $this->element->addOptions($this->settings->getDataFromProvider());
         $this->element->addValidator(new InclusionIn(array('domain' => array_keys($this->element->getOptions()))));
     }
 }

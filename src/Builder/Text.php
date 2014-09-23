@@ -23,7 +23,7 @@ class Text extends BuilderAbstract
 {
     public function setElement()
     {
-        $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : get_class($this) . self::NAME_SEPARATOR . mt_rand();
+        $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
         $this->element = new TextInput($name);
     }
 
