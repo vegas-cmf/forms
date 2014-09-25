@@ -14,6 +14,8 @@ namespace Vegas\Tests\Forms;
 use Phalcon\DI,
     Vegas\Forms\FormFactory,
     Vegas\Forms\DataProvider\DataProviderInterface;
+use Vegas\Forms\Builder\Exception\NotFoundException;
+use Vegas\Forms\BuilderAbstract;
 
 /**
  * Used to mock translations using DI.
@@ -64,8 +66,9 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        $this->formFactory = new FormFactory;
         $di = DI::getDefault();
+        $this->formFactory = new FormFactory;
+        $this->formFactory->setDI($di);
         $di->set('i18n', new FakeTranslator);
         $di->set('formFactory', $this->formFactory);    // The factory is used as a shared service.
         $di->set('config', new \Phalcon\Config([
@@ -78,7 +81,33 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ]));
+
         parent::setUp();
+    }
+
+    /**
+     * @expectedException \Vegas\Forms\Builder\Exception\NotFoundException
+     */
+    public function testExceptionWhenClassNotExists()
+    {
+        $this->formFactory->addBuilder('\Invalid\Class\Not\Existed');
+
+    }
+
+    /**
+     * @expectedException \Vegas\Forms\Builder\Exception\NotDefinedException
+     */
+    public function testExceptionWhenNotDefinedCallingBuilder()
+    {
+        $data = [
+            [
+                'name'      => 'fakeUser',
+                'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
+                'required'  => true,
+                'label'     => 'Fill fake user'
+            ]
+        ];
+        $this->formFactory->createForm($data);
     }
 
     /**
@@ -89,7 +118,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $this->formFactory->addBuilder('\Vegas\Tests\Stub\Models\FakeBuilder');
 
         $elements = $this->formFactory->getAvailableInputs();
-        $this->assertTrue(in_array('\Vegas\Tests\Stub\Models\FakeBuilder', $elements));
+        $this->assertTrue(in_array('FakeBuilder', $elements));
 
         $data = [
             [
@@ -315,4 +344,12 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testRenderElements()
+    {
+        $elements = $this->formFactory->render();
+        $this->assertEquals(6, count($elements));
+        foreach($elements as $element){
+            $this->assertTrue($element instanceof \Phalcon\Forms\Element);
+        }
+    }
 }

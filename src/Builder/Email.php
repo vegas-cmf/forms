@@ -14,7 +14,7 @@ namespace Vegas\Forms\Builder;
 
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
-    Phalcon\Forms\Element\Text,
+    Phalcon\Forms\Element\Text as EmailText,
     Vegas\Validation\Validator\Email as EmailValidator;
 
 /**
@@ -26,7 +26,7 @@ class Email extends BuilderAbstract
     public function setElement()
     {
         $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
-        $this->element = new Text($name);
+        $this->element = new EmailText($name);
         $this->element->addValidator(new EmailValidator);
     }
 

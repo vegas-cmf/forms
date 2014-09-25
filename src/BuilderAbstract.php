@@ -76,8 +76,7 @@ abstract class BuilderAbstract implements BuilderInterface
      * Default setter for dataProvider field
      */
     public function setData() {
-        if ($this->settings->getValue(InputSettings::DATA_PARAM)) {
-        }
+
     }
 
     /**
