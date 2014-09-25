@@ -11,6 +11,7 @@
  */
 namespace Vegas\Forms;
 
+use Phalcon\Forms\Element\Hidden;
 use Vegas\Forms\DataProvider\Exception\NotFoundException,
     Vegas\Forms\DataProvider\DataProviderInterface,
     Vegas\Forms\Element\Select,
@@ -61,16 +62,8 @@ class InputSettings extends \Vegas\Forms\Form
     
     public function initialize()
     {
-        $params = array(
-            'useEmpty' => true,
-            'emptyText' => $this->i18n->_('Please Select...'),
-        );
-        
-        $type = new Select(self::TYPE_PARAM,null,$params);
-        $type
-                ->addOptions($this->di->get('formFactory')->getAvailableInputs())
-                ->addValidator(new PresenceOf)
-                ->setLabel('Input type');
+
+        $type = new Hidden(self::TYPE_PARAM);
         $this->add($type);
         
         $identifier = (new Text(self::IDENTIFIER_PARAM))
@@ -106,18 +99,22 @@ class InputSettings extends \Vegas\Forms\Form
     public function getDataFromProvider()
     {
         $select = $this->get(self::DATA_PARAM);
+        if(is_null($select->getValue())) {
+            return array();
+        }
         $classname = $select->getValue();
         if (!class_exists($classname) || !array_key_exists($classname, $select->getOptions())) {
             throw new NotFoundException;
         }
         return (new $classname)->getData();
+
     }
     
     /**
      * Adds selectable list of data providers.
      * Usable only for selectable input types.
      */
-    private function addDataProviderInput()
+    public function addDataProviderInput()
     {
         $input = (new Select(self::DATA_PARAM))
                 ->setOptions(array(null => '---'));

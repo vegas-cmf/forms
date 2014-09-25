@@ -11,28 +11,20 @@
  */
 namespace Vegas\Forms\Builder;
 
+use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
-    Phalcon\Forms\Element\Text as TextInput,
-    Vegas\Validation\Validator\PresenceOf;
+    Phalcon\Forms\Element\Text as TextInput;
 
-trait Text
+/**
+ * Class Text
+ * @package Vegas\Forms\Builder
+ */
+class Text extends BuilderAbstract
 {
-    
-    /**
-     * @param \Vegas\Forms\InputSettings $settings
-     * @return \Phalcon\Forms\Element\Text
-     */
-    public function buildText(InputSettings $settings)
+    public function setElement()
     {
-        $name = $settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $settings->getValue(InputSettings::IDENTIFIER_PARAM) : 'Text-'.mt_rand();
-        $element = new TextInput($name);
-        
-        $settings->getValue(InputSettings::REQUIRED_PARAM) && $element->addValidator(new PresenceOf());
-        $settings->getValue(InputSettings::LABEL_PARAM) && $element->setLabel($settings->getValue(InputSettings::LABEL_PARAM));
-        $settings->getValue(InputSettings::DEFAULTS_PARAM) && $element->setDefault($settings->getValue(InputSettings::DEFAULTS_PARAM));
-        $settings->getValue(InputSettings::PLACEHOLDER_PARAM) && $element->setAttribute('placeholder', $settings->getValue(InputSettings::PLACEHOLDER_PARAM));
-        
-        return $element;
+        $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
+        $this->element = new TextInput($name);
     }
-    
+
 }

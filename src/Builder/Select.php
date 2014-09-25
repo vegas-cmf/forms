@@ -2,48 +2,49 @@
 /**
  * This file is part of Vegas package
  *
- * @author Radosław Fąfara <radek@archdevil.pl>
+ * @author Mateusz Aniołek <dev@mateusz-aniolek.com>
  * @copyright Amsterdam Standard Sp. Z o.o.
  * @homepage https://bitbucket.org/amsdard/vegas-phalcon
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Vegas\Forms\Builder;
 
+use Phalcon\DI;
+use Vegas\DI\InjectionAwareTrait;
+use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\Select as SelectInput,
     Vegas\Validation\Validator\PresenceOf,
     Vegas\Validation\Validator\InclusionIn;
 
-trait Select
+/**
+ * Class Select
+ * @package Vegas\Forms\Builder
+ */
+class Select extends BuilderAbstract
 {
-    
-    /**
-     * @param \Vegas\Forms\InputSettings $settings
-     * @return \Vegas\Forms\Element\Select
-     */
-    public function buildSelect(InputSettings $settings)
+    public function setElement()
     {
-        $name = $settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $settings->getValue(InputSettings::IDENTIFIER_PARAM) : 'Select-'.mt_rand();
-        $element = new SelectInput($name);
-        
-        if ($settings->getValue(InputSettings::REQUIRED_PARAM)) {
-            $element->addValidator(new PresenceOf());
-        } else {
-            $element->setOptions(array(null => '---'));
-        }
-        $settings->getValue(InputSettings::LABEL_PARAM) && $element->setLabel($settings->getValue(InputSettings::LABEL_PARAM));
-        $settings->getValue(InputSettings::DEFAULTS_PARAM) && $element->setDefault($settings->getValue(InputSettings::DEFAULTS_PARAM));
-        $settings->getValue(InputSettings::PLACEHOLDER_PARAM) && $element->setAttribute('placeholder', $settings->getValue(InputSettings::PLACEHOLDER_PARAM));
-        
-        if ($settings->getValue(InputSettings::DATA_PARAM)) {
-            $data = $settings->getDataFromProvider();
-            $element->addOptions($data);
-            $element->addValidator(new InclusionIn(array('domain' => array_keys($element->getOptions()))));
-        }
-        
-        return $element;
+        $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
+        $this->element = new SelectInput($name, []);
     }
-    
+
+    public function setValidator()
+    {
+        if ($this->settings->getValue(InputSettings::REQUIRED_PARAM)) {
+            $this->element->addValidator(new PresenceOf());
+        } else {
+            $this->element->setOptions(array(null => '---'));
+        }
+    }
+
+    public function setData()
+    {
+        $this->settings->addDataProviderInput();
+        $this->element->addOptions($this->settings->getDataFromProvider());
+        $this->element->addValidator(new InclusionIn(array('domain' => array_keys($this->element->getOptions()))));
+    }
 }
