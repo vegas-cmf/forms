@@ -14,8 +14,8 @@
 namespace Vegas\Forms\Builder;
 
 /**
- *
- * @package Vegas\Forms\Builder\Exception
+ * Class Exception
+ * @package Vegas\Forms\Builder
  */
 class Exception extends \Vegas\Forms\Exception
 {
