@@ -33,6 +33,15 @@ class FormTest extends \PHPUnit_Framework_TestCase
             'test2' => array(
                 'en' => 'baz',
                 'nl' => 123.4
+            ),
+            'test3' => array(
+                array(
+                    0 => 'doubleArrayed',
+                    1 => 'extraData'
+                )
+            ),
+            'not_in_form' => array(
+                'some_value'
             )
         );
 
@@ -47,9 +56,13 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $form->add($text);
         $form->add(new Text('test2[nl]'));
 
+        $form->add(new Text('test3[0][]'));
+        $form->add(new Text('test3[0][]'));
+
         $form->bind($values, $model);
 
         $this->assertTrue($form->isValid());
+        $this->assertTrue(!isset($model->not_in_form));
 
         $this->assertEquals($model->test1[0], $form->getValue('test1[2]'));
         $this->assertEquals($model->test1[1], $form->getValue('test1[3]'));
@@ -61,5 +74,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($model->test2['nl'], $form->getValue('test2[nl]'));
 
         $this->assertNull($form->getValue('test2[en][notexsiting]'));
+
+        $this->assertEquals($model->test3[0][0], $form->getValue('test3[0][0]'));
+        $this->assertEquals($model->test3[0][1], $form->getValue('test3[0][1]'));
     }
 }

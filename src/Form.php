@@ -20,21 +20,30 @@ class Form extends \Phalcon\Forms\Form
      * @param object $entity
      * @param array $whitelist
      */
-    public function bind($data, $entity, $whitelist=null)
+    public function bind($data, $entity, $whitelist = null)
     {
         parent::bind($data, $entity, $whitelist);
         
-        $this->bindArrays($data, $entity);
+        $this->bindArrays($data, $entity, $whitelist);
     }
     
-    private function bindArrays($data, $entity)
+    private function bindArrays($data, $entity, $whitelist = null)
     {
+        $rawNames = array();
+
+        foreach ($this->getElements() As $element) {
+            $rawNames[] = preg_replace('/\[[a-zA-Z0-9]*\]/','', $element->getName());
+        }
+
         foreach ($data As $name => $values) {
-            if (is_array($values)) {
+            if (!is_array($values) || !in_array($name, $rawNames)) {
+                continue;
+            }
+
+            if (empty($whitelist) || isset($whitelist[$name])) {
                 $nameArray = array($name);
 
                 $values = $this->prepareValues($nameArray, $values);
-
                 $entity->$name = $this->reindex($values);
             }
         }
