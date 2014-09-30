@@ -33,7 +33,8 @@ class MultiSelect extends Select
 
     public function __construct($name, $options = null, $attributes = null)
     {
-        $this->setDecorator(new Decorator(dirname(__FILE__).'/MultiSelect/views/'));
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'MultiSelect', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         $this->setAttribute('name', $name.'[]');
 
         parent::__construct($name, $options, $attributes);

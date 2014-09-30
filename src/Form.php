@@ -32,7 +32,7 @@ class Form extends \Phalcon\Forms\Form
         $rawNames = array();
 
         foreach ($this->getElements() As $element) {
-            $rawNames[] = preg_replace('/\[[a-zA-Z0-9]*\]/','', $element->getName());
+            $rawNames[] = preg_replace('/\[[a-zA-Z0-9\-\_]*\]/','', $element->getName());
         }
 
         foreach ($data As $name => $values) {
@@ -101,7 +101,7 @@ class Form extends \Phalcon\Forms\Form
             $value = $this->prepareValues($name, $value);
         }
         
-        if ($this->passArray($value) || $this->passString($value)) {
+        if ($this->passArray($value) || $this->passScalar($value)) {
             return $value;
         }
         
@@ -113,9 +113,9 @@ class Form extends \Phalcon\Forms\Form
         return is_array($value) && count($value);
     }
     
-    private function passString($value)
+    private function passScalar($value)
     {
-        return !is_array($value) && $value !== '';
+        return is_scalar($value) && (string)$value !== '';
     }
 
     private function reindex($values)

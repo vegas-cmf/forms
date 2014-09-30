@@ -21,7 +21,7 @@ class Select extends \Phalcon\Forms\Element\Select
     public function addOptions(array $options)
     {
         $existingOptions = $this->getOptions();
-        $newOptions = empty($existingOptions) ? $options : array_merge($existingOptions, $options);
+        $newOptions = empty($existingOptions) ? $options : array_merge((array)$existingOptions, $options);
         $this->setOptions($newOptions);
         return $this;
     }

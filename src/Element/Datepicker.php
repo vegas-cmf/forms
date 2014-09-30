@@ -22,7 +22,8 @@ class Datepicker extends Text
     public function __construct($name, $attributes = null)
     {
         $this->addFilter('dateToTimestamp');
-        $this->setDecorator(new Decorator(dirname(__FILE__).'/Datepicker/views/'));
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Datepicker', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         parent::__construct($name, $attributes);
     }
 

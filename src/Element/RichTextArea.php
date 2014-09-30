@@ -27,7 +27,8 @@ class RichTextArea extends TextArea
      */
     public function __construct($name, $attributes = null)
     {
-        $this->setDecorator(new Decorator(dirname(__FILE__).'/RichTextArea/views/'));
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'RichTextArea', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         parent::__construct($name, $attributes);
     }
 }
