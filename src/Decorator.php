@@ -116,14 +116,14 @@ class Decorator implements DecoratorInterface
      * @param DiInterface $di
      * @return $this
      */
-    public function setDI(DiInterface $di)
+    public function setDI($di)
     {
         $this->di = $di;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return DiInterface
      */
     public function getDI()
     {

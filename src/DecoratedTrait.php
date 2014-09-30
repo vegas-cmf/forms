@@ -16,12 +16,15 @@ use Vegas\Forms\Decorator\Exception\ElementNotDecoratedException;
 
 trait DecoratedTrait
 {
+    /**
+     * @var DecoratorInterface
+     */
     protected $decorator;
 
     /**
      * Render element decorated with specific view/template.
      *
-     * @param null $attributes
+     * @param array|null $attributes
      * @return string
      * @throws Decorator\Exception\ElementNotDecoratedException
      */
@@ -31,17 +34,17 @@ trait DecoratedTrait
             throw new ElementNotDecoratedException();
         }
 
-        $baseAttributes = array();
-        $baseAttributes['name'] = $baseAttributes['id'] = $this->getName();
+        $customAttributes = is_array($attributes) ? $attributes : [];
 
-        if (is_array($attributes)) {
-            $baseAttributes = array_merge($baseAttributes, $attributes);
-        }
+        $baseAttributes = array_merge([
+                'id'    => $this->getName(),
+                'name'  => $this->getName()
+            ],
+            $customAttributes,
+            $this->getAttributes()
+        );
 
-        $baseAttributes = array_merge($baseAttributes, $this->getAttributes());
-
-        if (isset($baseAttributes['value']))
-        {
+        if (isset($baseAttributes['value'])) {
             $value = $baseAttributes['value'];
             unset($baseAttributes['value']);
         } else {
@@ -54,7 +57,7 @@ trait DecoratedTrait
     /**
      * Get element decorator.
      *
-     * @return mixed
+     * @return DecoratorInterface
      */
     public function getDecorator()
     {

@@ -19,8 +19,10 @@ class Timepicker extends Text
 {
     use DecoratedTrait;
 
-    public function __construct($name, $attributes = null) {
-        $this->setDecorator(new Decorator(dirname(__FILE__).'/Timepicker/views/'));
+    public function __construct($name, $attributes = null)
+    {
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Timepicker', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         parent::__construct($name, $attributes);
     }
 }

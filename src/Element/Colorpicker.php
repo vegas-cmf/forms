@@ -21,7 +21,8 @@ class Colorpicker extends Text
 
     public function __construct($name, $attributes = null)
     {
-        $this->setDecorator(new Decorator(dirname(__FILE__).'/Colorpicker/views/'));
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Colorpicker', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         parent::__construct($name, $attributes);
     }
 }

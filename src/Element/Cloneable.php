@@ -51,7 +51,8 @@ class Cloneable extends Element
     final public function __construct($name, $attributes = null)
     {
         parent::__construct($name, $attributes);
-        $this->setDecorator(new Decorator(dirname(__FILE__).'/Cloneable/views/'));
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Cloneable', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         $this->addValidator(new ValidationExtender(array('cloneable' => $this)));
     }
 
