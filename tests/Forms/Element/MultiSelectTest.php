@@ -2,9 +2,9 @@
 /**
  * This file is part of Vegas package
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +12,7 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
+use Phalcon\Forms\Element\Select;
 use Vegas\Forms\Element\MultiSelect;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
@@ -34,35 +35,38 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->form->get('select')->addOptions(array(
+        $options = array(
             'test1' => 'foo',
             'test2' => 'bar'
-        ));
+        );
+        $this->form->get('select')->addOptions($options);
 
-        $this->assertNull($this->form->get('select')->getAssetsManager());
+        $this->assertNull($this->form->get('select')->getDecorator()->getDI());
 
         try {
-            $this->form->get('select')->render();
+            $this->form->get('select')->renderDecorated();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
         }
 
-        $this->form->get('select')->setAssetsManager($this->di->get('assets'));
+        $this->form->get('select')->getDecorator()->setDI($this->di);
+        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('select')->getDecorator()->getDI());
 
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('select')->getAssetsManager());
+        $select = new Select('select', $options, ['name' => 'select[]']);
 
-        $this->form->get('select')->addOptions(array(
-            'test3' => 'baz'
-        ));
-
-        $html = <<<RENDERED
-<input type="hidden" name="select[]" /><select id="select" name="select[]" multiple="multiple" data-vegas-multiselect="1">
-	<option value="test1">foo</option>
-	<option value="test2">bar</option>
-	<option value="test3">baz</option>
+        $htmlDecorated = <<<RENDER
+<input type="hidden" name="select[]" />
+<select id="select" name="select[]" multiple="multiple" data-vegas-multiselect>
+    <option value="test1">foo</option>
+    <option value="test2">bar</option>
 </select>
-RENDERED;
+RENDER;
 
-        $this->assertEquals($html, $this->form->get('select')->render());
+        $this->assertEquals($select->render(['value' => 'test1']), $this->form->get('select')->render(['value' => 'test1']));
+        $this->assertEquals('', $this->form->get('select')->renderDecorated());
+
+        $this->form->get('select')->getDecorator()->setTemplateName('jquery');
+        $this->assertEquals($htmlDecorated, $this->form->get('select')->renderDecorated());
     }
 }

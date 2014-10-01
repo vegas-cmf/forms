@@ -4,7 +4,7 @@
  *
  * @author Radosław Fąfara <radek@archdevil.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,7 +21,7 @@ class Select extends \Phalcon\Forms\Element\Select
     public function addOptions(array $options)
     {
         $existingOptions = $this->getOptions();
-        $newOptions = empty($existingOptions) ? $options : array_merge($existingOptions, $options);
+        $newOptions = empty($existingOptions) ? $options : array_merge((array)$existingOptions, $options);
         $this->setOptions($newOptions);
         return $this;
     }

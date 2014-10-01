@@ -2,9 +2,9 @@
 /**
  * This file is part of Vegas package
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,15 +32,18 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     public function testInvalidSetup()
     {
         $cloneable = new Cloneable('cloneable_field');
-        
+
+        $this->assertNull($cloneable->getDecorator()->getDI());
+
         try {
-            $cloneable->render();
+            $cloneable->renderDecorated();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
+            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
         }
-        
-        $cloneable->setAssetsManager($this->di->get('assets'));
-        
+
+        $cloneable->getDecorator()->setDI($this->di);
+
         try {
             $cloneable->render();
         } catch (\Exception $ex) {
@@ -69,13 +72,48 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         $cloneable = $this->prepareValidCloneableField();
         $this->form->add($cloneable);
 
+        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('cloneable_field')->getDecorator()->getDI());
+
+        $html = <<<RENDERED
+<div id="cloneable_field" vegas-cloneable>
+    <fieldset>
+        <input type="text" name="cloneable_field[0][test1]" />
+        <input type="text" name="cloneable_field[0][test2]" />
+    </fieldset>
+    <fieldset>
+        <input type="text" name="cloneable_field[0][test1]" />
+        <input type="text" name="cloneable_field[0][test2]" />
+    </fieldset>
+</div>
+RENDERED;
+
+        $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
+
         $this->assertEquals(
-            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset></div>',
+            $html,
             $this->form->get('cloneable_field')->render()
         );
 
         $this->assertEquals(
-            '<div vegas-cloneable="1"><fieldset attribute="test"><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset attribute="test"><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset></div>',
+            $html,
+            $this->form->get('cloneable_field')->renderDecorated()
+        );
+
+        $htmlWithAttr = <<<RENDERED
+<div id="cloneable_field" attribute="test" vegas-cloneable>
+    <fieldset>
+        <input type="text" name="cloneable_field[0][test1]" />
+        <input type="text" name="cloneable_field[0][test2]" />
+    </fieldset>
+    <fieldset>
+        <input type="text" name="cloneable_field[0][test1]" />
+        <input type="text" name="cloneable_field[0][test2]" />
+    </fieldset>
+</div>
+RENDERED;
+
+        $this->assertEquals(
+            $htmlWithAttr,
             $this->form->get('cloneable_field')->render(array('attribute' => 'test'))
         );
 
@@ -105,8 +143,27 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($model->cloneable_field[0]['test1'], 'foo');
         $this->assertEquals($model->cloneable_field[1]['test2'], 'xyz');
 
+        $html = <<<RENDERED
+<div id="cloneable_field" vegas-cloneable>
+    <fieldset>
+        <input type="text" name="cloneable_field[0][test1]" />
+        <input type="text" name="cloneable_field[0][test2]" />
+    </fieldset>
+    <fieldset>
+        <input type="text" name="cloneable_field[0][test1]" value="foo" />
+        <input type="text" name="cloneable_field[0][test2]" value="bar" />
+    </fieldset>
+    <fieldset>
+        <input type="text" name="cloneable_field[1][test1]" value="baz" />
+        <input type="text" name="cloneable_field[1][test2]" value="xyz" />
+    </fieldset>
+</div>
+RENDERED;
+
+        $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
+
         $this->assertEquals(
-            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /></fieldset></div>',
+            $html,
             $this->form->get('cloneable_field')->render()
         );
     }
@@ -115,7 +172,6 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     {
         $cloneable = $this->prepareValidCloneableField();
         $cloneable->getBaseElement('test1')->addValidator(new PresenceOf());
-
         $this->form->add($cloneable);
 
         $this->assertFalse($this->form->isValid(array(
@@ -151,34 +207,12 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
             'fake_field' => 'foo'
         )));
     }
-	
-	public function testAddAssetsAddsSortable()
-	{
-		$cloneable = $this->prepareValidCloneableField();
-		$cloneable->setUserOption('sortable', true);
-		
-		$this->form->add($cloneable);
-		$this->form->get('cloneable_field')->getRows();
-			
-		$sortableAssetPath = 'assets/vendor/html5sortable/jquery.sortable.js';
-		$assets = $this->di->get('assets');
-		$result = false;
-		
-		foreach ($assets->getJs()->getResources() as $resource) {
-			if ($resource->getPath() === $sortableAssetPath) {
-				$result = true;
-				break;
-			}
-		}
-        
-		$this->assertTrue($result);
-	}
-	
+
 	public function testRowGet()
 	{
 		$cloneable = $this->prepareValidCloneableField();
-		
 		$this->form->add($cloneable);
+
 		$cloneableObj = $this->form->get('cloneable_field');
 		
 		$rows = $cloneableObj->getRows();
@@ -192,8 +226,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
-        $cloneable->setAssetsManager($this->di->get('assets'));
-		
+
 		$element = new \Phalcon\Forms\Element\Text('email_filter');
 		$element->addFilter(new Email(['filter' => 'email']));		
         $cloneable->addBaseElement($element);
@@ -246,8 +279,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
-        $cloneable->setAssetsManager($this->di->get('assets'));
-		
+
 		$filedName = 'no_filter';
 		$element = new \Phalcon\Forms\Element\Text($filedName);
         $cloneable->addBaseElement($element);
@@ -269,13 +301,9 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     private function prepareValidCloneableField()
     {
         $cloneable = new Cloneable('cloneable_field');
-		
-        $assets = $this->di->get('assets');
-        $cloneable->setAssetsManager($assets);
-        $this->assertSame($assets, $cloneable->getAssetsManager());
-
         $cloneable->setBaseElements(array(new \Phalcon\Forms\Element\Text('test1')));
         $cloneable->addBaseElement(new \Phalcon\Forms\Element\Text('test2'));
+        $cloneable->getDecorator()->setDI($this->di);
         return $cloneable;
     }
 }
