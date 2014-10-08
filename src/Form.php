@@ -136,9 +136,10 @@ class Form extends \Phalcon\Forms\Form
      */
     public function getValue($name)
     {
-        $matches = array();
+        $unBracketName = str_replace(']', '', $name);
+        $matches = explode('[',$unBracketName);
 
-        if (preg_match('/^([a-zA-Z0-9\-\_]+)\[([a-zA-Z0-9\-\_]*)\](\[([a-zA-Z0-9\-\_]*)\])?$/', $name, $matches)) {
+        if (count($matches)) {
             return $this->getArrayValue($matches);
         }
 
@@ -147,11 +148,11 @@ class Form extends \Phalcon\Forms\Form
 
     private function getArrayValue(array $matches)
     {
-        $baseName = $matches[1];
+        $baseName = $matches[0];
         $value = parent::getValue($baseName);
 
         foreach ($matches As $key => $match) {
-            if ($key !== 0 && $key%2 === 0) {
+            if ($key) {
                 if (isset($value[$match])) {
                     $value = $value[$match];
                 } else {
