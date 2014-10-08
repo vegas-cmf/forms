@@ -14,6 +14,7 @@ namespace Vegas\Tests\Forms\Element;
 use Phalcon\DI;
 use Phalcon\Validation\Validator\PresenceOf;
 use Vegas\Forms\Element\Cloneable;
+use Vegas\Forms\Element\Datepicker;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
 
@@ -127,7 +128,6 @@ RENDERED;
         $cloneable = $this->prepareValidCloneableField();
 
         $datepicker = new Datepicker('date');
-        $datepicker->setAssetsManager($this->di->get('assets'));
 
         $cloneable->addBaseElement($datepicker);
 
@@ -157,14 +157,17 @@ RENDERED;
     <fieldset>
         <input type="text" name="cloneable_field[0][test1]" />
         <input type="text" name="cloneable_field[0][test2]" />
+        <input type="text" name="cloneable_field[0][date]" />
     </fieldset>
     <fieldset>
         <input type="text" name="cloneable_field[0][test1]" value="foo" />
         <input type="text" name="cloneable_field[0][test2]" value="bar" />
+        <input type="text" name="cloneable_field[0][date]" />
     </fieldset>
     <fieldset>
         <input type="text" name="cloneable_field[1][test1]" value="baz" />
         <input type="text" name="cloneable_field[1][test2]" value="xyz" />
+        <input type="text" name="cloneable_field[1][date]" value="2014-03-01" />
     </fieldset>
 </div>
 RENDERED;
@@ -235,8 +238,7 @@ RENDERED;
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
-        $cloneable->setAssetsManager($this->di->get('assets'));
-		
+
 		$filedName = 'no_filter';
 		$element = new \Phalcon\Forms\Element\Text($filedName);
         $cloneable->addBaseElement($element);
