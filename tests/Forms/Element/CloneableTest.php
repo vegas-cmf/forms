@@ -162,7 +162,7 @@ RENDERED;
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals(
-            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /></fieldset></div>',
+            $html,
             $this->form->get('cloneable_field')->render()
         );
     }
