@@ -162,7 +162,7 @@ RENDERED;
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals(
-            $html,
+            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /></fieldset></div>',
             $this->form->get('cloneable_field')->render()
         );
     }
@@ -219,53 +219,6 @@ RENDERED;
 		$test2 = $test1->get('test2');
 		
 		$this->assertInstanceOf('\Phalcon\Forms\Element\Text', $test2);
-	}
-
-	public function testGetArrayedValue()
-	{
-		$cloneableName = 'foo_cloneable';
-        $cloneable = new Cloneable($cloneableName);
-
-		$element = new \Phalcon\Forms\Element\Text('email_filter');
-		$element->addFilter('email');
-        $cloneable->addBaseElement($element);
-
-		$element = new \Phalcon\Forms\Element\Text('string_filter');
-		$element->addFilter('string');
-        $cloneable->addBaseElement($element);
-
-		$element = new \Phalcon\Forms\Element\Text('int_filter');
-		$element->addFilter('int');
-        $cloneable->addBaseElement($element);
-
-		$element = new \Phalcon\Forms\Element\Text('float_filter');
-		$element->addFilter('float');
-        $cloneable->addBaseElement($element);
-
-		$this->form->add($cloneable);
-		$cloneableObj = $this->form->get($cloneableName);
-		$cloneableObj->getRows();
-
-		$rows = $cloneableObj->getRows();
-		$test1 = $rows[0];
-		$test1->setValues([
-			'email_filter' => '\\email _ value<>',
-			'string_filter' => '<foo>value</bar>',
-			'int_filter' => 'foo11689bar$^%&%&',
-			'float_filter' => 'sk1df%2*%&3*I.Jd5f6g'
-		]);
-
-		$expectedValues = [
-			'email_filter' => 'email_value',
-			'string_filter' => 'value',
-			'int_filter' => '11689',
-			'float_filter' => '123.56'
-		];
-
-		$elements = $test1->getElements();
-		foreach ($expectedValues as $label => $expectedValue) {
-			$this->assertSame($expectedValue, $elements[$label]->getValue());
-		}
 	}
 	
 	public function testGetSingleFieldNameReturnsOneElementName()
