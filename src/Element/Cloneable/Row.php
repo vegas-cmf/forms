@@ -82,7 +82,7 @@ class Row
         if (!empty($filters)) {
             foreach ($filters As $filter) {
                 $returnValue = $this->cloneable->getForm()
-                    ->getDI()->get('filter')->sanitize($returnValue, $filter->getOption('filter'));
+                    ->getDI()->get('filter')->sanitize($returnValue, $filter);
             }
         }
         
