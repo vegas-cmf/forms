@@ -14,6 +14,7 @@ namespace Vegas\Tests\Forms\Element;
 use Phalcon\DI;
 use Phalcon\Validation\Validator\PresenceOf;
 use Vegas\Forms\Element\Cloneable;
+use Vegas\Forms\Element\Datepicker;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
 
@@ -87,12 +88,20 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         $model = new FakeModel();
 
         $cloneable = $this->prepareValidCloneableField();
+
+        $datepicker = new Datepicker('date');
+        $datepicker->setAssetsManager($this->di->get('assets'));
+
+        $cloneable->addBaseElement($datepicker);
+
+        $this->form->add($datepicker);
         $this->form->add($cloneable);
 
         $this->form->bind(array(
+            'date' => '2014-03-01',
             'cloneable_field' => array(
                 array('test1' => 'foo', 'test2' => 'bar'),
-                array('test1' => 'baz', 'test2' => 'xyz'),
+                array('test1' => 'baz', 'test2' => 'xyz', 'date' => '2014-03-01'),
             )
         ), $model);
 
@@ -100,12 +109,14 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($bindedValues[0]['test1'], 'foo');
         $this->assertEquals($bindedValues[1]['test2'], 'xyz');
+        $this->assertEquals($bindedValues[1]['date'], $this->form->get('date')->getValue());
 
-        $this->assertEquals($model->cloneable_field[0]['test1'], 'foo');
-        $this->assertEquals($model->cloneable_field[1]['test2'], 'xyz');
+        $this->assertEquals('foo', $model->cloneable_field[0]['test1']);
+        $this->assertEquals('xyz', $model->cloneable_field[1]['test2']);
+        $this->assertEquals($model->date, $model->cloneable_field[1]['date']); // int 1393628400
 
         $this->assertEquals(
-            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /></fieldset></div>',
+            '<div vegas-cloneable="1"><fieldset><input type="text" name="cloneable_field[0][test1]" /><input type="text" name="cloneable_field[0][test2]" /><input type="text" name="cloneable_field[0][date]" vegas-datepicker="1" /></fieldset><fieldset><input type="text" name="cloneable_field[0][test1]" value="foo" /><input type="text" name="cloneable_field[0][test2]" value="bar" /><input type="text" name="cloneable_field[0][date]" vegas-datepicker="1" /></fieldset><fieldset><input type="text" name="cloneable_field[1][test1]" value="baz" /><input type="text" name="cloneable_field[1][test2]" value="xyz" /><input type="text" name="cloneable_field[1][date]" value="2014-03-01" vegas-datepicker="1" /></fieldset></div>',
             $this->form->get('cloneable_field')->render()
         );
     }
