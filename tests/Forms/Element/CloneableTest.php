@@ -13,7 +13,6 @@ namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
 use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Email;
 use Vegas\Forms\Element\Cloneable;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
@@ -221,54 +220,48 @@ RENDERED;
 		
 		$this->assertInstanceOf('\Phalcon\Forms\Element\Text', $test2);
 	}
-	
+
 	public function testGetArrayedValue()
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
 
 		$element = new \Phalcon\Forms\Element\Text('email_filter');
-		$element->addFilter(new Email(['filter' => 'email']));		
+		$element->addFilter('email');
         $cloneable->addBaseElement($element);
-		
+
 		$element = new \Phalcon\Forms\Element\Text('string_filter');
-		$element->addFilter(new Email(['filter' => 'string']));		
+		$element->addFilter('string');
         $cloneable->addBaseElement($element);
-		
+
 		$element = new \Phalcon\Forms\Element\Text('int_filter');
-		$element->addFilter(new Email(['filter' => 'int']));		
+		$element->addFilter('int');
         $cloneable->addBaseElement($element);
-		
+
 		$element = new \Phalcon\Forms\Element\Text('float_filter');
-		$element->addFilter(new Email(['filter' => 'float']));		
+		$element->addFilter('float');
         $cloneable->addBaseElement($element);
-		
-		$element = new \Phalcon\Forms\Element\Text('alphanum_filter');
-		$element->addFilter(new Email(['filter' => 'alphanum']));		
-        $cloneable->addBaseElement($element);
-		
+
 		$this->form->add($cloneable);
 		$cloneableObj = $this->form->get($cloneableName);
 		$cloneableObj->getRows();
-		
+
 		$rows = $cloneableObj->getRows();
 		$test1 = $rows[0];
 		$test1->setValues([
 			'email_filter' => '\\email _ value<>',
 			'string_filter' => '<foo>value</bar>',
 			'int_filter' => 'foo11689bar$^%&%&',
-			'float_filter' => 'sk1df%2*%&3*I.Jd5f6g',
-			'alphanum_filter' => '!@#*][\\Foo<>?Bar)*(Baz',
+			'float_filter' => 'sk1df%2*%&3*I.Jd5f6g'
 		]);
-		
+
 		$expectedValues = [
 			'email_filter' => 'email_value',
 			'string_filter' => 'value',
 			'int_filter' => '11689',
-			'float_filter' => '123.56',
-			'alphanum_filter' => 'FooBarBaz',
+			'float_filter' => '123.56'
 		];
-		
+
 		$elements = $test1->getElements();
 		foreach ($expectedValues as $label => $expectedValue) {
 			$this->assertSame($expectedValue, $elements[$label]->getValue());
