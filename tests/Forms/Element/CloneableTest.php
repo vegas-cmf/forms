@@ -125,12 +125,20 @@ RENDERED;
         $model = new FakeModel();
 
         $cloneable = $this->prepareValidCloneableField();
+
+        $datepicker = new Datepicker('date');
+        $datepicker->setAssetsManager($this->di->get('assets'));
+
+        $cloneable->addBaseElement($datepicker);
+
+        $this->form->add($datepicker);
         $this->form->add($cloneable);
 
         $this->form->bind(array(
+            'date' => '2014-03-01',
             'cloneable_field' => array(
                 array('test1' => 'foo', 'test2' => 'bar'),
-                array('test1' => 'baz', 'test2' => 'xyz'),
+                array('test1' => 'baz', 'test2' => 'xyz', 'date' => '2014-03-01'),
             )
         ), $model);
 
@@ -138,9 +146,11 @@ RENDERED;
 
         $this->assertEquals($bindedValues[0]['test1'], 'foo');
         $this->assertEquals($bindedValues[1]['test2'], 'xyz');
+        $this->assertEquals($bindedValues[1]['date'], $this->form->get('date')->getValue());
 
-        $this->assertEquals($model->cloneable_field[0]['test1'], 'foo');
-        $this->assertEquals($model->cloneable_field[1]['test2'], 'xyz');
+        $this->assertEquals('foo', $model->cloneable_field[0]['test1']);
+        $this->assertEquals('xyz', $model->cloneable_field[1]['test2']);
+        $this->assertEquals($model->date, $model->cloneable_field[1]['date']); // int 1393628400
 
         $html = <<<RENDERED
 <div id="cloneable_field" vegas-cloneable>
@@ -225,7 +235,8 @@ RENDERED;
 	{
 		$cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
-
+        $cloneable->setAssetsManager($this->di->get('assets'));
+		
 		$filedName = 'no_filter';
 		$element = new \Phalcon\Forms\Element\Text($filedName);
         $cloneable->addBaseElement($element);
