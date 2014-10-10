@@ -18,6 +18,7 @@ use Vegas\Forms\Decorator\DecoratorInterface;
 use Vegas\Forms\Decorator\Exception\DiNotSetException;
 use Vegas\Forms\Decorator\Exception\InvalidAssetsManagerException;
 use Vegas\Forms\Decorator\Exception\ViewNotSetException;
+use Phalcon\Mvc\View;
 
 class Decorator implements DecoratorInterface
 {
@@ -85,7 +86,9 @@ class Decorator implements DecoratorInterface
             'attributes' => $attributes,
             'element' => $formElement,
             'value' => $value
-        ]);
+        ], function ($view) {
+            $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
+        });
     }
 
     /**

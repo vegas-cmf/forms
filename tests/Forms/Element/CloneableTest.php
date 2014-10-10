@@ -87,6 +87,11 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 </div>
 RENDERED;
 
+        $this->assertEquals(
+            '',
+            $this->form->get('cloneable_field')->renderDecorated()
+        );
+
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals(
