@@ -4,7 +4,7 @@
  *
  * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://github.com/vegas-cmf
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,7 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
-use Phalcon\Forms\Element\Select;
+use Vegas\Forms\Element\Select;
 use Vegas\Forms\Element\MultiSelect;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
@@ -39,8 +39,17 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
             'test1' => 'foo',
             'test2' => 'bar'
         );
+
+        $testElement = new Select('select', $options, ['name' => 'select[]']);
+
         $this->form->get('select')->addOptions($options);
 
+        $this->assertEquals(
+            $testElement->render(),
+            $this->form->get('select')->renderDecorated()
+        );
+
+        $this->form->get('select')->getDecorator()->setTemplateName('jquery');
         $this->assertNull($this->form->get('select')->getDecorator()->getDI());
 
         try {
@@ -53,8 +62,6 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
         $this->form->get('select')->getDecorator()->setDI($this->di);
         $this->assertInstanceOf('\Phalcon\DI', $this->form->get('select')->getDecorator()->getDI());
 
-        $select = new Select('select', $options, ['name' => 'select[]']);
-
         $htmlDecorated = <<<RENDER
 <input type="hidden" name="select[]" />
 <select id="select" name="select[]" multiple="multiple" data-vegas-multiselect>
@@ -63,10 +70,7 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
 </select>
 RENDER;
 
-        $this->assertEquals($select->render(['value' => 'test1']), $this->form->get('select')->render(['value' => 'test1']));
-        $this->assertEquals('', $this->form->get('select')->renderDecorated());
-
-        $this->form->get('select')->getDecorator()->setTemplateName('jquery');
+        $this->assertEquals($testElement->render(['value' => 'test1']), $this->form->get('select')->render(['value' => 'test1']));
         $this->assertEquals($htmlDecorated, $this->form->get('select')->renderDecorated());
     }
 }

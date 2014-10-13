@@ -20,7 +20,7 @@
  *
  * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://github.com/vegas-cmf
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,6 +31,7 @@ use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException;
 use Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException;
+use Vegas\Forms\Element\Cloneable\Exception\RenderDecoratedOnlyException;
 use Vegas\Forms\Element\Cloneable\Validation\Extender As ValidationExtender;
 use Phalcon\Forms\Element;
 
@@ -120,13 +121,14 @@ class Cloneable extends Element
     }
 
     /**
-     * Cloneable element uses decorator by default.
+     * Cloneable element uses decorator with jQuery template by default.
      *
      * @param null $attributes
      * @return string
      */
     public function render($attributes = null)
     {
+        $this->getDecorator()->setTemplateName('jquery');
         return $this->renderDecorated($attributes);
     }
 

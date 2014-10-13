@@ -4,7 +4,7 @@
  *
  * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://github.com/vegas-cmf
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -40,6 +40,7 @@ class Decorator implements DecoratorInterface
 
     /**
      * Render form element with current templatePath and templateName.
+     * If templatePath or templateName are not set, render default.
      *
      * @param ElementInterface $formElement
      * @param string $value
@@ -51,6 +52,10 @@ class Decorator implements DecoratorInterface
      */
     public function render(ElementInterface $formElement, $value = '', $attributes = array())
     {
+        if (empty($this->templateName) || empty($this->templatePath)) {
+            return $formElement->render();
+        }
+
         if (!($this->di instanceof DiInterface)) {
             throw new DiNotSetException();
         }

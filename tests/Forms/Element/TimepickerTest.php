@@ -4,7 +4,7 @@
  *
  * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://github.com/vegas-cmf
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -37,6 +37,15 @@ class TimepickerTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
+        $testElement = (new Text('date'))
+            ->setAttribute('class', 'test1');
+
+        $this->assertEquals(
+            $testElement->render(),
+            $this->form->get('date')
+        );
+
+        $this->form->get('date')->getDecorator()->setTemplateName('jquery');
         $this->assertNull($this->form->get('date')->getDecorator()->getDI());
 
         try {
@@ -51,15 +60,9 @@ class TimepickerTest extends \PHPUnit_Framework_TestCase
 
         $attributes = ['name' => 'foobaz'];
 
-        $testElement = (new Text('date'))
-            ->setAttribute('class', 'test1');
-
         $this->assertEquals($testElement->render($attributes), $this->form->get('date')->render($attributes));
 
         $this->regenerateForm();
-
-        $this->assertEquals('', $this->form->get('date')->renderDecorated());
-
         $this->form->get('date')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals('<input type="text" id="date" name="date" class="test1" value="10:20" vegas-timepicker />', $this->form->get('date')->renderDecorated());

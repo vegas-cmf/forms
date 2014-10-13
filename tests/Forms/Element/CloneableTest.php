@@ -4,7 +4,7 @@
  *
  * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://github.com/vegas-cmf
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -36,7 +36,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($cloneable->getDecorator()->getDI());
 
         try {
-            $cloneable->renderDecorated();
+            $cloneable->render();
             throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
@@ -46,6 +46,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
         }
@@ -54,6 +55,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
             
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
         }
@@ -62,6 +64,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException', $ex);
         }
@@ -87,21 +90,11 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 </div>
 RENDERED;
 
-        $this->assertEquals(
-            '',
-            $this->form->get('cloneable_field')->renderDecorated()
-        );
-
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
 
         $this->assertEquals(
             $html,
             $this->form->get('cloneable_field')->render()
-        );
-
-        $this->assertEquals(
-            $html,
-            $this->form->get('cloneable_field')->renderDecorated()
         );
 
         $htmlWithAttr = <<<RENDERED

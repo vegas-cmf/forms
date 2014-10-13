@@ -9,12 +9,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace Vegas\Forms\Element;
 
-namespace Vegas\Forms\Decorator\Exception;
+use Vegas\Forms\UnDecoratedTrait;
 
-use Vegas\Forms\Decorator\Exception;
-
-class ElementNotDecoratedException extends Exception
+class Check extends \Phalcon\Forms\Element\Check
 {
-    protected $message = 'Element does not have decorator set.';
+    use UnDecoratedTrait;
 }
