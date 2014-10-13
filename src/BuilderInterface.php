@@ -43,4 +43,9 @@ interface BuilderInterface
      * Method sets placeholder attribute for element
      */
     function setAttributes();
+
+    /**
+     * Method sets additional options for edit form
+     */
+    function setAdditionalOptions();
 }

@@ -21,7 +21,6 @@ class Datepicker extends Text implements AssetsInjectableInterface
     public function __construct($name, $attributes = null)
     {
         $attributes['vegas-datepicker'] = true;
-        $this->addFilter('dateToTimestamp');
         
         parent::__construct($name, $attributes);
     }

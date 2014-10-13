@@ -34,9 +34,14 @@ class FormFactory implements InjectionAwareInterface
     ];
 
     /**
-     * Common prefix for all trait builder methods used by this factory
+     * Common prefix for all builder methods used by this factory
      */
-    const METHOD_NAME = 'build';
+    const BUILDER_METHOD = 'build';
+
+    /**
+     * Common prefix for all additional options methods used by this factory
+     */
+    const ADDITIONAL_OPTIONS_METHOD = 'getAdditionalOptions';
 
     /**
      * @var \Phalcon\DiInterface $dependencyInjector
@@ -97,9 +102,19 @@ class FormFactory implements InjectionAwareInterface
     {
         $form = new GenericForm;
         foreach ($data as $item) {
+
             $element = $this->callBuilderMethod($item);
             if ($element->getLabel()) {
                 $element->setLabel($this->getDI()->get('i18n')->_($element->getLabel()));
+            }
+            $additionalOptions = $this->callAdditionalOptionsMethod($item);
+
+            if($additionalOptions !== null) {
+                foreach($additionalOptions as $option) {
+                    if(isset($item[$option->getName()])) {
+                        $element->setAttribute($option->getName(), $item[$option->getName()]);
+                    }
+                }
             }
             $form->add($element);
         }
@@ -107,7 +122,7 @@ class FormFactory implements InjectionAwareInterface
     }
 
     /**
-     * Proxies factory create call to specific responsible trait.
+     * Proxies factory create call to specific responsible builder.
      * @param array $settings
      * @return \Phalcon\Forms\ElementInterface form element instance
      * @throws \Vegas\Forms\Builder\Exception\NotFoundException When a specific type is not found
@@ -129,9 +144,44 @@ class FormFactory implements InjectionAwareInterface
             throw new NotDefinedException();
         }
 
-        $method = new \ReflectionMethod($className, self::METHOD_NAME);
+        $method = new \ReflectionMethod($className, self::BUILDER_METHOD);
         return $method->invokeArgs(new $className, array($settings));
     }
+
+    /**
+     * Proxies factory create call for additional fields to specific responsible builder.
+     * @param array $settings
+     * @return \Phalcon\Forms\ElementInterface form element instance
+     * @throws \Vegas\Forms\Builder\Exception\NotFoundException When a specific type is not found
+     */
+    private function callAdditionalOptionsMethod($item)
+    {
+        $settings = new InputSettingsForm;
+        if (!$settings->isValid($item)) {
+            throw new InvalidInputSettingsException;
+        }
+        $settings->bind($item, new \stdClass);
+
+        $className = $item[InputSettingsForm::TYPE_PARAM];
+
+        if(!class_exists($className)) {
+            throw new NotFoundException();
+        }
+        if(!in_array($className, $this->builders)) {
+            throw new NotDefinedException();
+        }
+//        print_r($className);exit;
+        $builderObject = new $className;
+        $builderObject->setAdditionalOptions();
+        return $builderObject->getAdditionalOptions();
+
+        $setMethod = new \ReflectionMethod($className, 'initElement');
+        $getMethod = new \ReflectionMethod($className, self::ADDITIONAL_OPTIONS_METHOD);
+        $setMethod->invokeArgs($builderObject, array($settings));
+        return $getMethod->invokeArgs($builderObject, array($settings));
+    }
+
+
 
     /**
      * Method create object for render each element. Execute initElement method
@@ -141,7 +191,11 @@ class FormFactory implements InjectionAwareInterface
     {
         $elements = [];
         foreach($this->builders as $builder) {
-            $elements[] = (new $builder)->initElement();
+            $object = new $builder;
+            $elements[] = [
+                'element' => $object->initElement(),
+                'options' => $object->getAdditionalOptions()
+                ];
         }
         return $elements;
     }
