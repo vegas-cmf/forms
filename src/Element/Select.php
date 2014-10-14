@@ -11,8 +11,12 @@
  */
 namespace Vegas\Forms\Element;
 
+use Vegas\Forms\UnDecoratedTrait;
+
 class Select extends \Phalcon\Forms\Element\Select
 {
+    use UnDecoratedTrait;
+
     /**
      * Allows to add multiple options at once when providing just one array.
      * @param array $options array of key => value for each option
