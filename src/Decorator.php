@@ -22,6 +22,7 @@ use Phalcon\Mvc\View;
 
 class Decorator implements DecoratorInterface
 {
+    protected $variables = array();
     protected $templateName;
     protected $templatePath;
     protected $di;
@@ -56,6 +57,26 @@ class Decorator implements DecoratorInterface
             return $formElement->render();
         }
 
+        $this->checkDependencies();
+
+        $this->variables['element'] = $formElement;
+        $this->variables['value'] = $value;
+        $this->variables['attributes'] = $attributes;
+
+        $partial = $this->generatePartial();
+
+        return $partial;
+    }
+
+    /**
+     * Check for required DI services.
+     * 
+     * @throws Decorator\Exception\DiNotSetException
+     * @throws Decorator\Exception\InvalidAssetsManagerException
+     * @throws Decorator\Exception\ViewNotSetException
+     */
+    private function checkDependencies()
+    {
         if (!($this->di instanceof DiInterface)) {
             throw new DiNotSetException();
         }
@@ -67,10 +88,6 @@ class Decorator implements DecoratorInterface
         if (!$this->di->has('assets')) {
             throw new InvalidAssetsManagerException();
         }
-
-        $partial = $this->generatePartial($formElement, $value, $attributes);
-
-        return $partial;
     }
 
     /**
@@ -79,7 +96,7 @@ class Decorator implements DecoratorInterface
      * @param array $attributes
      * @return mixed
      */
-    private function generatePartial(ElementInterface $formElement, $value = '', array $attributes)
+    private function generatePartial()
     {
         $view = $this->di->get('view');
 
@@ -87,11 +104,7 @@ class Decorator implements DecoratorInterface
             $view->setViewsDir($this->templatePath);
         }
 
-        return $view->getRender('', $this->templateName, [
-            'attributes' => $attributes,
-            'element' => $formElement,
-            'value' => $value
-        ], function ($view) {
+        return $view->getRender('', $this->templateName, $this->variables, function ($view) {
             $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         });
     }
@@ -136,5 +149,26 @@ class Decorator implements DecoratorInterface
     public function getDI()
     {
         return $this->di;
+    }
+
+    /**
+     * @param array $variables
+     * @return $this
+     */
+    public function setVariables(array $variables)
+    {
+        $this->variables = $variables;
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @return $this
+     */
+    public function addVariable($name, $value)
+    {
+        $this->variables[$name] = $value;
+        return $this;
     }
 }

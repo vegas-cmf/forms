@@ -19,4 +19,6 @@ interface DecoratorInterface extends InjectionAwareInterface
     public function render(ElementInterface $formElement, $value = '', $attributes = array());
     public function setTemplateName($name);
     public function setTemplatePath($path);
+    public function setVariables(array $variables);
+    public function addVariable($name, $value);
 }
