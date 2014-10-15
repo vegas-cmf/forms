@@ -44,14 +44,5 @@ class Datepicker extends BuilderAbstract
         $this->additionalOptions[] = $format;
     }
 
-    public function updateOption($option)
-    {
-        foreach($this->additionalOptions as $key => $item) {
-            if($item->getName() == $option['key']) {
-                $this->additionalOptions[$key]->setAttribute('value', $option['value']);
-            }
-        }
-
-    }
 
 }
