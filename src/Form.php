@@ -32,7 +32,7 @@ class Form extends \Phalcon\Forms\Form
         $rawNames = array();
 
         foreach ($this->getElements() As $element) {
-            $rawNames[] = preg_replace('/\[[a-zA-Z0-9]*\]/','', $element->getName());
+            $rawNames[] = preg_replace('/\[[a-zA-Z0-9\-_]*\]/','', $element->getName());
         }
 
         foreach ($data As $name => $values) {
