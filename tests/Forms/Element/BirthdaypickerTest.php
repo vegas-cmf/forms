@@ -62,6 +62,7 @@ class BirthdaypickerTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->form->get('date')->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
         }

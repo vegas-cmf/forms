@@ -35,6 +35,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
         }
@@ -43,6 +44,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
         }
@@ -51,6 +53,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
             
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
         }
@@ -59,6 +62,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         
         try {
             $cloneable->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException', $ex);
         }

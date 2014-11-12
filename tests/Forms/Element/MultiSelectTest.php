@@ -43,6 +43,7 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->form->get('select')->render();
+            throw new \Exception('Not this exception.');
         } catch (\Exception $ex) {
             $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
         }
