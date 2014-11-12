@@ -40,19 +40,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->assertNull($this->form->get('browser')->getAssetsManager());
-
-        try {
-            $this->form->get('browser')->render();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
-        }
-
-        $this->form->get('browser')->setAssetsManager($this->di->get('assets'));
-
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('browser')->getAssetsManager());
-
         $html = <<<RENDER
 <div class="input-group browser-wrapper">
                     <input type="text" id="browser" name="browser" vegas-browser="1" />
