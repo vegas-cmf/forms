@@ -74,19 +74,8 @@ class Row
         if (!isset($value[$baseName])) {
             return null;
         }
-        
-        $returnValue = $value[$baseName];
-        
-        $filters = $this->elements[$baseName]->getFilters();
 
-        if (!empty($filters)) {
-            foreach ($filters As $filter) {
-                $returnValue = $this->cloneable->getForm()
-                    ->getDI()->get('filter')->sanitize($returnValue, $filter->getOption('filter'));
-            }
-        }
-        
-        return $returnValue;
+        return $value[$baseName];
     }
     
     public function getElements()
