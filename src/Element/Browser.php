@@ -11,15 +11,13 @@
  */
 namespace Vegas\Forms\Element;
 
-use \Phalcon\Forms\Element\Text;
-
 /**
  * @TODO prepare for v1.1
  *
  * Class Browser
  * @package Vegas\Forms\Element
  */
-class Browser extends Text
+class Browser extends \Phalcon\Forms\Element\Text
 {
     private $assets;
     

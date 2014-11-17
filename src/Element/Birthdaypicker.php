@@ -15,7 +15,7 @@ use Phalcon\Forms\Element\Text;
 use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 
-class Birthdaypicker extends Text
+class Birthdaypicker extends \Phalcon\Forms\Element\Text
 {
     use DecoratedTrait;
 

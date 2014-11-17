@@ -11,11 +11,10 @@
  */
 namespace Vegas\Forms\Element;
 
-use Phalcon\Forms\Element\Text;
 use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 
-class Colorpicker extends Text
+class Colorpicker extends \Phalcon\Forms\Element\Text
 {
     use DecoratedTrait;
 
