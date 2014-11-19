@@ -11,15 +11,16 @@
  */
 namespace Vegas\Forms\Element;
 
+use Vegas\Forms\DecoratedTrait;
+use Vegas\Forms\Decorator;
+
 /**
- * @TODO prepare for v1.1
- *
  * Class Browser
  * @package Vegas\Forms\Element
  */
 class Browser extends \Phalcon\Forms\Element\Text
 {
-    private $assets;
+    use DecoratedTrait;
     
     /**
      * Constructs rich text area (ckeditor)
@@ -29,20 +30,8 @@ class Browser extends \Phalcon\Forms\Element\Text
      */
     public function __construct($name, $attributes = null)
     {
-        $attributes['vegas-browser'] = true;
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Browser', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         parent::__construct($name, $attributes);
-    }
-    
-    public function render($attributes = null)
-    {
-        $input = parent::render($attributes);
-        
-        $html = '<div class="input-group browser-wrapper">
-                    ' . $input . '
-                    <div class="input-group-btn">
-                        <a class="btn btn-primary btn-browse">Browse</a>
-                    </div>
-                </div>';
-        return $html;
     }
 }

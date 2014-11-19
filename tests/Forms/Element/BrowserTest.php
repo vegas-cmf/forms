@@ -13,6 +13,7 @@ namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
 use Vegas\Forms\Element\Browser;
+use Vegas\Forms\Element\Text;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 
@@ -40,15 +41,24 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
+        $textField = new Text('browser');
+
+        $this->assertEquals($textField->render(), $this->form->get('browser')->render());
+        $this->assertEquals($textField->render(), $this->form->get('browser')->renderDecorated());
+
         $html = <<<RENDER
 <div class="input-group browser-wrapper">
-                    <input type="text" id="browser" name="browser" vegas-browser="1" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-primary btn-browse">Browse</a>
-                    </div>
-                </div>
+    <input type="text" id="browser" name="browser" value="" vegas-browser />
+    <div class="input-group-btn">
+        <a class="btn btn-primary btn-browse">Browse</a>
+    </div>
+</div>
 RENDER;
 
-        $this->assertEquals($html, $this->form->get('browser')->render());
+        $this->form->get('browser')->getDecorator()->setDI($this->di);
+        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('browser')->getDecorator()->getDI());
+
+        $this->form->get('browser')->getDecorator()->setTemplateName('jquery');
+        $this->assertEquals($html, $this->form->get('browser')->renderDecorated());
     }
 }
