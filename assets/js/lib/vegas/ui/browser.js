@@ -12,16 +12,23 @@
 var browserElement;
 
 $(document).ready(function() {
-
     var config = {
         filebrowserBrowseUrl: '/assets/html/ui/elbrowser.html',
         filebrowserWindowWidth: '740',
         filebrowserWindowHeight: '410'
     };
 
-    $('.btn-browse').click(function(e) {
-        browserElement = $(this).parents('.browser-wrapper');
-        window.open(config.filebrowserBrowseUrl,'vegas-browser','left=100, top=100, width=' + config.filebrowserWindowWidth + ',height=' + config.filebrowserWindowHeight);
+    var render = function() {
+        $('.btn-browse').click(function(){
+            browserElement = $(this).parents('.browser-wrapper');
+            window.open(config.filebrowserBrowseUrl,'vegas-browser','left=100, top=100, width=' + config.filebrowserWindowWidth + ',height=' + config.filebrowserWindowHeight);
+        });
+    }
+
+    render();
+
+    $('[vegas-cloneable]').on('cloned', function() {
+        render();
     });
 });
 
