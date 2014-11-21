@@ -13,6 +13,7 @@
 namespace Vegas\Forms;
 
 use Phalcon\DI;
+use Vegas\DI\InjectionAwareTrait;
 use Vegas\Forms\Element\AssetsInjectableInterface;
 use Vegas\Validation\Validator\PresenceOf;
 
@@ -130,10 +131,7 @@ abstract class BuilderAbstract implements BuilderInterface
     /**
      * Default setter for extra options
      */
-    public function setAdditionalOptions()
-    {
-
-    }
+    public function setAdditionalOptions(){ }
 
     public function getAdditionalOptions()
     {
