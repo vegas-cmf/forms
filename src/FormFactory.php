@@ -175,7 +175,7 @@ class FormFactory implements InjectionAwareInterface
         if(!in_array($className, $this->builders)) {
             throw new NotDefinedException();
         }
-//        print_r($className);exit;
+
         $builderObject = new $className;
         $builderObject->setAdditionalOptions();
         return $builderObject->getAdditionalOptions();

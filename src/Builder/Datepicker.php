@@ -12,6 +12,7 @@
 
 namespace Vegas\Forms\Builder;
 
+use Phalcon\DI;
 use Phalcon\Forms\Element\Text;
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
@@ -42,6 +43,8 @@ class Datepicker extends BuilderAbstract
         $format = new Text('format');
         $format->setLabel("Format");
         $this->additionalOptions[] = $format;
+
+        DI::getDefault()->get('assets')->addJs('assets/js/lib/vegas/formbuilder/datepicker.js');
     }
 
 
