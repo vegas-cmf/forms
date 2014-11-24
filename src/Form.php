@@ -2,9 +2,9 @@
 /**
  * This file is part of Vegas package
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage https://github.com/vegas-cmf
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -15,26 +15,35 @@ class Form extends \Phalcon\Forms\Form
 {
     /**
      * Bind also an array values.
-     * 
+     *
      * @param array $data
      * @param object $entity
      * @param array $whitelist
      */
-    public function bind($data, $entity, $whitelist=null)
+    public function bind($data, $entity, $whitelist = null)
     {
         parent::bind($data, $entity, $whitelist);
-        
-        $this->bindArrays($data, $entity);
+
+        $this->bindArrays($data, $entity, $whitelist);
     }
-    
-    private function bindArrays($data, $entity)
+
+    private function bindArrays($data, $entity, $whitelist = null)
     {
+        $rawNames = array();
+
+        foreach ($this->getElements() As $element) {
+            $rawNames[] = preg_replace('/\[[a-zA-Z0-9\-_]*\]/','', $element->getName());
+        }
+
         foreach ($data As $name => $values) {
-            if (is_array($values)) {
+            if (!is_array($values) || !in_array($name, $rawNames)) {
+                continue;
+            }
+
+            if (empty($whitelist) || isset($whitelist[$name])) {
                 $nameArray = array($name);
 
                 $values = $this->prepareValues($nameArray, $values);
-
                 $entity->$name = $this->reindex($values);
             }
         }
@@ -64,46 +73,68 @@ class Form extends \Phalcon\Forms\Form
 
     /**
      * Remove empty strings from array.
-     * 
+     *
      * @param array $values
      * @return array
      */
     private function prepareValues(array $name, array $values)
     {
         $tempArray = array();
-        
-        foreach ($values As $key => $value) { 
+
+        foreach ($values As $key => $value) {
             $baseName = $name;
             $baseName[] = $key;
-            
+
             $value = $this->prepareValue($baseName, $value);
-            
+
             if ($value !== null) {
                 $tempArray[$key] = $value;
             }
         }
-        
+
         return $tempArray;
     }
-    
+
     private function prepareValue(array $name, $value)
     {
         if (is_array($value)) {
             $value = $this->prepareValues($name, $value);
+        } elseif ($this->has($name[0]) && $this->get($name[0]) instanceof \Vegas\Forms\Element\Cloneable) {
+            $value = $this->prepareCloneableValue($name, $value);
         }
-        
+
         if ($this->passArray($value) || $this->passString($value)) {
             return $value;
         }
-        
+
         return null;
     }
-    
+
+    private function prepareCloneableValue(array $name, $value)
+    {
+        $cloneable = $this->get($name[0]);
+        $elements = $cloneable->getBaseElements();
+
+        if (isset($elements[$name[count($name)-1]])) {
+            $element = $elements[$name[count($name)-1]];
+
+            $filters = $element->getFilters();
+
+            if (!empty($filters)) {
+                foreach ($filters As $filter) {
+                    $value = $this->getDI()->get('filter')->sanitize($value, $filter);
+                }
+            }
+        }
+
+        return $value;
+    }
+
     private function passArray($value)
     {
         return is_array($value) && count($value);
     }
-    
+
     private function passString($value)
     {
         return !is_array($value) && $value !== '';
@@ -127,9 +158,10 @@ class Form extends \Phalcon\Forms\Form
      */
     public function getValue($name)
     {
-        $matches = array();
+        $unBracketName = str_replace(']', '', $name);
+        $matches = explode('[',$unBracketName);
 
-        if (preg_match('/^([a-zA-Z0-9\-\_]+)\[([a-zA-Z0-9\-\_]*)\](\[([a-zA-Z0-9\-\_]*)\])?$/', $name, $matches)) {
+        if (count($matches)) {
             return $this->getArrayValue($matches);
         }
 
@@ -138,11 +170,11 @@ class Form extends \Phalcon\Forms\Form
 
     private function getArrayValue(array $matches)
     {
-        $baseName = $matches[1];
+        $baseName = $matches[0];
         $value = parent::getValue($baseName);
 
         foreach ($matches As $key => $match) {
-            if ($key !== 0 && $key%2 === 0) {
+            if ($key) {
                 if (isset($value[$match])) {
                     $value = $value[$match];
                 } else {
