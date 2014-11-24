@@ -208,7 +208,6 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertTrue($form->isValid($validData));
-
     }
     
     public function testCreateDynamicFormWithStaticElements()
@@ -313,7 +312,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Vegas\Forms\Exception\InvalidInputSettingsException', $e);
         }
     }
-    
+
     public function testNonexistentBuilderType()
     {
         $data = [

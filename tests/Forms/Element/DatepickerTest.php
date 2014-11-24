@@ -37,7 +37,7 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $dateTime = new \DateTime('2014-03-13');
 
         $this->form->bind(array('date' => $dateTime->format('Y-m-d')), $this->model);
-//        $this->assertEquals($dateTime->getTimestamp(), $this->model->date);
+        $this->assertEquals($dateTime->getTimestamp(), $this->model->date);
         $this->assertEquals($this->form->get('date')->getValue(), $dateTime->format('Y-m-d'));
 
         // create new form for filled model
@@ -50,6 +50,15 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $testString = 'test string';
         $this->form->bind(array('date' => $testString), $this->model);
         $this->assertEquals($testString, $this->model->date);
+
+        // create new form for filled model
+        $this->form = new FakeVegasForm($this->model);
+        $datepicker = new Datepicker('date');
+        $this->form->add($datepicker);
+        $this->form->bind(array('date' => 1394665200), $this->model);
+
+        $this->assertEquals('2014-03-13', $this->form->get('date')->getValue());
+
     }
 
     public function testRender()

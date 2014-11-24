@@ -13,11 +13,11 @@
 namespace Vegas\Forms\Builder;
 
 use Phalcon\DI;
-use Phalcon\Forms\Element\Text;
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\Datepicker as DatepickerInput;
 use Vegas\Validation\Validator\Date;
+use Vegas\Validation\Validator\Regex;
 
 /**
  * Class Datepicker
@@ -35,12 +35,12 @@ class Datepicker extends BuilderAbstract
     public function setValidator()
     {
         parent::setValidator();
-        $this->element->addValidator(new Date(['format' => 'Y-m-d']));
+        $this->element->addValidator(new Regex(['pattern' => '/[0-9]*/']));
     }
 
     public function setAdditionalOptions()
     {
-        $format = new Text('format');
+        $format = new \Phalcon\Forms\Element\Text('format');
         $format->setLabel("Format");
         $this->additionalOptions[] = $format;
 
