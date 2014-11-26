@@ -17,6 +17,7 @@ use Phalcon\DI,
 use Vegas\Forms\Builder\Exception\NotFoundException;
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\Form;
+use Vegas\Validation\Validator\PresenceOf;
 
 /**
  * Used to mock translations using DI.
@@ -144,7 +145,9 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                 'name'      => 'fakeUser4',
                 'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
                 'required'  => true,
-                'label'     => 'Fill fake user'
+                'label'     => 'Fill fake user',
+                'placeholder'=> 'User name',
+                'default'   => 'Tester Lester'
             ],
             [
                 'name'      => 'fakeUser5',
