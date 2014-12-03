@@ -22,7 +22,7 @@ use Phalcon\Mvc\View;
 
 class Decorator implements DecoratorInterface
 {
-    protected $variables = array();
+    protected $variables = [];
     protected $templateName;
     protected $templatePath;
     protected $di;
@@ -32,10 +32,14 @@ class Decorator implements DecoratorInterface
      *
      * @param null $path
      */
-    public function __construct($path = null)
+    public function __construct($templatePath = null, $templateName = null)
     {
-        if ($path) {
-            $this->templatePath = $path;
+        if ($templatePath) {
+            $this->templatePath = $templatePath;
+        }
+
+        if ($templateName) {
+            $this->templateName = $templateName;
         }
     }
 

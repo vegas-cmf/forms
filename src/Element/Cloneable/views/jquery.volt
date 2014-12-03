@@ -13,3 +13,4 @@
 </fieldset>
 {% endfor %}
 </div>
+<div class="clearfix"></div>
