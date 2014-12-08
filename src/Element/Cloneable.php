@@ -18,33 +18,51 @@
  * $this->add($answers);
  * </code>
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException,
-    Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException,
-    Vegas\Forms\Element\Cloneable\Validation\Extender As ValidationExtender,
-    Phalcon\Forms\Element;
+use Vegas\Forms\DecoratedTrait;
+use Vegas\Forms\Decorator;
+use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException;
+use Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException;
+use Vegas\Forms\Element\Cloneable\Exception\RenderDecoratedOnlyException;
+use Vegas\Forms\Element\Cloneable\Validation\Extender As ValidationExtender;
+use Phalcon\Forms\Element;
 
-class Cloneable extends Element implements AssetsInjectableInterface
+class Cloneable extends Element
 {
-    private $assets;
+    use DecoratedTrait;
+
     private $baseElements = array();
     private $rows = array();
     private $currentRowIndex = 0;
 
+    /**
+     * Final Cloneable field constructor with Decorator and ValidationExtender adding.
+     *
+     * @param string $name
+     * @param null $attributes
+     */
     final public function __construct($name, $attributes = null)
     {
         parent::__construct($name, $attributes);
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Cloneable', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         $this->addValidator(new ValidationExtender(array('cloneable' => $this)));
     }
 
+    /**
+     * Set base elements for Cloneable Row.
+     *
+     * @param array $elements
+     * @return $this
+     */
     public function setBaseElements(array $elements)
     {
         foreach ($elements as $element) {
@@ -54,6 +72,12 @@ class Cloneable extends Element implements AssetsInjectableInterface
         return $this;
     }
 
+    /**
+     * Add one element to base elements array.
+     *
+     * @param \Phalcon\Forms\ElementInterface $element
+     * @return $this
+     */
     public function addBaseElement(\Phalcon\Forms\ElementInterface $element)
     {
         $this->baseElements[$element->getName()] = $element;
@@ -61,11 +85,22 @@ class Cloneable extends Element implements AssetsInjectableInterface
         return $this;
     }
 
+    /**
+     * Get all base elements for Cloneable Row.
+     *
+     * @return array
+     */
     public function getBaseElements()
     {
         return $this->baseElements;
     }
 
+    /**
+     * Get base element by name.
+     *
+     * @param $name
+     * @return null
+     */
     public function getBaseElement($name)
     {
         if (empty($this->baseElements[$name])) {
@@ -75,39 +110,36 @@ class Cloneable extends Element implements AssetsInjectableInterface
         return $this->baseElements[$name];
     }
 
+    /**
+     * Returns current used row index.
+     *
+     * @return int
+     */
     public function getRowIndex()
     {
         return $this->currentRowIndex;
     }
 
+    /**
+     * Cloneable element uses decorator with jQuery template by default.
+     *
+     * @param null $attributes
+     * @return string
+     */
     public function render($attributes = null)
     {
-        if (is_array($attributes)) {
-            $attributes = array_merge($attributes, $this->getAttributes());
-        } else {
-            $attributes = $this->getAttributes();
-        }
-
-        $renderer = new Cloneable\Renderer($this, $attributes);
-        return $renderer->run();
+        $this->getDecorator()->setTemplateName('jquery');
+        return $this->renderDecorated($attributes);
     }
 
-    private function addAssets()
-    {
-        if ($this->getUserOption('sortable',false)) {
-            $this->assets->addJs('assets/vendor/html5sortable/jquery.sortable.js');
-
-        }
-        $this->assets->addCss('assets/css/common/cloneable.css');
-        $this->assets->addJs('assets/js/lib/vegas/ui/cloneable.js');
-    }
-
+    /**
+     * Checking all base elements before generating rows.
+     *
+     * @throws Cloneable\Exception\BaseElementNotSetException
+     * @throws Cloneable\Exception\CantInheritCloneableException
+     */
     private function validate()
     {
-        if(!$this->assets) {
-            throw new Exception\InvalidAssetsManagerException();
-        }
-
         if (empty($this->baseElements)) {
             throw new BaseElementNotSetException();
         }
@@ -119,16 +151,12 @@ class Cloneable extends Element implements AssetsInjectableInterface
         }
     }
 
-    public function getAssetsManager() {
-        return $this->assets;
-    }
-
-    public function setAssetsManager(\Phalcon\Assets\Manager $assets) {
-        $this->assets = $assets;
-
-        return $this;
-    }
-
+    /**
+     * Returns all Cloneable Rows for given data.
+     * The getRows() method will also try to generate them if they are not set.
+     *
+     * @return array
+     */
     public function getRows()
     {
         if (empty($this->rows)) {
@@ -138,11 +166,12 @@ class Cloneable extends Element implements AssetsInjectableInterface
         return $this->rows;
     }
 
+    /**
+     * Generating rows for given data.
+     */
     private function generateRows()
     {
         $this->validate();
-        $this->addAssets();
-
         $this->rows = array();
 
         // empty row for cloneable js
@@ -160,6 +189,11 @@ class Cloneable extends Element implements AssetsInjectableInterface
         }
     }
 
+    /**
+     * Adds one Cloneable\Row object to rows array.
+     *
+     * @param null $values
+     */
     private function addRow($values = null)
     {
         $row = new Cloneable\Row($this);
