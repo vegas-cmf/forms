@@ -88,6 +88,7 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
         <input type="text" name="cloneable_field[0][test2]" />
     </fieldset>
 </div>
+<div class="clearfix"></div>
 RENDERED;
 
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
@@ -108,6 +109,7 @@ RENDERED;
         <input type="text" name="cloneable_field[0][test2]" />
     </fieldset>
 </div>
+<div class="clearfix"></div>
 RENDERED;
 
         $this->assertEquals(
@@ -168,6 +170,7 @@ RENDERED;
         <input type="text" name="cloneable_field[1][date]" value="2014-03-01" />
     </fieldset>
 </div>
+<div class="clearfix"></div>
 RENDERED;
 
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
