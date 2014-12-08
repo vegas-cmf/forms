@@ -11,13 +11,11 @@
  */
 namespace Vegas\Forms\Element;
 
-use Phalcon\Forms\Element\Text;
-use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 
-class Birthdaypicker extends \Phalcon\Forms\Element\Text
+class Birthdaypicker extends \Phalcon\Forms\Element\Text implements Decorator\DecoratedInterface
 {
-    use DecoratedTrait;
+    use Decorator\DecoratedTrait;
 
     public function __construct($name, $attributes = null)
     {

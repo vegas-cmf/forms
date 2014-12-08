@@ -9,7 +9,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Vegas\Forms;
+namespace Vegas\Forms\Decorator;
 
 use Vegas\Forms\Decorator\DecoratorInterface;
 use Vegas\Forms\Decorator\Exception\ElementNotDecoratedException;

@@ -47,18 +47,6 @@ class ColorpickerTest extends \PHPUnit_Framework_TestCase
 
         $this->form->get('content')->getDecorator()->setTemplateName('jquery');
 
-        $this->assertNull($this->form->get('content')->getDecorator()->getDI());
-
-        try {
-            $this->form->get('content')->renderDecorated();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
-        }
-
-        $this->form->get('content')->getDecorator()->setDI($this->di);
-        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('content')->getDecorator()->getDI());
-
         $attributes = ['name' => 'foobaz'];
 
         $this->assertEquals($testElement->render($attributes), $this->form->get('content')->render($attributes));

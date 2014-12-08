@@ -66,18 +66,6 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
 
         $this->form->get('date')->getDecorator()->setTemplateName('jquery');
 
-        $this->assertNull($this->form->get('date')->getDecorator()->getDI());
-
-        try {
-            $this->form->get('date')->renderDecorated();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
-        }
-
-        $this->form->get('date')->getDecorator()->setDI($this->di);
-        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('date')->getDecorator()->getDI());
-
         $attributes = ['name' => 'foobaz'];
 
         $this->assertEquals($testElement->render($attributes), $this->form->get('date')->render($attributes));

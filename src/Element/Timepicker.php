@@ -11,12 +11,11 @@
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 
-class Timepicker extends \Phalcon\Forms\Element\Text
+class Timepicker extends \Phalcon\Forms\Element\Text implements Decorator\DecoratedInterface
 {
-    use DecoratedTrait;
+    use Decorator\DecoratedTrait;
 
     public function __construct($name, $attributes = null)
     {

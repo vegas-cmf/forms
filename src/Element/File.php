@@ -11,7 +11,7 @@
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Forms\UnDecoratedTrait;
+use Vegas\Forms\Decorator\UnDecoratedTrait;
 
 class File extends \Phalcon\Forms\Element\File
 {

@@ -50,7 +50,7 @@ class Form extends \Phalcon\Forms\Form
     }
 
     /**
-     * Adds an element to the form
+     * Adds an element to the form, if element has DecoratedInterface, injects DI
      *
      * @param \Phalcon\Forms\ElementInterface $element
      * @param string $postion
@@ -59,9 +59,15 @@ class Form extends \Phalcon\Forms\Form
      */
     public function add($element, $postion = null, $type = null)
     {
+        if ($element instanceof Decorator\DecoratedInterface
+            && $element->getDecorator() instanceof DecoratorInterface) {
+            $element->getDecorator()->setDI($this->di);
+        }
+
         $reflectionClass = new \ReflectionClass($element);
         $elementType = strtolower(str_replace($reflectionClass->getNamespaceName() . '\\', '', $reflectionClass->getName()));
         $element->setUserOption('_type', $elementType);
+
         // hax even when $postion and $type are null by default, call parent::add($element, $postion, $type)
         // causes exception : Array position does not exist
         if (!is_null($postion) || !is_null($type)) {

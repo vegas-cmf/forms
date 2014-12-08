@@ -14,7 +14,6 @@ namespace Vegas\Forms;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\DiInterface;
 use Phalcon\Forms\ElementInterface;
-use Vegas\Forms\Decorator\DecoratorInterface;
 use Vegas\Forms\Decorator\Exception\DiNotSetException;
 use Vegas\Forms\Decorator\Exception\InvalidAssetsManagerException;
 use Vegas\Forms\Decorator\Exception\ViewNotSetException;
@@ -74,7 +73,7 @@ class Decorator implements DecoratorInterface
 
     /**
      * Check for required DI services.
-     * 
+     *
      * @throws Decorator\Exception\DiNotSetException
      * @throws Decorator\Exception\InvalidAssetsManagerException
      * @throws Decorator\Exception\ViewNotSetException

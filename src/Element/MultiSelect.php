@@ -22,14 +22,11 @@
  */
 namespace Vegas\Forms\Element;
 
-use Phalcon\Forms\Element\Hidden;
-use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
-use Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
 
-class MultiSelect extends Select
+class MultiSelect extends Select implements Decorator\DecoratedInterface
 {
-    use DecoratedTrait;
+    use Decorator\DecoratedTrait;
 
     public function __construct($name, $options = null, $attributes = null)
     {

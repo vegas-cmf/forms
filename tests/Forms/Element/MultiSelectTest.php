@@ -50,17 +50,6 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->form->get('select')->getDecorator()->setTemplateName('jquery');
-        $this->assertNull($this->form->get('select')->getDecorator()->getDI());
-
-        try {
-            $this->form->get('select')->renderDecorated();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
-        }
-
-        $this->form->get('select')->getDecorator()->setDI($this->di);
-        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('select')->getDecorator()->getDI());
 
         $htmlDecorated = <<<RENDER
 <input type="hidden" name="select[]" />

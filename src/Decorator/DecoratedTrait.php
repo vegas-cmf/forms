@@ -9,10 +9,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Vegas\Forms;
+namespace Vegas\Forms\Decorator;
 
-use Vegas\Forms\Decorator\DecoratorInterface;
 use Vegas\Forms\Decorator\Exception\ElementNotDecoratedException;
+use Vegas\Forms\DecoratorInterface;
 
 trait DecoratedTrait
 {
@@ -26,7 +26,7 @@ trait DecoratedTrait
      *
      * @param array|null $attributes
      * @return string
-     * @throws Decorator\Exception\ElementNotDecoratedException
+     * @throws \Vegas\Forms\Decorator\Exception\ElementNotDecoratedException
      */
     public function renderDecorated($attributes = null)
     {
@@ -67,7 +67,7 @@ trait DecoratedTrait
     /**
      * Set decorator for element.
      *
-     * @param DecoratorInterface $decorator
+     * @param \Vegas\Forms\DecoratorInterface $decorator
      * @return $this
      */
     public function setDecorator(DecoratorInterface $decorator)

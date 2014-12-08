@@ -11,16 +11,15 @@
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 
 /**
  * Class Browser
  * @package Vegas\Forms\Element
  */
-class Browser extends \Phalcon\Forms\Element\Text
+class Browser extends \Phalcon\Forms\Element\Text implements Decorator\DecoratedInterface
 {
-    use DecoratedTrait;
+    use Decorator\DecoratedTrait;
     
     /**
      * Constructs rich text area (ckeditor)

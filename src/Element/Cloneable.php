@@ -27,7 +27,6 @@
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 use Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException;
 use Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException;
@@ -35,9 +34,9 @@ use Vegas\Forms\Element\Cloneable\Exception\RenderDecoratedOnlyException;
 use Vegas\Forms\Element\Cloneable\Validation\Extender As ValidationExtender;
 use Phalcon\Forms\Element;
 
-class Cloneable extends Element
+class Cloneable extends Element implements Decorator\DecoratedInterface
 {
-    use DecoratedTrait;
+    use Decorator\DecoratedTrait;
 
     private $baseElements = array();
     private $rows = array();

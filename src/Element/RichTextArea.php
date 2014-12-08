@@ -12,12 +12,11 @@
 namespace Vegas\Forms\Element;
 
 use \Phalcon\Forms\Element\TextArea;
-use Vegas\Forms\DecoratedTrait;
 use Vegas\Forms\Decorator;
 
-class RichTextArea extends TextArea
+class RichTextArea extends TextArea implements Decorator\DecoratedInterface
 {
-    use DecoratedTrait;
+    use Decorator\DecoratedTrait;
 
     /**
      * Constructs rich text area (ckeditor)
