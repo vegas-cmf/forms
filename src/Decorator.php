@@ -11,7 +11,6 @@
  */
 namespace Vegas\Forms;
 
-use Phalcon\DI\FactoryDefault;
 use Phalcon\DiInterface;
 use Phalcon\Forms\ElementInterface;
 use Vegas\Forms\Decorator\Exception\DiNotSetException;
@@ -107,7 +106,7 @@ class Decorator implements DecoratorInterface
             $view->setViewsDir($this->templatePath);
         }
 
-        return $view->getRender('', $this->templateName, $this->variables, function ($view) {
+        return $view->getRender('', $this->templateName, $this->variables, function (\Phalcon\Mvc\ViewInterface $view) {
             $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         });
     }

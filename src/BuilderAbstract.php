@@ -12,8 +12,6 @@
 
 namespace Vegas\Forms;
 
-use Phalcon\DI;
-use Vegas\Forms\Element\AssetsInjectableInterface;
 use Vegas\Validation\Validator\PresenceOf;
 
 /**
@@ -130,4 +128,4 @@ abstract class BuilderAbstract implements BuilderInterface
         return $this->element;
     }
 
-} 
+}

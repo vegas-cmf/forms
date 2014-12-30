@@ -12,13 +12,11 @@
 
 namespace Vegas\Forms\Builder;
 
-use Phalcon\DI;
-use Vegas\DI\InjectionAwareTrait;
 use Vegas\Forms\BuilderAbstract;
-use Vegas\Forms\InputSettings,
-    Vegas\Forms\Element\Select as SelectInput,
-    Vegas\Validation\Validator\PresenceOf,
-    Vegas\Validation\Validator\InclusionIn;
+use Vegas\Forms\InputSettings;
+use Vegas\Forms\Element\Select as SelectInput;
+use Vegas\Validation\Validator\PresenceOf;
+use Vegas\Validation\Validator\InclusionIn;
 
 /**
  * Class Select

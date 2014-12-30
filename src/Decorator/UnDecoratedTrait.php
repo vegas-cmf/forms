@@ -11,12 +11,9 @@
  */
 namespace Vegas\Forms\Decorator;
 
-use Vegas\Forms\Decorator\DecoratorInterface;
-use Vegas\Forms\Decorator\Exception\ElementNotDecoratedException;
-
 /**
  * Class UnDecoratedTrait - trait with renderDecorated for elements that don't need decorator (like
- * base Phalcon\Forms\Elements extended by our classes).
+ * base \Phalcon\Forms\Elements extended by our classes).
  *
  * @package Vegas\Forms
  */
