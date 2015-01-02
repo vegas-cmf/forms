@@ -55,11 +55,17 @@ class Decorator implements DecoratorInterface
      */
     public function render(ElementInterface $formElement, $value = '', $attributes = array())
     {
+        $this->checkDependencies();
+
+        $config = $this->di->get('config');
+
+        if (empty($this->templateName) && !empty($config->forms->templates->default_name)) {
+            $this->templateName = $config->forms->templates->default_name;
+        }
+
         if (empty($this->templateName) || empty($this->templatePath)) {
             return $formElement->render();
         }
-
-        $this->checkDependencies();
 
         $this->variables['element'] = $formElement;
         $this->variables['value'] = $value;

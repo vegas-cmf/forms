@@ -95,5 +95,17 @@ class DecoratorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertContains($html, $decorator->render($this->field, null, ['foo' => 'bar']));
         $this->assertContains('test1234foobar', $decorator->render($this->field, 'test1234foobar', ['foo' => 'bar']));
+
+        $this->di->get('config')->forms->templates->default_name = 'jquery';
+        $decorator = new Decorator($templatePath);
+        $decorator->setDI($this->di);
+
+        $html = '<textarea vegas-richtext>';
+
+        $this->assertContains($html, $decorator->render($this->field));
+        $this->assertContains('test1234foobar', $decorator->render($this->field, 'test1234foobar'));
+
+        // reset config to previous state
+        $this->di->get('config')->offsetUnset('forms');
     }
 }

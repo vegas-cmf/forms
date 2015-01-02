@@ -29,6 +29,5 @@ class Email extends BuilderAbstract
         $this->element = new EmailText($name);
         $this->element->addValidator(new EmailValidator);
     }
-
 }
 

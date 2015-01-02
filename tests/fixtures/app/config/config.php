@@ -10,8 +10,7 @@ return array(
 
     'forms' => [
         'templates' => [
-            'default_name' => 'jquery'
-            //'default_path' => PATH_TO_ALL_CUSTOM_TEMPLATES - optional
+            //'default_name' => 'jquery' // if present this will be default template name loaded in all decorated elements
         ]
     ]
 );
