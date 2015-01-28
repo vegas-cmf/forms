@@ -107,6 +107,12 @@ class Form extends \Phalcon\Forms\Form
             $value = $this->prepareValues($name, $value);
         } elseif ($this->has($name[0]) && $this->get($name[0]) instanceof \Vegas\Forms\Element\Cloneable) {
             $value = $this->prepareCloneableValue($name, $value);
+        } else {
+            $qualifiedName = $this->prepareFullName($name);
+            if ($this->has($qualifiedName)) {
+                $element = $this->get($qualifiedName);
+                $value = $this->appendFilters($element, $value);
+            }
         }
 
         if ($this->passArray($value) || $this->passScalar($value)) {
@@ -116,6 +122,20 @@ class Form extends \Phalcon\Forms\Form
         return null;
     }
 
+    private function prepareFullName(array $name)
+    {
+        $qualifiedName = $name[0];
+
+        foreach ($name As $key => $namePart) {
+            if (!$key) {
+                continue;
+            }
+            $qualifiedName .= '['.$namePart.']';
+        }
+
+        return $qualifiedName;
+    }
+
     private function prepareCloneableValue(array $name, $value)
     {
         $cloneable = $this->get($name[0]);
@@ -123,14 +143,7 @@ class Form extends \Phalcon\Forms\Form
 
         if (isset($elements[$name[count($name)-1]])) {
             $element = $elements[$name[count($name)-1]];
-
-            $filters = $element->getFilters();
-
-            if (!empty($filters)) {
-                foreach ($filters As $filter) {
-                    $value = $this->getDI()->get('filter')->sanitize($value, $filter);
-                }
-            }
+            $value = $this->appendFilters($element, $value);
         }
 
         return $value;
@@ -186,6 +199,19 @@ class Form extends \Phalcon\Forms\Form
                 } else {
                     return null;
                 }
+            }
+        }
+
+        return $value;
+    }
+
+    private function appendFilters($element, $value)
+    {
+        $filters = $element->getFilters();
+
+        if (!empty($filters)) {
+            foreach ($filters As $filter) {
+                $value = $this->getDI()->get('filter')->sanitize($value, $filter);
             }
         }
 

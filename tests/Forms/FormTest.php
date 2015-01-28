@@ -26,6 +26,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $model = new FakeModel();
 
         $values = array(
+            'integer' => '3 14',
             'test1' => array(
                 2 => 'foo',
                 3 => 'bar'
@@ -49,14 +50,20 @@ class FormTest extends \PHPUnit_Framework_TestCase
 
         $form = new Form();
 
+        $text = new Text('integer');
+        $text->addFilter('int');
+        $form->add($text);
+
         $form->add(new Text('test1[]'));
         $form->add(new Text('test1[]'));
 
         $text = new Text('test2[en]');
         $text->addValidator(new PresenceOf());
-
         $form->add($text);
-        $form->add(new Text('test2[nl]'));
+
+        $text = new Text('test2[nl]');
+        $text->addFilter('int');
+        $form->add($text);
 
         $form->add(new Text('test3[0][]'));
         $form->add(new Text('test3[0][1][]'));
@@ -66,6 +73,9 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($form->isValid());
         $this->assertTrue(!isset($model->not_in_form));
 
+        $this->assertEquals('3 14', $form->getValue('integer'));
+        $this->assertEquals(314, $model->integer);
+
         $this->assertEquals($model->test1[0], $form->getValue('test1[2]'));
         $this->assertEquals($model->test1[1], $form->getValue('test1[3]'));
 
@@ -73,7 +83,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($form->getValue('test1[1]'));
 
         $this->assertEquals($model->test2['en'], $form->getValue('test2[en]'));
-        $this->assertEquals($model->test2['nl'], $form->getValue('test2[nl]'));
+        $this->assertEquals(123.4, $form->getValue('test2[nl]'));
+        $this->assertEquals(1234, $model->test2['nl']);
 
         $this->assertNull($form->getValue('test2[en][notexsiting]'));
 
