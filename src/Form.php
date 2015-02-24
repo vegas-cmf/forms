@@ -43,8 +43,10 @@ class Form extends \Phalcon\Forms\Form
             if (empty($whitelist) || isset($whitelist[$name])) {
                 $nameArray = array($name);
 
-                $values = $this->prepareValues($nameArray, $values);
-                $entity->$name = $this->reindex($values);
+                $newValues = $this->prepareValues($nameArray, $values);
+                $oldValues = !empty($entity->$name) ? $entity->$name : [];
+
+                $entity->$name = $this->reindex($oldValues, $newValues);
             }
         }
     }
@@ -156,18 +158,18 @@ class Form extends \Phalcon\Forms\Form
 
     private function passScalar($value)
     {
-        return is_scalar($value) && (string)$value !== '';
+        return is_scalar($value);
     }
 
-    private function reindex($values)
+    private function reindex($currentValues, $newValues)
     {
-        foreach ($values As $key => $value) {
+        foreach ($newValues As $key => $value) {
             if (!is_numeric($key)) {
-                return $values;
+                return array_replace_recursive($currentValues, $newValues);
             }
         }
 
-        return array_values($values);
+        return array_values($newValues);
     }
 
     /**
