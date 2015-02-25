@@ -80,4 +80,76 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($model->test3[0][0], $form->getValue('test3[0][0]'));
         $this->assertEquals($model->test3[0][1][0], $form->getValue('test3[0][1][0]'));
     }
+
+    public function testEmptyArray()
+    {
+        $defaultTest = [
+            'test1' => [
+                'en' => 'foo',
+                'foo' => 'test11'
+            ],
+            'test2' => [
+                'nl' => 'bar',
+                'foo' => 'test22'
+            ],
+            'test3' => [
+                'ru' => 'baz',
+                'foo' => 'test33'
+            ],
+            'test4' => [
+                'es' => 'asdf',
+                'foo' => 'test44'
+            ]
+        ];
+
+        $model = new FakeModel();
+        $model->test = $defaultTest;
+
+        $form = new Form();
+
+        $text = new Text('test[test1][en]');
+        $form->add($text);
+
+        $text = new Text('test[test2][nl]');
+        $form->add($text);
+
+        $text = new Text('test[test3][ru]');
+        $form->add($text);
+
+        // empty values
+        $values = [
+            'test' => [
+                'test1' => [
+                    'en' => ''
+                ],
+                'test2' => [
+                    'nl' => null
+                ],
+                'test3' => [
+                    'ru' => 0
+                ]
+            ]
+        ];
+
+        $form->bind($values, $model);
+
+        $this->assertTrue($form->isValid());
+
+        $this->assertArrayHasKey('test1', $model->test);
+        $this->assertArrayHasKey('test2', $model->test);
+        $this->assertArrayHasKey('test3', $model->test);
+        $this->assertArrayHasKey('test4', $model->test);
+
+        $this->assertEquals('', $model->test['test1']['en']);
+        $this->assertEquals('test11', $model->test['test1']['foo']);
+
+        $this->assertEquals('bar', $model->test['test2']['nl']);
+        $this->assertEquals('test22', $model->test['test2']['foo']);
+
+        $this->assertEquals(0, $model->test['test3']['ru']);
+        $this->assertEquals('test33', $model->test['test3']['foo']);
+
+        $this->assertEquals('asdf', $model->test['test4']['es']);
+        $this->assertEquals('test44', $model->test['test4']['foo']);
+    }
 }
