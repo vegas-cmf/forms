@@ -32,7 +32,7 @@ class Form extends \Phalcon\Forms\Form
         $rawNames = array();
 
         foreach ($this->getElements() As $element) {
-            $rawNames[] = preg_replace('/\[[a-zA-Z0-9\-_]*\]/','', $element->getName());
+            $rawNames[] = preg_replace('/\[[a-zA-Z0-9\-\_]*\]/','', $element->getName());
         }
 
         foreach ($data As $name => $values) {
@@ -43,8 +43,10 @@ class Form extends \Phalcon\Forms\Form
             if (empty($whitelist) || isset($whitelist[$name])) {
                 $nameArray = array($name);
 
-                $values = $this->prepareValues($nameArray, $values);
-                $entity->$name = $this->reindex($values);
+                $newValues = $this->prepareValues($nameArray, $values);
+                $oldValues = !empty($entity->$name) ? $entity->$name : [];
+
+                $entity->$name = $this->reindex($oldValues, $newValues);
             }
         }
     }
@@ -62,6 +64,7 @@ class Form extends \Phalcon\Forms\Form
         $reflectionClass = new \ReflectionClass($element);
         $elementType = strtolower(str_replace($reflectionClass->getNamespaceName() . '\\', '', $reflectionClass->getName()));
         $element->setUserOption('_type', $elementType);
+
         // hax even when $postion and $type are null by default, call parent::add($element, $postion, $type)
         // causes exception : Array position does not exist
         if (!is_null($postion) || !is_null($type)) {
@@ -101,13 +104,33 @@ class Form extends \Phalcon\Forms\Form
             $value = $this->prepareValues($name, $value);
         } elseif ($this->has($name[0]) && $this->get($name[0]) instanceof \Vegas\Forms\Element\Cloneable) {
             $value = $this->prepareCloneableValue($name, $value);
+        } else {
+            $qualifiedName = $this->prepareFullName($name);
+            if ($this->has($qualifiedName)) {
+                $element = $this->get($qualifiedName);
+                $value = $this->appendFilters($element, $value);
+            }
         }
 
-        if ($this->passArray($value) || $this->passString($value)) {
+        if ($this->passArray($value) || $this->passScalar($value)) {
             return $value;
         }
 
         return null;
+    }
+
+    private function prepareFullName(array $name)
+    {
+        $qualifiedName = $name[0];
+
+        foreach ($name As $key => $namePart) {
+            if (!$key) {
+                continue;
+            }
+            $qualifiedName .= '['.$namePart.']';
+        }
+
+        return $qualifiedName;
     }
 
     private function prepareCloneableValue(array $name, $value)
@@ -117,14 +140,7 @@ class Form extends \Phalcon\Forms\Form
 
         if (isset($elements[$name[count($name)-1]])) {
             $element = $elements[$name[count($name)-1]];
-
-            $filters = $element->getFilters();
-
-            if (!empty($filters)) {
-                foreach ($filters As $filter) {
-                    $value = $this->getDI()->get('filter')->sanitize($value, $filter);
-                }
-            }
+            $value = $this->appendFilters($element, $value);
         }
 
         return $value;
@@ -135,20 +151,20 @@ class Form extends \Phalcon\Forms\Form
         return is_array($value) && count($value);
     }
 
-    private function passString($value)
+    private function passScalar($value)
     {
-        return !is_array($value) && $value !== '';
+        return is_scalar($value);
     }
 
-    private function reindex($values)
+    private function reindex($currentValues, $newValues)
     {
-        foreach ($values As $key => $value) {
+        foreach ($newValues As $key => $value) {
             if (!is_numeric($key)) {
-                return $values;
+                return array_replace_recursive($currentValues, $newValues);
             }
         }
 
-        return array_values($values);
+        return array_values($newValues);
     }
 
     /**
@@ -180,6 +196,19 @@ class Form extends \Phalcon\Forms\Form
                 } else {
                     return null;
                 }
+            }
+        }
+
+        return $value;
+    }
+
+    private function appendFilters($element, $value)
+    {
+        $filters = $element->getFilters();
+
+        if (!empty($filters)) {
+            foreach ($filters As $filter) {
+                $value = $this->getDI()->get('filter')->sanitize($value, $filter);
             }
         }
 
