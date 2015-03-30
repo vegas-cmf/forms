@@ -48,6 +48,10 @@ trait DecoratedTrait
             $value = $baseAttributes['value'];
             unset($baseAttributes['value']);
         } else {
+            if (is_object($this->_form)) {
+                $this->_value = $this->_form->getValue($this->getName());
+            }
+
             $value = $this->getValue();
         }
 
