@@ -11,12 +11,15 @@
  */
 namespace Vegas\Forms\Element;
 
-use \Vegas\Forms\Element\Exception\InvalidAssetsManagerException;
-use \Phalcon\Forms\Element\Text;
+use Vegas\Forms\Decorator;
 
-class Browser extends Text implements AssetsInjectableInterface
+/**
+ * Class Browser
+ * @package Vegas\Forms\Element
+ */
+class Browser extends \Phalcon\Forms\Element\Text implements Decorator\DecoratedInterface
 {
-    private $assets;
+    use Decorator\DecoratedTrait;
     
     /**
      * Constructs rich text area (ckeditor)
@@ -26,41 +29,8 @@ class Browser extends Text implements AssetsInjectableInterface
      */
     public function __construct($name, $attributes = null)
     {
-        $attributes['vegas-browser'] = true;
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Browser', 'views', '']);
+        $this->setDecorator(new Decorator($templatePath));
         parent::__construct($name, $attributes);
-    }
-    
-    public function render($attributes = null)
-    {
-        $this->addAssets();
-        
-        $input = parent::render($attributes);
-        
-        $html = '<div class="input-group browser-wrapper">
-                    ' . $input . '
-                    <div class="input-group-btn">
-                        <a class="btn btn-primary btn-browse">Browse</a>
-                    </div>
-                </div>';
-        return $html;
-    }
-    
-    private function addAssets()
-    {
-        if(!$this->assets) {
-            throw new InvalidAssetsManagerException();
-        }
-        $this->assets->addJs('assets/js/lib/vegas/ui/browser.js');
-    }
-    
-    public function getAssetsManager()
-    {
-        return $this->assets;
-    }
-
-    public function setAssetsManager(\Phalcon\Assets\Manager $assets)
-    {
-        $this->assets = $assets;        
-        return $this;
     }
 }

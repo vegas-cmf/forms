@@ -4,7 +4,7 @@
  *
  * @author Mateusz Aniołek <dev@mateusz-aniolek.com>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -29,6 +29,5 @@ class Email extends BuilderAbstract
         $this->element = new EmailText($name);
         $this->element->addValidator(new EmailValidator);
     }
-
 }
 

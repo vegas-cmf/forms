@@ -4,7 +4,7 @@
  *
  * @author Mateusz Aniołek <dev@mateusz-aniolek.com>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,8 +28,7 @@ class Datepicker extends BuilderAbstract
     public function setElement()
     {
         $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
-        $this->element = (new DatepickerInput($name))
-            ->setAssetsManager($this->settings->assets);
+        $this->element = (new DatepickerInput($name));
     }
 
     public function setValidator()
@@ -40,12 +39,10 @@ class Datepicker extends BuilderAbstract
 
     public function setAdditionalOptions()
     {
-        $format = new \Phalcon\Forms\Element\Text('format');
+        $format = new \Vegas\Forms\Element\Text('format');
         $format->setLabel("Format");
         $this->additionalOptions[] = $format;
 
         DI::getDefault()->get('assets')->addJs('assets/js/lib/vegas/formbuilder/datepicker.js');
     }
-
-
 }

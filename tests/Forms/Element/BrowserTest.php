@@ -13,6 +13,7 @@ namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
 use Vegas\Forms\Element\Browser;
+use Vegas\Forms\Element\Text;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 
@@ -40,28 +41,24 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $this->assertNull($this->form->get('browser')->getAssetsManager());
+        $textField = new Text('browser');
 
-        try {
-            $this->form->get('browser')->render();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
-        }
-
-        $this->form->get('browser')->setAssetsManager($this->di->get('assets'));
-
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('browser')->getAssetsManager());
+        $this->assertEquals($textField->render(), $this->form->get('browser')->render());
+        $this->assertEquals($textField->render(), $this->form->get('browser')->renderDecorated());
 
         $html = <<<RENDER
 <div class="input-group browser-wrapper">
-                    <input type="text" id="browser" name="browser" vegas-browser="1" />
-                    <div class="input-group-btn">
-                        <a class="btn btn-primary btn-browse">Browse</a>
-                    </div>
-                </div>
+    <input type="text" id="browser" name="browser" value="" vegas-browser />
+    <div class="input-group-btn">
+        <a class="btn btn-primary btn-browse">Browse</a>
+    </div>
+</div>
 RENDER;
 
-        $this->assertEquals($html, $this->form->get('browser')->render());
+        $this->form->get('browser')->getDecorator()->setDI($this->di);
+        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('browser')->getDecorator()->getDI());
+
+        $this->form->get('browser')->getDecorator()->setTemplateName('jquery');
+        $this->assertEquals($html, $this->form->get('browser')->renderDecorated());
     }
 }

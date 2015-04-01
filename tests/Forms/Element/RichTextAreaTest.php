@@ -2,9 +2,9 @@
 /**
  * This file is part of Vegas package
  *
- * @author Arkadiusz Ostrycharz <arkadiusz.ostrycharz@gmail.com>
+ * @author Arkadiusz Ostrycharz <aostrycharz@amsterdam-standard.pl>
  * @copyright Amsterdam Standard Sp. Z o.o.
- * @homepage https://bitbucket.org/amsdard/vegas-phalcon
+ * @homepage http://vegas-cmf.github.io/
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,6 +12,7 @@
 namespace Vegas\Tests\Forms\Element;
 
 use Phalcon\DI;
+use Phalcon\Forms\Element\TextArea;
 use Vegas\Forms\Element\RichTextArea;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
@@ -29,23 +30,43 @@ class RichTextAreaTest extends \PHPUnit_Framework_TestCase
         $this->form = new FakeVegasForm();
 
         $content = new RichTextArea('content');
+        $content->setAttribute('class', 'test1');
         $this->form->add($content);
     }
 
     public function testRender()
     {
-        $this->assertNull($this->form->get('content')->getAssetsManager());
+        $testElement = (new TextArea('content'))
+            ->setAttribute('class', 'test1');
 
-        try {
-            $this->form->get('content')->render();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Exception\InvalidAssetsManagerException', $ex);
-        }
+        $this->assertEquals(
+            $testElement->render(),
+            $this->form->get('content')->renderDecorated()
+        );
 
-        $this->form->get('content')->setAssetsManager($this->di->get('assets'));
+        $this->form->get('content')->getDecorator()->setTemplateName('jquery');
 
-        $this->assertInstanceOf('\Phalcon\Assets\Manager', $this->form->get('content')->getAssetsManager());
-        $this->assertEquals('<textarea id="content" name="content" vegas-richtext="1"></textarea>', $this->form->get('content')->render());
+        $attributes = ['name' => 'foobaz'];
+
+        $this->assertEquals($testElement->render($attributes), $this->form->get('content')->render($attributes));
+
+        $this->regenerateForm();
+        $this->form->get('content')->getDecorator()->setTemplateName('jquery');
+
+        $this->assertEquals($testElement->render(['value' => '#f0f0f0']), $this->form->get('content')->render());
+        $this->assertEquals("<textarea id=\"content\" name=\"content\" class=\"test1\" vegas-richtext>\n#f0f0f0</textarea>", $this->form->get('content')->renderDecorated());
+    }
+
+    private function regenerateForm()
+    {
+        $this->model->content = '#abcdef';
+        $this->form = new FakeVegasForm($this->model);
+
+        $content = new RichTextArea('content');
+        $content->setAttribute('class', 'test1');
+        $content->getDecorator()->setDI($this->di);
+
+        $this->form->add($content);
+        $this->form->bind(['content' => '#f0f0f0'], $this->model);
     }
 }
