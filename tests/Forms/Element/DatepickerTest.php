@@ -37,7 +37,7 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
     public function testInput()
     {
         $dateTime = new \DateTime();
-        $dateTime->setTimezone(new \DateTimeZone('Europe/Amsterdam'));
+        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
         $dateTime->setTimestamp(1394665200);
 
         $formattedDate = $dateTime->format('Y-m-d');
