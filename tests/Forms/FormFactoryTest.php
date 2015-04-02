@@ -16,6 +16,8 @@ use Phalcon\DI,
     Vegas\Forms\DataProvider\DataProviderInterface;
 use Vegas\Forms\Builder\Exception\NotFoundException;
 use Vegas\Forms\BuilderAbstract;
+use Vegas\Forms\Form;
+use Vegas\Validation\Validator\PresenceOf;
 
 /**
  * Used to mock translations using DI.
@@ -143,7 +145,9 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                 'name'      => 'fakeUser4',
                 'type'      => '\Vegas\Tests\Stub\Models\FakeBuilder',
                 'required'  => true,
-                'label'     => 'Fill fake user'
+                'label'     => 'Fill fake user',
+                'placeholder'=> 'User name',
+                'default'   => 'Tester Lester'
             ],
             [
                 'name'      => 'fakeUser5',
@@ -157,10 +161,10 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, count($form->getElements()));
 
     }
-    
+
     public function testCreateEmptyDynamicForm()
     {
-        $data = [];        
+        $data = [];
         $form = $this->formFactory->createForm($data);
         $this->assertInstanceOf('\Vegas\Forms\Form', $form);
         $this->assertEmpty($form->getElements());
@@ -169,6 +173,13 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateDynamicForm()
     {
         $data = [
+            [
+                'name'      => 'userBirthdate',
+                'type'      => '\Vegas\Forms\Builder\Datepicker',
+                'required'  => true,
+                'label'     => 'Fill birthdate',
+                'format'    => 'Y-m-d'
+            ],
             [
                 'name'      => 'userEmail',
                 'type'      => '\Vegas\Forms\Builder\Email',
@@ -180,12 +191,6 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                 'type'      => '\Vegas\Forms\Builder\Password',
                 'required'  => true,
                 'label'     => 'Fill password'
-            ],
-            [
-                'name'      => 'userBirthdate',
-                'type'      => '\Vegas\Forms\Builder\Datepicker',
-                'required'  => true,
-                'label'     => 'Fill birthdate'
             ],
             [
                 'name'      => 'userName',
@@ -206,7 +211,6 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertTrue($form->isValid($validData));
-
     }
     
     public function testCreateDynamicFormWithStaticElements()
@@ -311,7 +315,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Vegas\Forms\Exception\InvalidInputSettingsException', $e);
         }
     }
-    
+
     public function testNonexistentBuilderType()
     {
         $data = [
@@ -349,7 +353,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         $elements = $this->formFactory->render();
         $this->assertEquals(6, count($elements));
         foreach($elements as $element){
-            $this->assertTrue($element instanceof \Phalcon\Forms\Element);
+            $this->assertTrue($element['element'] instanceof \Phalcon\Forms\Element);
         }
     }
 }
