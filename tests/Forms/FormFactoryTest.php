@@ -329,6 +329,7 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @TODO check why failing...
+     * https://github.com/phalcon/cphalcon/releases/tag/phalcon-v2.0.0 - maybe release info will give us some hints?
      */
 
 //    /**
