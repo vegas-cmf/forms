@@ -11,12 +11,12 @@
  */
 namespace Vegas\Forms;
 
-use Phalcon\DI\InjectionAwareInterface,
-    Vegas\Forms\Exception\InvalidInputSettingsException,
-    Vegas\Forms\Builder\Exception\NotFoundException,
-    Vegas\Forms\Form as GenericForm,
-    Vegas\Forms\InputSettings as InputSettingsForm;
+use Phalcon\DI\InjectionAwareInterface;
+use Vegas\Forms\Form as GenericForm;
+use Vegas\Forms\InputSettings as InputSettingsForm;
+use Vegas\Forms\Builder\Exception\InvalidInputSettingsException;
 use Vegas\Forms\Builder\Exception\NotDefinedException;
+use Vegas\Forms\Builder\Exception\NotFoundException;
 
 class FormFactory implements InjectionAwareInterface
 {
@@ -49,7 +49,7 @@ class FormFactory implements InjectionAwareInterface
      * @param \Phalcon\DiInterface $dependencyInjector
      * @return $this
      */
-    public function setDI($dependencyInjector)
+    public function setDI(\Phalcon\DiInterface $dependencyInjector)
     {
         $this->di = $dependencyInjector;
         return $this;
@@ -91,7 +91,7 @@ class FormFactory implements InjectionAwareInterface
      *
      * @param array $data each form element data
      * @return \Vegas\Forms\Form full instance of form
-     * @throws \Vegas\Forms\Exception\InvalidInputSettingsException When provided invalid (manipulated) input
+     * @throws \Vegas\Forms\Builder\Exception\InvalidInputSettingsException When provided invalid (manipulated) input
      */
     public function createForm(array $data)
     {

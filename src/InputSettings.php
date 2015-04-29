@@ -11,13 +11,13 @@
  */
 namespace Vegas\Forms;
 
+use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
-use Vegas\Forms\DataProvider\Exception\NotFoundException,
-    Vegas\Forms\DataProvider\DataProviderInterface,
-    Vegas\Forms\Element\Select,
-    Phalcon\Forms\Element\Text,
-    Phalcon\Forms\Element\Check,
-    Vegas\Validation\Validator\PresenceOf;
+use Phalcon\Forms\Element\Text;
+use Vegas\Forms\DataProvider\DataProviderInterface;
+use Vegas\Forms\DataProvider\Exception\NotFoundException;
+use Vegas\Forms\Element\Select;
+use Vegas\Validation\Validator\PresenceOf;
 
 /**
  * Subform used to validate settings for each created input element in FormFactory

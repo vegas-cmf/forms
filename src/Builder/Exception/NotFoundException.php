@@ -12,13 +12,13 @@
 
 namespace Vegas\Forms\Builder\Exception;
 
-use \Vegas\Forms\Builder\Exception as BuilderException;
+use \Vegas\Forms\Exception as FormsException;
 
 /**
  *
- * @package Vegas\Forms\Exception
+ * @package Vegas\Forms\Builder\Exception
  */
-class NotFoundException extends BuilderException
+class NotFoundException extends FormsException
 {
     protected $message = 'Input builder not found';
 }

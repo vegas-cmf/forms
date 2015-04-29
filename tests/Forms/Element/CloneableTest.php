@@ -22,54 +22,59 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 {
     protected $di;
     protected $form;
-    
+
     protected function setUp()
     {
         $this->di = DI::getDefault();
         $this->form = new FakeVegasForm();
     }
 
-    public function testInvalidSetup()
+    /**
+     * @expectedException \Vegas\Forms\Decorator\Exception\DiNotSetException
+     */
+    public function testDiNotSetSetup()
     {
         $cloneable = new Cloneable('cloneable_field');
 
         $this->assertNull($cloneable->getDecorator()->getDI());
+        $cloneable->render();
+    }
 
-        try {
-            $cloneable->render();
-            throw new \Exception('Not this exception.');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
-        }
-
+    /**
+     * @expectedException \Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException
+     */
+    public function testBaseElementNotSet()
+    {
+        $cloneable = new Cloneable('cloneable_field');
         $cloneable->getDecorator()->setDI($this->di);
 
-        try {
-            $cloneable->render();
-            throw new \Exception('Not this exception');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
-        }
-        
-        $cloneable->setBaseElements(array());
-            
-        try {
-            $cloneable->render();
-            throw new \Exception('Not this exception');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException', $ex);
-        }
-        
-        $cloneable->setBaseElements(array(new Cloneable('another_cloneable')));
-        
-        try {
-            $cloneable->render();
-            throw new \Exception('Not this exception');
-        } catch (\Exception $ex) {
-            $this->assertInstanceOf('\Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException', $ex);
-        }
+        $cloneable->render();
     }
-    
+
+    /**
+     * @expectedException \Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException
+     */
+    public function testBaseElementSetEmptyArray()
+    {
+        $cloneable = new Cloneable('cloneable_field');
+        $cloneable->getDecorator()->setDI($this->di);
+
+        $cloneable->setBaseElements([]);
+        $cloneable->render();
+    }
+
+    /**
+     * @expectedException \Vegas\Forms\Element\Cloneable\Exception\CantInheritCloneableException
+     */
+    public function testOtherCloneableInheritance()
+    {
+        $cloneable = new Cloneable('cloneable_field');
+        $cloneable->getDecorator()->setDI($this->di);
+
+        $cloneable->setBaseElements(array(new Cloneable('another_cloneable')));
+        $cloneable->render();
+    }
+
     public function testCorrectSetup()
     {
         $cloneable = $this->prepareValidCloneableField();
@@ -227,14 +232,14 @@ RENDERED;
 		$this->form->add($cloneable);
 
 		$cloneableObj = $this->form->get('cloneable_field');
-		
+
 		$rows = $cloneableObj->getRows();
 		$test1 = $rows[0];
 		$test2 = $test1->get('test2');
-		
+
 		$this->assertInstanceOf('\Phalcon\Forms\Element\Text', $test2);
 	}
-	
+
 	public function testGetSingleFieldNameReturnsOneElementName()
 	{
 		$cloneableName = 'foo_cloneable';
@@ -243,15 +248,15 @@ RENDERED;
 		$filedName = 'no_filter';
 		$element = new \Phalcon\Forms\Element\Text($filedName);
         $cloneable->addBaseElement($element);
-		
+
 		$this->form->add($cloneable);
 		$cloneableObj = $this->form->get($cloneableName);
 		$rows = $cloneableObj->getRows();
-		
+
 		$test1 = $rows[0];
 		$expectedValue = 'whatever..';
 		$test1->setValues($expectedValue);
-		
+
 		$elements = $test1->getElements();
 		$this->assertCount(1, $elements);
 		$this->assertTrue(isset($elements[$filedName]));

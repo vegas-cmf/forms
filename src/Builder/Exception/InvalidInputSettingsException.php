@@ -10,13 +10,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Vegas\Forms\Exception;
+namespace Vegas\Forms\Builder\Exception;
 
 use \Vegas\Forms\Exception as FormsException;
 
 /**
  *
- * @package Vegas\Forms\Exception
+ * @package Vegas\Forms\Builder\Exception
  */
 class InvalidInputSettingsException extends FormsException
 {

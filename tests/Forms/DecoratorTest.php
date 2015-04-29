@@ -39,9 +39,7 @@ class DecoratorTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('\Vegas\Forms\Decorator\Exception\DiNotSetException', $ex);
         }
 
-        $di = clone $this->di;
-        $di->remove('view');
-
+        $di = new DI();
         $decorator->setDI($di);
 
         try {
@@ -52,8 +50,6 @@ class DecoratorTest extends \PHPUnit_Framework_TestCase
         }
 
         $di->set('view', $this->di->get('view'));
-        $di->remove('assets');
-
         $decorator->setDI($di);
 
         try {

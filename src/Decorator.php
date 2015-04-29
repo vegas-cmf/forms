@@ -120,7 +120,7 @@ class Decorator implements DecoratorInterface
     /**
      * Set template name for decorator.
      *
-     * @param $name
+     * @param string $name
      * @return $this
      */
     public function setTemplateName($name)
@@ -132,7 +132,7 @@ class Decorator implements DecoratorInterface
     /**
      * Set template path for decorator.
      *
-     * @param $path
+     * @param string $path
      * @return $this
      */
     public function setTemplatePath($path)
@@ -142,10 +142,10 @@ class Decorator implements DecoratorInterface
     }
 
     /**
-     * @param DiInterface $di
+     * @param \Phalcon\DiInterface $di
      * @return $this
      */
-    public function setDI($di)
+    public function setDI(\Phalcon\DiInterface $di)
     {
         $this->di = $di;
         return $this;

@@ -12,13 +12,13 @@
 
 namespace Vegas\Forms\DataProvider\Exception;
 
-use \Vegas\Forms\DataProvider\Exception as DataProviderException;
+use \Vegas\Forms\Exception as FormsException;
 
 /**
  *
- * @package Vegas\Forms\Exception
+ * @package Vegas\Forms\DataProvider\Exception
  */
-class NotFoundException extends DataProviderException
+class NotFoundException extends FormsException
 {
     protected $message = 'Input data provider not found';
 }

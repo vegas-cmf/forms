@@ -14,13 +14,13 @@ namespace Vegas\Forms\Element\Cloneable\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\Message;
 
-class Extender extends Validator
+class Extender extends Validator implements \Phalcon\Validation\ValidatorInterface
 {
     private $validator;
     private $attribute;
     private $messages;
 
-    public function validate($validator, $attribute)
+    public function validate(\Phalcon\Validation $validator, $attribute)
     {
         $this->validator = $validator;
         $this->attribute = $attribute;

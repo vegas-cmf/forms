@@ -64,7 +64,6 @@ abstract class BuilderAbstract implements BuilderInterface
     {
         if(is_null($this->settings)) {
             $this->settings = new InputSettings();
-
         }
 
         return $this->build($this->settings);
