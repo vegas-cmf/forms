@@ -11,6 +11,8 @@
  */
 namespace Vegas\Forms;
 
+use Phalcon\Forms\ElementInterface;
+
 class Form extends \Phalcon\Forms\Form
 {
     /**
@@ -59,7 +61,7 @@ class Form extends \Phalcon\Forms\Form
      * @param bool $type If $type is TRUE, the element wile add before $postion, else is after
      * @return \Phalcon\Forms\Form
      */
-    public function add($element, $postion = null, $type = null)
+    public function add(ElementInterface $element, $postion = null, $type = null)
     {
         if ($element instanceof Decorator\DecoratedInterface
             && $element->getDecorator() instanceof DecoratorInterface) {
