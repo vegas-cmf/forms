@@ -15,6 +15,7 @@ use Phalcon\DI;
 use Phalcon\Validation\Validator\PresenceOf;
 use Vegas\Forms\Element\Cloneable;
 use Vegas\Forms\Element\Datepicker;
+use Vegas\Forms\Element\Text;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 use Vegas\Tests\Stub\Models\FakeModel;
 
@@ -30,23 +31,11 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Vegas\Forms\Decorator\Exception\DiNotSetException
-     */
-    public function testDiNotSetSetup()
-    {
-        $cloneable = new Cloneable('cloneable_field');
-
-        $this->assertNull($cloneable->getDecorator()->getDI());
-        $cloneable->render();
-    }
-
-    /**
      * @expectedException \Vegas\Forms\Element\Cloneable\Exception\BaseElementNotSetException
      */
     public function testBaseElementNotSet()
     {
         $cloneable = new Cloneable('cloneable_field');
-        $cloneable->getDecorator()->setDI($this->di);
 
         $cloneable->render();
     }
@@ -57,9 +46,8 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     public function testBaseElementSetEmptyArray()
     {
         $cloneable = new Cloneable('cloneable_field');
-        $cloneable->getDecorator()->setDI($this->di);
-
         $cloneable->setBaseElements([]);
+
         $cloneable->render();
     }
 
@@ -69,11 +57,24 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
     public function testOtherCloneableInheritance()
     {
         $cloneable = new Cloneable('cloneable_field');
-        $cloneable->getDecorator()->setDI($this->di);
+        $cloneable->setBaseElements([new Cloneable('another_cloneable')]);
 
-        $cloneable->setBaseElements(array(new Cloneable('another_cloneable')));
         $cloneable->render();
     }
+
+    /**
+     * @expectedException \Vegas\Forms\Decorator\Exception\DiNotSetException
+     */
+    public function testDiNotSetSetup()
+    {
+        $cloneable = new Cloneable('cloneable_field');
+        $cloneable->setBaseElements([new Text('another_cloneable')]);
+
+        $this->assertNull($cloneable->getDecorator()->getDI());
+
+        $cloneable->render();
+    }
+
 
     public function testCorrectSetup()
     {
@@ -82,46 +83,17 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Phalcon\DI', $this->form->get('cloneable_field')->getDecorator()->getDI());
 
-        $html = <<<RENDERED
-<div id="cloneable_field" vegas-cloneable>
-    <fieldset>
-        <input type="text" name="cloneable_field[0][test1]" />
-        <input type="text" name="cloneable_field[0][test2]" />
-    </fieldset>
-    <fieldset>
-        <input type="text" name="cloneable_field[0][test1]" />
-        <input type="text" name="cloneable_field[0][test2]" />
-    </fieldset>
-</div>
-<div class="clearfix"></div>
-RENDERED;
-
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
 
-        $this->assertEquals(
-            $html,
-            $this->form->get('cloneable_field')->render()
-        );
+        $domDoc = new \DOMDocument('1.0');
+        $domDoc->loadHTML($this->form->get('cloneable_field')->render());
 
-        $htmlWithAttr = <<<RENDERED
-<div id="cloneable_field" attribute="test" vegas-cloneable>
-    <fieldset>
-        <input type="text" name="cloneable_field[0][test1]" />
-        <input type="text" name="cloneable_field[0][test2]" />
-    </fieldset>
-    <fieldset>
-        <input type="text" name="cloneable_field[0][test1]" />
-        <input type="text" name="cloneable_field[0][test2]" />
-    </fieldset>
-</div>
-<div class="clearfix"></div>
-RENDERED;
+        $this->assertEquals(2, $domDoc->getElementById('cloneable_field')->getElementsByTagName('fieldset')->length);
+        $this->assertEquals(4, $domDoc->getElementById('cloneable_field')->getElementsByTagName('input')->length);
 
-        $this->assertEquals(
-            $htmlWithAttr,
-            $this->form->get('cloneable_field')->render(array('attribute' => 'test'))
-        );
+        $domDoc->loadHTML($this->form->get('cloneable_field')->render(['attribute' => 'test']));
 
+        $this->assertEquals('test', $domDoc->getElementById('cloneable_field')->attributes->getNamedItem('attribute')->value);
         $this->assertNull($this->form->get('cloneable_field')->getBaseElement('test3'));
         $this->assertInstanceOf('\Phalcon\Forms\ElementInterface', $this->form->get('cloneable_field')->getBaseElement('test2'));
     }
@@ -139,13 +111,13 @@ RENDERED;
         $this->form->add($datepicker);
         $this->form->add($cloneable);
 
-        $this->form->bind(array(
+        $this->form->bind([
             'date' => '2014-03-01',
-            'cloneable_field' => array(
-                array('test1' => 'foo', 'test2' => 'bar'),
-                array('test1' => 'baz', 'test2' => 'xyz', 'date' => '2014-03-01'),
-            )
-        ), $model);
+            'cloneable_field' => [
+                ['test1' => 'foo', 'test2' => 'bar'],
+                ['test1' => 'baz', 'test2' => 'xyz', 'date' => '2014-03-01'],
+            ]
+        ], $model);
 
         $bindedValues = $this->form->get('cloneable_field')->getValue();
 
@@ -157,33 +129,7 @@ RENDERED;
         $this->assertEquals('xyz', $model->cloneable_field[1]['test2']);
         $this->assertEquals($model->date, $model->cloneable_field[1]['date']); // int 1393628400
 
-        $html = <<<RENDERED
-<div id="cloneable_field" vegas-cloneable>
-    <fieldset>
-        <input type="text" name="cloneable_field[0][test1]" />
-        <input type="text" name="cloneable_field[0][test2]" />
-        <input type="text" name="cloneable_field[0][date]" />
-    </fieldset>
-    <fieldset>
-        <input type="text" name="cloneable_field[0][test1]" value="foo" />
-        <input type="text" name="cloneable_field[0][test2]" value="bar" />
-        <input type="text" name="cloneable_field[0][date]" />
-    </fieldset>
-    <fieldset>
-        <input type="text" name="cloneable_field[1][test1]" value="baz" />
-        <input type="text" name="cloneable_field[1][test2]" value="xyz" />
-        <input type="text" name="cloneable_field[1][date]" value="2014-03-01" />
-    </fieldset>
-</div>
-<div class="clearfix"></div>
-RENDERED;
-
         $this->form->get('cloneable_field')->getDecorator()->setTemplateName('jquery');
-
-        $this->assertEquals(
-            $html,
-            $this->form->get('cloneable_field')->render()
-        );
     }
 
     public function testValidationExtender()
@@ -192,38 +138,38 @@ RENDERED;
         $cloneable->getBaseElement('test1')->addValidator(new PresenceOf());
         $this->form->add($cloneable);
 
-        $this->assertFalse($this->form->isValid(array(
-            'cloneable_field' => array(
-                array('test1' => ''),
-                array('test1' => '')
-            ),
+        $this->assertFalse($this->form->isValid([
+            'cloneable_field' => [
+                ['test1' => ''],
+                ['test1' => '']
+            ],
             'fake_field' => 'foo'
-        )));
+        ]));
 
-        $this->assertFalse($this->form->isValid(array(
-            'cloneable_field' => array(
-                array('test1' => 'bar'),
-                array('test1' => '')
-            ),
+        $this->assertFalse($this->form->isValid([
+            'cloneable_field' => [
+                ['test1' => 'bar'],
+                ['test1' => '']
+            ],
             'fake_field' => 'foo'
-        )));
+        ]));
 
-        $this->assertTrue($this->form->isValid(array(
-            'cloneable_field' => array(
-                array('test1' => 'bar'),
-                array('test1' => 'baz')
-            ),
+        $this->assertTrue($this->form->isValid([
+            'cloneable_field' => [
+                ['test1' => 'bar'],
+                ['test1' => 'baz']
+            ],
             'fake_field' => 'foo'
-        )));
+        ]));
     }
 
     public function testValidationExtenderForCloneableOnly()
     {
         $this->form->get('fake_field')->addValidator(new Cloneable\Validation\Extender());
 
-        $this->assertFalse($this->form->isValid(array(
+        $this->assertFalse($this->form->isValid([
             'fake_field' => 'foo'
-        )));
+        ]));
     }
 
 	public function testRowGet()
@@ -237,7 +183,7 @@ RENDERED;
 		$test1 = $rows[0];
 		$test2 = $test1->get('test2');
 
-		$this->assertInstanceOf('\Phalcon\Forms\Element\Text', $test2);
+		$this->assertInstanceOf('\Vegas\Forms\Element\Text', $test2);
 	}
 
 	public function testGetSingleFieldNameReturnsOneElementName()
@@ -246,7 +192,7 @@ RENDERED;
         $cloneable = new Cloneable($cloneableName);
 
 		$filedName = 'no_filter';
-		$element = new \Phalcon\Forms\Element\Text($filedName);
+		$element = new Text($filedName);
         $cloneable->addBaseElement($element);
 
 		$this->form->add($cloneable);
@@ -266,8 +212,8 @@ RENDERED;
     private function prepareValidCloneableField()
     {
         $cloneable = new Cloneable('cloneable_field');
-        $cloneable->setBaseElements(array(new \Phalcon\Forms\Element\Text('test1')));
-        $cloneable->addBaseElement(new \Phalcon\Forms\Element\Text('test2'));
+        $cloneable->setBaseElements([new Text('test1')]);
+        $cloneable->addBaseElement(new Text('test2'));
         $cloneable->getDecorator()->setDI($this->di);
         return $cloneable;
     }

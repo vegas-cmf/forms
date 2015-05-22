@@ -63,10 +63,6 @@ class Decorator implements DecoratorInterface
             $this->templateName = $config->forms->templates->default_name;
         }
 
-        if (empty($this->templateName) || empty($this->templatePath)) {
-            return $formElement->render();
-        }
-
         $this->variables['element'] = $formElement;
         $this->variables['value'] = $value;
         $this->variables['attributes'] = $attributes;

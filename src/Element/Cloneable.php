@@ -36,7 +36,9 @@ use Phalcon\Forms\Element;
 
 class Cloneable extends Element implements Decorator\DecoratedInterface
 {
-    use Decorator\DecoratedTrait;
+    use Decorator\DecoratedTrait {
+        renderDecorated as private baseRenderDecorated;
+    }
 
     private $baseElements = array();
     private $rows = array();
@@ -53,6 +55,7 @@ class Cloneable extends Element implements Decorator\DecoratedInterface
         parent::__construct($name, $attributes);
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Cloneable', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         $this->addValidator(new ValidationExtender(array('cloneable' => $this)));
     }
 
@@ -127,8 +130,20 @@ class Cloneable extends Element implements Decorator\DecoratedInterface
      */
     public function render($attributes = null)
     {
-        $this->getDecorator()->setTemplateName('jquery');
         return $this->renderDecorated($attributes);
+    }
+
+    /**
+     * Render element decorated with specific view/template.
+     *
+     * @param array|null $attributes
+     * @return string
+     * @throws \Vegas\Forms\Decorator\Exception\ElementNotDecoratedException
+     */
+    public function renderDecorated($attributes = null)
+    {
+        $this->validate();
+        return $this->baseRenderDecorated($attributes);
     }
 
     /**
@@ -170,7 +185,6 @@ class Cloneable extends Element implements Decorator\DecoratedInterface
      */
     private function generateRows()
     {
-        $this->validate();
         $this->rows = array();
 
         // empty row for cloneable js

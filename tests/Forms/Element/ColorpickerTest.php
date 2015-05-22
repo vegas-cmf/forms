@@ -42,10 +42,8 @@ class ColorpickerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $testElement->render(),
-            $this->form->get('content')->renderDecorated()
+            $this->form->get('content')->render()
         );
-
-        $this->form->get('content')->getDecorator()->setTemplateName('jquery');
 
         $attributes = ['name' => 'foobaz'];
 

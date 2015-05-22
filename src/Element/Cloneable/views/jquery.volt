@@ -7,7 +7,7 @@
 {% for row in element.getRows() %}
     <fieldset>
     {% for element in row.getElements() %}
-    {{ element.render() }}
+    {{ element.renderDecorated() }}
 
     {% endfor %}
 </fieldset>

@@ -22,6 +22,7 @@ class Birthdaypicker extends \Phalcon\Forms\Element\Text implements Decorator\De
         $this->addFilter('dateToArray');
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Datepicker', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         parent::__construct($name, $attributes);
     }
     

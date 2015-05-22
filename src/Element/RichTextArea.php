@@ -28,6 +28,7 @@ class RichTextArea extends TextArea implements Decorator\DecoratedInterface
     {
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'RichTextArea', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         parent::__construct($name, $attributes);
     }
 }

@@ -28,7 +28,7 @@ class DecoratorTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalid()
     {
-        $decorator = new Decorator('jquery', '/test/path');
+        $decorator = new Decorator('/test/path', 'jquery');
 
         $this->assertNull($decorator->getDI());
 
@@ -58,6 +58,12 @@ class DecoratorTest extends \PHPUnit_Framework_TestCase
         } catch (\Exception $ex) {
             $this->assertInstanceOf('Vegas\Forms\Decorator\Exception\InvalidAssetsManagerException', $ex);
         }
+
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Element', 'views', '']);
+        $decorator = new Decorator($templatePath, 'notExistingTemplateName');
+        $decorator->setDI($this->di);
+
+        $this->assertEquals('', $decorator->render($this->field));
     }
 
     public function testValid()

@@ -46,10 +46,8 @@ class MultiSelectTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $testElement->render(),
-            $this->form->get('select')->renderDecorated()
+            $this->form->get('select')->render()
         );
-
-        $this->form->get('select')->getDecorator()->setTemplateName('jquery');
 
         $htmlDecorated = <<<RENDER
 <input type="hidden" name="select[]" />

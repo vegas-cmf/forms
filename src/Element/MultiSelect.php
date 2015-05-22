@@ -32,6 +32,7 @@ class MultiSelect extends Select implements Decorator\DecoratedInterface
     {
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'MultiSelect', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         $this->setAttribute('name', $name.'[]');
 
         parent::__construct($name, $options, $attributes);

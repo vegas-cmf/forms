@@ -22,6 +22,7 @@ class Datepicker extends \Phalcon\Forms\Element\Text implements Decorator\Decora
         $this->addFilter('dateToTimestamp');
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Datepicker', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         parent::__construct($name, $attributes);
     }
 

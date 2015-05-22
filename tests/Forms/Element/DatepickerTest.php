@@ -61,10 +61,8 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $testElement->render(),
-            $this->form->get('date')->renderDecorated()
+            $this->form->get('date')->render()
         );
-
-        $this->form->get('date')->getDecorator()->setTemplateName('jquery');
 
         $attributes = ['name' => 'foobaz'];
 

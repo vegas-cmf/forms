@@ -44,7 +44,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $textField = new Text('browser');
 
         $this->assertEquals($textField->render(), $this->form->get('browser')->render());
-        $this->assertEquals($textField->render(), $this->form->get('browser')->renderDecorated());
 
         $html = <<<RENDER
 <div class="input-group browser-wrapper">
@@ -55,10 +54,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 </div>
 RENDER;
 
-        $this->form->get('browser')->getDecorator()->setDI($this->di);
-        $this->assertInstanceOf('\Phalcon\DI', $this->form->get('browser')->getDecorator()->getDI());
-
-        $this->form->get('browser')->getDecorator()->setTemplateName('jquery');
         $this->assertEquals($html, $this->form->get('browser')->renderDecorated());
     }
 }

@@ -31,6 +31,7 @@ class Browser extends \Phalcon\Forms\Element\Text implements Decorator\Decorated
     {
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Browser', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         parent::__construct($name, $attributes);
     }
 }

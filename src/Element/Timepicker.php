@@ -21,6 +21,7 @@ class Timepicker extends \Phalcon\Forms\Element\Text implements Decorator\Decora
     {
         $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Timepicker', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setTemplateName('jquery');
         parent::__construct($name, $attributes);
     }
 }

@@ -45,8 +45,6 @@ class TimepickerTest extends \PHPUnit_Framework_TestCase
             $this->form->get('date')
         );
 
-        $this->form->get('date')->getDecorator()->setTemplateName('jquery');
-
         $attributes = ['name' => 'foobaz'];
 
         $this->assertEquals($testElement->render($attributes), $this->form->get('date')->render($attributes));
