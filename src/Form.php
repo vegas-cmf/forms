@@ -20,7 +20,7 @@ class Form extends \Phalcon\Forms\Form
      * @param object $entity
      * @param array $whitelist
      */
-    public function bind($data, $entity, $whitelist = null)
+    public function bind(array $data, $entity, $whitelist = null)
     {
         parent::bind($data, $entity, $whitelist);
 
