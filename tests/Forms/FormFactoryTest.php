@@ -16,6 +16,8 @@ use Phalcon\DI,
     Vegas\Forms\DataProvider\DataProviderInterface;
 use Vegas\Forms\Builder\Exception\NotFoundException;
 use Vegas\Forms\BuilderAbstract;
+use Vegas\Forms\Form;
+use Vegas\Validation\Validator\PresenceOf;
 
 /**
  * Used to mock translations using DI.
@@ -170,6 +172,13 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $data = [
             [
+                'name'      => 'userBirthdate',
+                'type'      => '\Vegas\Forms\Builder\Datepicker',
+                'required'  => true,
+                'label'     => 'Fill birthdate',
+                'format'    => 'Y-m-d'
+            ],
+            [
                 'name'      => 'userEmail',
                 'type'      => '\Vegas\Forms\Builder\Email',
                 'required'  => true,
@@ -180,12 +189,6 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
                 'type'      => '\Vegas\Forms\Builder\Password',
                 'required'  => true,
                 'label'     => 'Fill password'
-            ],
-            [
-                'name'      => 'userBirthdate',
-                'type'      => '\Vegas\Forms\Builder\Datepicker',
-                'required'  => true,
-                'label'     => 'Fill birthdate'
             ],
             [
                 'name'      => 'userName',
@@ -206,7 +209,6 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertTrue($form->isValid($validData));
-
     }
 
     public function testCreateDynamicFormWithStaticElements()

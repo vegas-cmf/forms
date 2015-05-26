@@ -12,9 +12,12 @@
 
 namespace Vegas\Forms\Builder;
 
+use Phalcon\DI;
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\InputSettings,
     Vegas\Forms\Element\Datepicker as DatepickerInput;
+use Vegas\Validation\Validator\Date;
+use Vegas\Validation\Validator\Regex;
 
 /**
  * Class Datepicker
@@ -26,5 +29,20 @@ class Datepicker extends BuilderAbstract
     {
         $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
         $this->element = (new DatepickerInput($name));
+    }
+
+    public function setValidator()
+    {
+        parent::setValidator();
+        $this->element->addValidator(new Regex(['pattern' => '/[0-9]*/']));
+    }
+
+    public function setAdditionalOptions()
+    {
+        $format = new \Vegas\Forms\Element\Text('format');
+        $format->setLabel("Format");
+        $this->additionalOptions[] = $format;
+
+        DI::getDefault()->get('assets')->addJs('assets/js/lib/vegas/formbuilder/datepicker.js');
     }
 }

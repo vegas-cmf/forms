@@ -12,6 +12,9 @@
 
 namespace Vegas\Forms;
 
+use Phalcon\DI;
+use Vegas\DI\InjectionAwareTrait;
+use Vegas\Forms\Element\AssetsInjectableInterface;
 use Vegas\Validation\Validator\PresenceOf;
 
 /**
@@ -38,6 +41,11 @@ abstract class BuilderAbstract implements BuilderInterface
     protected $settings;
 
     /**
+     * Stores additional fields
+     */
+    protected $additionalOptions;
+
+    /**
      * Method for building form element
      * @param InputSettings $settings
      * @return mixed
@@ -52,6 +60,7 @@ abstract class BuilderAbstract implements BuilderInterface
         $this->setDefault();
         $this->setAttributes();
         $this->setData();
+        $this->setAdditionalOptions();
 
         return $this->getElement();
     }
@@ -116,6 +125,16 @@ abstract class BuilderAbstract implements BuilderInterface
         if($this->settings->getValue(InputSettings::PLACEHOLDER_PARAM)) {
             $this->element->setAttribute('placeholder',  $this->settings->getValue(InputSettings::PLACEHOLDER_PARAM));
         }
+    }
+
+    /**
+     * Default setter for extra options
+     */
+    public function setAdditionalOptions(){ }
+
+    public function getAdditionalOptions()
+    {
+        return $this->additionalOptions;
     }
 
     /**
