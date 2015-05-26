@@ -59,9 +59,10 @@ class DatepickerTest extends \PHPUnit_Framework_TestCase
         $this->form = new FakeVegasForm($this->model);
         $datepicker = new Datepicker('date');
         $this->form->add($datepicker);
-        $this->form->bind(array('date' => $dateTime->getTimestamp()), $this->model);
+        $this->form->bind(array('date' => $formattedDate), $this->model);
 
         $this->assertEquals($formattedDate, $this->form->get('date')->getValue());
+        $this->assertEquals($dateTime->getTimestamp(), $this->model->date);
 
     }
 
