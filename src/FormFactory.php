@@ -39,16 +39,6 @@ class FormFactory implements InjectionAwareInterface
     const BUILDER_METHOD = 'build';
 
     /**
-     * Common prefix for initialize element of builder used by this factory
-     */
-    const INIT_ELEMENT_METHOD = 'initElement';
-
-    /**
-     * Common prefix for all additional options methods used by this factory
-     */
-    const ADDITIONAL_OPTIONS_METHOD = 'getAdditionalOptions';
-
-    /**
      * @var \Phalcon\DiInterface $dependencyInjector
      */
     protected $di;
@@ -179,14 +169,7 @@ class FormFactory implements InjectionAwareInterface
         $builderObject = new $className;
         $builderObject->setAdditionalOptions();
         return $builderObject->getAdditionalOptions();
-
-        $setMethod = new \ReflectionMethod($className, self::INIT_ELEMENT_METHOD);
-        $getMethod = new \ReflectionMethod($className, self::ADDITIONAL_OPTIONS_METHOD);
-        $setMethod->invokeArgs($builderObject, array($settings));
-        return $getMethod->invokeArgs($builderObject, array($settings));
     }
-
-
 
     /**
      * Method create object for render each element. Execute initElement method
