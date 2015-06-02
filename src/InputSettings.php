@@ -102,11 +102,12 @@ class InputSettings extends \Vegas\Forms\Form
         if(is_null($select->getValue())) {
             return array();
         }
-        $classname = $select->getValue();
-        if (!class_exists($classname) || !array_key_exists($classname, $select->getOptions())) {
+        $className = $select->getValue();
+        if (!class_exists($className) || !array_key_exists($className, $select->getOptions())) {
             throw new NotFoundException;
         }
-        return (new $classname)->getData();
+        $provider = new $className;
+        return $provider->getData();
 
     }
     
@@ -119,15 +120,13 @@ class InputSettings extends \Vegas\Forms\Form
         $input = (new Select(self::DATA_PARAM))
                 ->setOptions(array(null => '---'));
         $dataProviderClasses = array();
-        foreach ($this->di->get('config')->formFactory->dataProviders as $classname) {
-            $provider = new $classname;
+        foreach ($this->di->get('config')->formFactory->dataProviders as $className) {
+            $provider = new $className;
             if ($provider instanceof DataProviderInterface) {
-                $dataProviderClasses[$classname] = $provider->getName();
+                $dataProviderClasses[$className] = $provider->getName();
             }
         }
-        $input
-                ->addOptions($dataProviderClasses)
-                ->setLabel('Data provider');
+        $input->addOptions($dataProviderClasses)->setLabel('Data provider');
         $this->add($input);
     }
 }
