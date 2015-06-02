@@ -86,7 +86,7 @@ abstract class BuilderAbstract implements BuilderInterface
     {
         if($this->settings->getValue(InputSettings::REQUIRED_PARAM)) {
             $this->element->addValidator(new PresenceOf());
-            $this->element->addAttribute('required', 1);
+            $this->element->setAttribute('required', 1);
         }
     }
 
