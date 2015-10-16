@@ -26,5 +26,6 @@ class RichTextArea extends BuilderAbstract
     {
         $name = $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) ? $this->settings->getValue(InputSettings::IDENTIFIER_PARAM) : preg_replace('/.*\\\/', '', get_class($this)) . self::NAME_SEPARATOR . mt_rand();
         $this->element = (new RichTextAreaInput($name));
+        $this->element->setAttribute('vegas-richtext', '');
     }
 }

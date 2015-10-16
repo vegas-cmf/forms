@@ -99,8 +99,8 @@ class InputSettings extends \Vegas\Forms\Form
     public function getDataFromProvider()
     {
         $select = $this->get(self::DATA_PARAM);
-        if(is_null($select->getValue())) {
-            return array();
+        if(is_null($select->getValue()) || $select->getValue() === '') {
+            return [];
         }
         $className = $select->getValue();
         if (!class_exists($className) || !array_key_exists($className, $select->getOptions())) {

@@ -76,13 +76,30 @@ class FormFactory implements InjectionAwareInterface
         return array_combine($this->builders, $values);
     }
 
+    /**
+     * @param $builderClass
+     * @throws NotFoundException
+     */
     public function addBuilder($builderClass)
     {
         if(!class_exists($builderClass)) {
             throw new NotFoundException();
         }
-        $this->builders[] = $builderClass;
+
+        if(!$this->checkIfBuilderAlreadyExists($builderClass)) {
+            $this->builders[] = $builderClass;
+        }
     }
+
+    /**
+     * @param $builderClass
+     * @return bool
+     */
+    public function checkIfBuilderAlreadyExists($builderClass)
+    {
+        return in_array($builderClass, $this->builders);
+    }
+
 
     /**
      * Acts as factory pattern: generates form object with all dependent elements.
