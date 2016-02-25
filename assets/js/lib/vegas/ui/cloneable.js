@@ -15,6 +15,7 @@
 
             preparedField.find('[name]').each(function() {
                 var orginalName = $(this).attr('name');
+                var orginalId = $(this).attr('id');
 
                 var nameArray = orginalName.split('[');
                 var baseName = nameArray.shift();
@@ -26,6 +27,12 @@
                     nameArray[0] = parseInt(nameArray[0])+rowCounter;
                 }
 
+                if(orginalId) {
+                    var idValueArr = orginalId.split(']');
+                    var idValue = idValueArr.slice(-1).pop();
+                    var newNameValue = baseName + '[' + nameArray.join(']') + idValue;
+                }
+
                 var newName = baseName + '[' + nameArray.join(']');
 
                 preparedField.find('[name="'+orginalName+'"]').each(function() {
@@ -34,6 +41,14 @@
 
                 preparedField.find('[id="'+orginalName+'"]').each(function() {
                     $(this).attr('id',newName);
+                });
+
+                preparedField.find('[id="'+orginalId+'"]').each(function() {
+                    $(this).attr('id',newNameValue);
+                });
+
+                preparedField.find('[for="'+orginalId+'"]').each(function() {
+                    $(this).attr('for',newNameValue);
                 });
             });
 
