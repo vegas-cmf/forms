@@ -56,7 +56,7 @@
         };
 
         self.sortable = function(cloneContainer, options) {
-            if ($.fn.sortable) {
+            if ($.fn.sortable && options.sortable.active) {
                 cloneContainer.sortable({
                     forcePlaceholderSize: true,
                     items: ':visible'
@@ -83,6 +83,7 @@
                         .addClass('cloner-row-remove')
                 },
                 'sortable': {
+                    'active': false,
                     'callback': function() {
                         var orderIndicator = 0;
 
