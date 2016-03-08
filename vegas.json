@@ -2,7 +2,7 @@
   "dependencies": {
     "multiselect": "0.9.*",
     "ckeditor": "#full/4.3.3",
-    "eonasdan-bootstrap-datetimepicker": "3.0",
+    "eonasdan-bootstrap-datetimepicker": "3.*",
     "mjaalnir-bootstrap-colorpicker": "2.*",
     "html5sortable": "https://github.com/farhadi/html5sortable.git"
   },
@@ -17,24 +17,23 @@
     },
     "ckeditor": {
       ".": ["*.css", "*.js"],
-      "adapters": "adapters/**",
-      "lang": "lang/**",
-      "plugins": "plugins/**",
-      "skins": "skins/**"
+      "adapters": "adapters",
+      "lang": "lang",
+      "plugins": "plugins",
+      "skins": "skins"
     },
     "eonasdan-bootstrap-datetimepicker": {
-      ".": ["build/js/*.js", "build/css/*.css", "src/js/bootstrap-datetimepicker.js"],
-      "locales": "src/js/locales/*"
+      ".": ["build/js/*.js", "build/css/*.css", "src/js/bootstrap-datetimepicker.js"]
     },
     "html5sortable": {
       ".": "*.js"
     },
     "mjaalnir-bootstrap-colorpicker": {
-      ".": "dist/**"
+      ".": "dist"
     },
     "moment": {
       ".": ["moment.js", "min/*.js"],
-      "lang": "lang/*"
+      "locale": "locale"
     },
     "multiselect": {
       "js": "js/*",
