@@ -1,0 +1,45 @@
+{
+  "dependencies": {
+    "multiselect": "0.9.*",
+    "ckeditor": "#full/4.3.3",
+    "eonasdan-bootstrap-datetimepicker": "3.0",
+    "mjaalnir-bootstrap-colorpicker": "2.*",
+    "html5sortable": "https://github.com/farhadi/html5sortable.git"
+  },
+  "exportsOverride": {
+    "jquery": {
+      ".": ["jquery.js", "jquery.min.js"]
+    },
+    "bootstrap": {
+      "js": ["dist/js/bootstrap.js", "dist/js/bootstrap.min.js"],
+      "css": "dist/css/*",
+      "fonts": "dist/fonts/*"
+    },
+    "ckeditor": {
+      ".": ["*.css", "*.js"],
+      "adapters": "adapters/**",
+      "lang": "lang/**",
+      "plugins": "plugins/**",
+      "skins": "skins/**"
+    },
+    "eonasdan-bootstrap-datetimepicker": {
+      ".": ["build/js/*.js", "build/css/*.css", "src/js/bootstrap-datetimepicker.js"],
+      "locales": "src/js/locales/*"
+    },
+    "html5sortable": {
+      ".": "*.js"
+    },
+    "mjaalnir-bootstrap-colorpicker": {
+      ".": "dist/**"
+    },
+    "moment": {
+      ".": ["moment.js", "min/*.js"],
+      "lang": "lang/*"
+    },
+    "multiselect": {
+      "js": "js/*",
+      "css": "css/*",
+      "img": "img/*"
+    }
+  }
+}
