@@ -11,7 +11,7 @@
 (function($) {
     $.fn.vegasCloner = function(customOptions) {
         self.prepareField = function(element, rowCounter) {
-            var preparedField = element.clone();
+            var preparedField = element.clone(true,true);
 
             preparedField.find('[name]').each(function() {
                 var orginalName = $(this).attr('name');
@@ -113,7 +113,7 @@
             var removeRowBtn = options.row.removeButton;
 
             var cloneContainer = $(this);
-            var clonerBase = cloneContainer.find(options.row.selector+':eq(0)').clone();
+            var clonerBase = cloneContainer.find(options.row.selector+':eq(0)').clone(true,true);
 
             cloneContainer.find(options.row.selector+':eq(0)').remove();
 
