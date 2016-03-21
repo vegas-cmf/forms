@@ -11,7 +11,7 @@
 (function($) {
     $.fn.vegasCloner = function(customOptions) {
         self.prepareField = function(element, rowCounter) {
-            var preparedField = element.clone();
+            var preparedField = element.clone(true,true);
 
             preparedField.find('[name]').each(function() {
                 var orginalName = $(this).attr('name');
@@ -51,7 +51,7 @@
                     $(this).attr('for',newNameValue);
                 });
             });
-
+            $('.cloner-remove').show();
             return preparedField.show();
         };
 
@@ -113,18 +113,24 @@
             var removeRowBtn = options.row.removeButton;
 
             var cloneContainer = $(this);
-            var clonerBase = cloneContainer.find(options.row.selector+':eq(0)').clone();
-
-            cloneContainer.find(options.row.selector+':eq(0)').remove();
-
             if (typeof options.buttons.insertAfterSelector === 'undefined') {
                 options.buttons.insertAfterSelector = cloneContainer;
             }
 
-            removeBtn.insertAfter(options.buttons.insertAfterSelector);
+            removeBtn.insertAfter(options.buttons.insertAfterSelector).hide();
             addBtn.insertAfter(options.buttons.insertAfterSelector);
 
+            var clonerBase = cloneContainer.find(options.row.selector+':eq(0)').clone(true,true);
+
+            cloneContainer.find(options.row.selector+':eq(0)').remove();
+
             var rowCounter = cloneContainer.children().length;
+
+            var hideRemoveBtn = function(){
+                if(cloneContainer.children().length == 1) {
+                    $('.cloner-remove').hide();
+                }
+            };
 
             addBtn.on('click',function() {
                 var element = self.prepareField(clonerBase, rowCounter);
@@ -143,6 +149,8 @@
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
+
+                hideRemoveBtn();
             });
 
             removeRowBtn.on('click', function() {
@@ -152,11 +160,15 @@
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
+
+                hideRemoveBtn();
             });
 
             cloneContainer.find(options.row.selector).each(function() {
                 removeRowBtn.clone(true).appendTo($(this));
             });
+
+            $('#' + cloneContainer[0].id + ' ' + options.row.selector + ':first-of-type .cloner-row-remove').css('display', 'none');
 
             self.sortable(cloneContainer, options);
 
