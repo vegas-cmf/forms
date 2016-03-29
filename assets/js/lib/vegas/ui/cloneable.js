@@ -73,7 +73,8 @@
                     },
                     'remove': {
                         'text': 'Remove last',
-                        'class': 'btn-form-cancel'
+                        'class': 'btn-form-cancel',
+                        'alertText': 'Do you want to remove this item?'
                     }
                 },
                 'row': {
@@ -142,24 +143,34 @@
                 rowCounter++;
             });
 
-            removeBtn.on('click',function() {
+            var alertMsg = options.buttons.remove.alertText;
+
+            var removeBtnAction = function() {
                 if (cloneContainer.children().length > 1) {
                     cloneContainer.children().last().remove();
                     rowCounter--;
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
+            };
+
+            removeBtn.on('click',function() {
+                alertMsg ? confirm(alertMsg) ? removeBtnAction() : false : removeBtnAction();
 
                 hideRemoveBtn();
             });
 
-            removeRowBtn.on('click', function() {
+            var removeRowAction = function(context) {
                 if (cloneContainer.children().length > 1) {
-                    $(this).parent().remove();
+                    context.parent().remove();
                     rowCounter--;
                 } else {
                     cloneContainer.find('input, textarea, select').val('');
                 }
+            };
+
+            removeRowBtn.on('click', function() {
+                alertMsg ? confirm(alertMsg) ? removeRowAction($(this)) : false : removeRowAction($(this));
 
                 hideRemoveBtn();
             });
