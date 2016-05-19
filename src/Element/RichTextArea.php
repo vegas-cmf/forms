@@ -11,10 +11,9 @@
  */
 namespace Vegas\Forms\Element;
 
-use \Phalcon\Forms\Element\TextArea;
 use Vegas\Forms\Decorator;
 
-class RichTextArea extends TextArea implements Decorator\DecoratedInterface
+class RichTextArea extends \Phalcon\Forms\Element\TextArea implements Decorator\DecoratedInterface
 {
     use Decorator\DecoratedTrait;
 
