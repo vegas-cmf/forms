@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.6",
         "ext-phalcon": "2.*",
-        "vegas-cmf/assets" : "dev-master",
+        "vegas-cmf/assets" : "v2.0",
         "vegas-cmf/validation" : "2.*",
         "vegas-cmf/filter" : "2.*"
     },
