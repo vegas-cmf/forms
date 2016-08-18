@@ -79,19 +79,13 @@ abstract class BuilderAbstract implements BuilderInterface
     }
 
     /**
-     * Default setter for dataProvider field
-     */
-    public function setData() {
-
-    }
-
-    /**
      * Default setter for element validator
      */
     public function setValidator()
     {
         if($this->settings->getValue(InputSettings::REQUIRED_PARAM)) {
             $this->element->addValidator(new PresenceOf());
+            $this->element->setAttribute('required', 1);
         }
     }
 
@@ -128,10 +122,29 @@ abstract class BuilderAbstract implements BuilderInterface
     }
 
     /**
+     * Default setter for placeholder attribute
+     */
+    public function setRequired()
+    {
+        if($this->settings->getValue(InputSettings::REQUIRED_PARAM)) {
+            $this->element->setAttribute('placeholder',  $this->settings->getValue(InputSettings::PLACEHOLDER_PARAM));
+        }
+    }
+
+    /**
+     * Default setter for dataProvider field
+     */
+    public function setData() { }
+
+    /**
      * Default setter for extra options
      */
-    public function setAdditionalOptions(){ }
+    public function setAdditionalOptions() { }
 
+    /**
+     * Getter for additional options
+     * @return mixed
+     */
     public function getAdditionalOptions()
     {
         return $this->additionalOptions;
