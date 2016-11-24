@@ -18,7 +18,7 @@ use Vegas\Forms\Element\Text;
 use Vegas\Tests\Stub\Models\FakeModel;
 use Vegas\Tests\Stub\Models\FakeVegasForm;
 
-class Checktest extends \PHPUnit_Framework_TestCase
+class CheckTest extends \PHPUnit_Framework_TestCase
 {
     protected $di;
     protected $form;
