@@ -11,6 +11,7 @@
  */
 namespace Vegas\Tests\Forms;
 use Phalcon\Forms\Element\Text;
+use Vegas\Forms\Element\Check;
 use Vegas\Validation\Validator\PresenceOf;
 use Vegas\Forms\Element\Cloneable;
 use Vegas\Forms\Form;
@@ -163,4 +164,5 @@ class FormTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('asdf', $model->test['test4']['es']);
         $this->assertEquals('test44', $model->test['test4']['foo']);
     }
+
 }
