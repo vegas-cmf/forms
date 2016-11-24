@@ -14,9 +14,11 @@ namespace Vegas\Tests\Forms;
 use Phalcon\DI,
     Vegas\Forms\FormFactory,
     Vegas\Forms\DataProvider\DataProviderInterface;
+use Vegas\Forms\Builder\Email;
 use Vegas\Forms\Builder\Exception\NotFoundException;
 use Vegas\Forms\BuilderAbstract;
 use Vegas\Forms\Form;
+use Vegas\Forms\InputSettings;
 use Vegas\Validation\Validator\PresenceOf;
 
 /**
@@ -157,6 +159,19 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
 
         $form = $this->formFactory->createForm($data);
         $this->assertEquals(5, count($form->getElements()));
+
+    }
+
+    public function testBuilderInitElement()
+    {
+        $email = new Email();
+
+        $settings = new InputSettings();
+
+
+        $a = $email->build($settings);
+
+        $b = 1;
 
     }
 
