@@ -162,19 +162,6 @@ class FormFactoryTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testBuilderInitElement()
-    {
-        $email = new Email();
-
-        $settings = new InputSettings();
-
-
-        $a = $email->build($settings);
-
-        $b = 1;
-
-    }
-
     public function testCreateEmptyDynamicForm()
     {
         $data = [];
