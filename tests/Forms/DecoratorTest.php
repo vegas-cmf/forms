@@ -13,7 +13,10 @@ namespace Vegas\Tests\Forms;
 
 use Phalcon\DI;
 use Vegas\Forms\Decorator;
+use Vegas\Forms\Element\Browser;
 use Vegas\Forms\Element\RichTextArea;
+use Vegas\Forms\Form;
+use Vegas\Tests\Stub\NotDecoratedExampleForm;
 
 class DecoratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -109,5 +112,15 @@ class DecoratorTest extends \PHPUnit_Framework_TestCase
 
         // reset config to previous state
         $this->di->get('config')->offsetUnset('forms');
+    }
+
+    /**
+     * @expectedException \Vegas\Forms\Decorator\Exception\ElementNotDecoratedException
+     */
+    public function testDecoratedNotSetException()
+    {
+        $form = new NotDecoratedExampleForm();
+        $form->get('fake_field')->render();
+
     }
 }

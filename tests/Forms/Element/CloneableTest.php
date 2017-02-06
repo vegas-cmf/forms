@@ -186,28 +186,61 @@ class CloneableTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\Vegas\Forms\Element\Text', $test2);
 	}
 
-	public function testGetSingleFieldNameReturnsOneElementName()
-	{
-		$cloneableName = 'foo_cloneable';
+    public function testGetSingleFieldNameReturnsOneElementName()
+    {
+        $cloneableName = 'foo_cloneable';
         $cloneable = new Cloneable($cloneableName);
 
-		$filedName = 'no_filter';
-		$element = new Text($filedName);
+        $filedName = 'no_filter';
+        $element = new Text($filedName);
         $cloneable->addBaseElement($element);
 
-		$this->form->add($cloneable);
-		$cloneableObj = $this->form->get($cloneableName);
-		$rows = $cloneableObj->getRows();
+        $this->form->add($cloneable);
+        $cloneableObj = $this->form->get($cloneableName);
+        $rows = $cloneableObj->getRows();
 
-		$test1 = $rows[0];
-		$expectedValue = 'whatever..';
-		$test1->setValues($expectedValue);
+        $test1 = $rows[0];
+        $expectedValue = 'whatever..';
+        $test1->setValues($expectedValue);
 
-		$elements = $test1->getElements();
-		$this->assertCount(1, $elements);
-		$this->assertTrue(isset($elements[$filedName]));
-		$this->assertSame($expectedValue, $elements[$filedName]->getValue());
-	}
+        $elements = $test1->getElements();
+        $this->assertCount(1, $elements);
+        $this->assertTrue(isset($elements[$filedName]));
+        $this->assertSame($expectedValue, $elements[$filedName]->getValue());
+    }
+
+    public function testGetSingleFieldNameReturnsMoreThanOneElementName()
+    {
+        $cloneableName = 'foo_cloneable';
+        $cloneable = new Cloneable($cloneableName);
+
+        $filedName1 = 'no_filter';
+        $element = new Text($filedName1);
+        $cloneable->addBaseElement($element);
+        $filedName2 = 'no_foobar';
+        $element = new Text($filedName2);
+        $cloneable->addBaseElement($element);
+
+        $this->form->add($cloneable);
+        $cloneableObj = $this->form->get($cloneableName);
+        $rows = $cloneableObj->getRows();
+
+        $expectedValue1 = 'whatever..';
+        $expectedValue2 = 'foobar';
+
+        $test1 = $rows[0];
+        $test1->setValues(['no_filter' => $expectedValue1, 'no_foobar' => $expectedValue2]);
+
+        $test2 = $rows[1];
+        $test2->setValues(['no_filter' => $expectedValue1]);
+
+        $elements = $test1->getElements();
+        $this->assertCount(2, $elements);
+        $this->assertTrue(isset($elements[$filedName1]));
+        $this->assertTrue(isset($elements[$filedName2]));
+        $this->assertSame($expectedValue1, $elements[$filedName1]->getValue());
+        $this->assertSame($expectedValue2, $elements[$filedName2]->getValue());
+    }
 
     private function prepareValidCloneableField()
     {

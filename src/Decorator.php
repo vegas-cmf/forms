@@ -105,6 +105,8 @@ class Decorator implements DecoratorInterface
         /** @var View $view */
         $view = $this->di->get('view');
 
+        $_viewsDir = $view->getViewsDir();
+
         if ($this->templatePath) {
             $_viewsDir = $view->getViewsDir();
             $view->setViewsDir($this->templatePath);

@@ -11,9 +11,28 @@
  */
 namespace Vegas\Forms\Element;
 
-use Vegas\Forms\Decorator\UnDecoratedTrait;
+use Phalcon\Di;
+use Vegas\Forms\Decorator;
+use Vegas\Forms\Decorator\DecoratedTrait;
 
 class Check extends \Phalcon\Forms\Element\Check
 {
-    use UnDecoratedTrait;
+    use DecoratedTrait;
+
+    public function __construct($name, $attributes = null)
+    {
+        $di = Di::getDefault();
+        $templatePath = dirname(__FILE__) . '/Check/views';
+        $this->setDecorator(new Decorator($templatePath));
+        $this->getDecorator()->setDI($di);
+        $this->getDecorator()->setTemplateName('jquery');
+
+        parent::__construct($name, $attributes);
+    }
+
+    public function render($attributes = null)
+    {
+        $this->setAttribute('checked', $this->getValue() || $this->getDefault() ? true : null);
+        return parent::render($attributes);
+    }
 }
