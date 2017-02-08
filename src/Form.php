@@ -21,12 +21,15 @@ class Form extends \Phalcon\Forms\Form
      * @param array $data
      * @param object $entity
      * @param array $whitelist
+     * @return Form
      */
     public function bind(array $data, $entity, $whitelist = null)
     {
         parent::bind($data, $entity, $whitelist);
 
         $this->bindArrays($data, $entity, $whitelist);
+
+        return $this;
     }
 
     private function bindArrays($data, $entity, $whitelist = null)

@@ -105,20 +105,14 @@ class Decorator implements DecoratorInterface
         /** @var View $view */
         $view = $this->di->get('view');
 
-        $_viewsDir = $view->getViewsDir();
+        $templatePath = $this->templatePath ? $this->templatePath : null;
 
-        if ($this->templatePath) {
-            $_viewsDir = $view->getViewsDir();
-            $view->setViewsDir($this->templatePath);
-        }
-
-        $content = $view->getRender('', $this->templateName, $this->variables, function (\Phalcon\Mvc\ViewInterface $view) {
+        $content = $view->getRender($this->templatePath, $this->templateName, $this->variables, function (\Phalcon\Mvc\ViewInterface $view) use ($templatePath) {
+            if (!is_null($templatePath)) {
+                $view->setViewsDir($templatePath);
+            }
             $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         });
-
-        if ($this->templatePath) {
-            $view->setViewsDir($_viewsDir);
-        }
 
         return $content;
     }
