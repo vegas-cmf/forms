@@ -1,0 +1,22 @@
+mongo:
+  image: mongo:3.2
+  container_name: vegas-cmf-forms-mongo
+  command: mongod --smallfiles
+  expose:
+    - 27017
+    - 28017
+  environment:
+    - AUTH=no
+    - TERM=xterm-256color
+
+phpunit:
+  image: amsdard/phalcon:3.x
+  container_name: vegas-cmf-forms-phpunit
+  command: vendor/bin/phpunit
+  environment:
+    - TERM=xterm-256color
+    - MONGO_DB_NAME=vegas_test
+  links:
+    - mongo:vegas-cmf-forms-mongo
+  volumes:
+    - ./:/opt

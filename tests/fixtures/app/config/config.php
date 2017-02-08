@@ -5,7 +5,9 @@ return array(
     'environment'    => 'development',
 
     'mongo' => [
-        'db' => 'vegas_test',
+        'dbname'    => getenv('MONGO_DB_NAME'),
+        'host'      => getenv('VEGAS_CMF_FORMS_MONGO_PORT_27017_TCP_ADDR'),
+        'port'      => getenv('VEGAS_CMF_FORMS_MONGO_PORT_27017_TCP_PORT')
     ],
 
     'forms' => [

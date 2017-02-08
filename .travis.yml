@@ -3,19 +3,29 @@ language: php
 php:
   - 5.6
 
+env:
+  global:
+    - MONGO_DB_NAME="vegas_test"
+    - VEGAS_CMF_FORMS_MONGO_PORT_27017_TCP_ADDR="localhost"
+    - VEGAS_CMF_FORMS_MONGO_PORT_27017_TCP_PORT=27017
+  matrix:
+    - PHALCON_VERSION="3.0.x"
+    - PHALCON_VERSION="v3.0.3"
+    - PHALCON_VERSION="v3.0.2"
+    - PHALCON_VERSION="v3.0.1"
+    - PHALCON_VERSION="v3.0.0"
+
 services:
   - mongodb
   - memcached
 
 before_install:
-  - mysql -e "CREATE DATABASE IF NOT EXISTS vegas_test;" -uroot
+  - printf "\n" | pecl install mongo &> /dev/null
 
 before_script:
-  - phpenv config-add travis/php.ini
-  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.8
-  - (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize && ./configure --enable-phalcon && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini)
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev
+  - ./travis/install-phalcon-extension.sh ${PHALCON_VERSION}
+  - php --ri phalcon
+  - travis_retry composer install --dev --no-interaction
 
 script:
   - mkdir -p tests/fixtures/cache

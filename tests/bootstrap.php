@@ -20,7 +20,7 @@ $di->set('config', $config);
 
 $di->set('mongo', function() use ($config) {
     $mongo = new \MongoClient();
-    return $mongo->selectDb($config->mongo->db);
+    return $mongo->selectDb($config->mongo->dbname);
 }, true);
 
 $di->set('collectionManager', function() {
@@ -31,8 +31,8 @@ $di->set('filter', '\Vegas\Filter', true);
 
 $view = new \Phalcon\Mvc\View();
 $view->registerEngines(array(
-    '.volt' => function ($this, $di) {
-            $volt = new \Phalcon\Mvc\View\Engine\Volt($this, $di);
+    '.volt' => function ($view, $di) {
+            $volt = new \Phalcon\Mvc\View\Engine\Volt($view, $di);
             $volt->setOptions(array(
                 'compiledPath' => TESTS_ROOT_DIR.'/fixtures/cache/',
                 'compiledSeparator' => '_'
@@ -45,4 +45,4 @@ $view->registerEngines(array(
 
 $di->set('view', $view);
 
-Phalcon\DI::setDefault($di);
+\Phalcon\DI::setDefault($di);
