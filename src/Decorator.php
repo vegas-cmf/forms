@@ -121,7 +121,9 @@ class Decorator implements DecoratorInterface
 
         try {
 
-            $view->setViewsDir($this->templatePath);
+            if (!is_null($this->templatePath)) {
+                $view->setViewsDir($this->templatePath);
+            }
             $content = $view->getPartial($this->templatePath . $this->templateName, $this->variables);
 
         } catch (\Phalcon\Mvc\View\Exception $e) {
@@ -136,7 +138,7 @@ class Decorator implements DecoratorInterface
             $content = '';
         }
 
-        $view->setViewsDir($viewsDir);
+        $view->setViewsDir(is_null($viewsDir) ? [] : $viewsDir);
 
         return $content;
     }
