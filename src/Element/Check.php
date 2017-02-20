@@ -22,7 +22,7 @@ class Check extends \Phalcon\Forms\Element\Check
     public function __construct($name, $attributes = null)
     {
         $di = Di::getDefault();
-        $templatePath = dirname(__FILE__) . '/Check/views';
+        $templatePath = implode(DIRECTORY_SEPARATOR, [dirname(__FILE__), 'Check', 'views', '']);
         $this->setDecorator(new Decorator($templatePath));
         $this->getDecorator()->setDI($di);
         $this->getDecorator()->setTemplateName('jquery');

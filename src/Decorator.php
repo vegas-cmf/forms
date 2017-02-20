@@ -20,9 +20,24 @@ use Phalcon\Mvc\View;
 
 class Decorator implements DecoratorInterface
 {
+    /**
+     * @var array
+     */
     protected $variables = [];
+
+    /**
+     * @var string|null
+     */
     protected $templateName;
+
+    /**
+     * @var string|null
+     */
     protected $templatePath;
+
+    /**
+     * @var \Phalcon\DiInterface
+     */
     protected $di;
 
     /**
@@ -95,24 +110,33 @@ class Decorator implements DecoratorInterface
     }
 
     /**
-     * @param ElementInterface $formElement
-     * @param string $value
-     * @param array $attributes
-     * @return mixed
+     * @return string
      */
     private function generatePartial()
     {
         /** @var View $view */
         $view = $this->di->get('view');
 
-        $templatePath = $this->templatePath ? $this->templatePath : null;
+        $viewsDir = $view->getViewsDir();
 
-        $content = $view->getRender($this->templatePath, $this->templateName, $this->variables, function (\Phalcon\Mvc\ViewInterface $view) use ($templatePath) {
-            if (!is_null($templatePath)) {
-                $view->setViewsDir($templatePath);
+        try {
+
+            $view->setViewsDir($this->templatePath);
+            $content = $view->getPartial($this->templateName, $this->variables);
+
+        } catch (\Phalcon\Mvc\View\Exception $e) {
+            ob_end_clean();
+
+            $errorMessage = sprintf("%s, template path used: '%s'", $e->getMessage(), $this->templatePath);
+            if ($this->di->has('logger')) {
+                $this->di->get('logger')->notice($errorMessage);
+            } else {
+                error_log($errorMessage);
             }
-            $view->setRenderLevel(View::LEVEL_ACTION_VIEW);
-        });
+            $content = '';
+        }
+
+        $view->setViewsDir($viewsDir);
 
         return $content;
     }

@@ -53,6 +53,10 @@ class DiProvider
 
         $di->set('filter', '\Vegas\Filter', true);
 
+        $di->set('logger', function () {
+            return new \Phalcon\Logger\Adapter\Stream('/dev/null');
+        }, true);
+
         \Phalcon\Di::setDefault($di);
     }
 
