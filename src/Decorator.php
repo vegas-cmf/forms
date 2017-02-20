@@ -122,7 +122,7 @@ class Decorator implements DecoratorInterface
         try {
 
             $view->setViewsDir($this->templatePath);
-            $content = $view->getPartial($this->templateName, $this->variables);
+            $content = $view->getPartial($this->templatePath . $this->templateName, $this->variables);
 
         } catch (\Phalcon\Mvc\View\Exception $e) {
             ob_end_clean();
